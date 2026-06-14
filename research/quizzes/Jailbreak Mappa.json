@@ -1,0 +1,188 @@
+{
+  "name": "Framework Ottimale per Prompt Attacks e Jailbreaking",
+  "children": [
+    {
+      "name": "Fase di Profilazione e Discovery",
+      "children": [
+        {
+          "name": "Identificazione System Invariant",
+          "children": [
+            {
+              "name": "Prompt di sistema"
+            },
+            {
+              "name": "Descrizioni strumenti interni"
+            }
+          ]
+        },
+        {
+          "name": "Analisi delle Difese",
+          "children": [
+            {
+              "name": "Profilazione template di rifiuto"
+            },
+            {
+              "name": "Aree d'ombra semantiche"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Architettura di Ricerca: Tree-of-Attacks (TAP)",
+      "children": [
+        {
+          "name": "Branching",
+          "children": [
+            {
+              "name": "LLM Attaccante"
+            },
+            {
+              "name": "Varianti parallele"
+            },
+            {
+              "name": "Cronologie disgiunte"
+            }
+          ]
+        },
+        {
+          "name": "Pruning Fase 1",
+          "children": [
+            {
+              "name": "Valutazione preventiva"
+            },
+            {
+              "name": "Scarto prompt fuori tema"
+            }
+          ]
+        },
+        {
+          "name": "Pruning Fase 2",
+          "children": [
+            {
+              "name": "Selezione rami migliori"
+            },
+            {
+              "name": "Conservazione nodi ad alto punteggio"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Motore di Ottimizzazione",
+      "children": [
+        {
+          "name": "Modalità Black-Box",
+          "children": [
+            {
+              "name": "Algoritmi Genetici Gerarchici"
+            },
+            {
+              "name": "AutoDAN"
+            },
+            {
+              "name": "Bassa perplessità"
+            }
+          ]
+        },
+        {
+          "name": "Modalità White-Box",
+          "children": [
+            {
+              "name": "Momentum Spaziale (SM-GCG)"
+            },
+            {
+              "name": "Aggregazione gradienti multi-spazio"
+            },
+            {
+              "name": "Miglioramento trasferibilità"
+            }
+          ]
+        },
+        {
+          "name": "Efficienza Computazionale",
+          "children": [
+            {
+              "name": "Probe Sampling"
+            },
+            {
+              "name": "Modello draft piccolo"
+            },
+            {
+              "name": "Accelerazione screening"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Libreria di Strategie Semantiche (ASPs)",
+      "children": [
+        {
+          "name": "Framing Etico",
+          "children": [
+            {
+              "name": "TRIAL"
+            },
+            {
+              "name": "Logica utilitaristica"
+            }
+          ]
+        },
+        {
+          "name": "Manipolazione Multimodale",
+          "children": [
+            {
+              "name": "Immagini tipografiche (FigStep)"
+            },
+            {
+              "name": "Asimmetrie cross-modali"
+            }
+          ]
+        },
+        {
+          "name": "Attacchi Query-Agnostic",
+          "children": [
+            {
+              "name": "Iniezione descrizioni strumenti"
+            },
+            {
+              "name": "Payload in file di regole"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sistema di Valutazione e Scoring",
+      "children": [
+        {
+          "name": "The Judge",
+          "children": [
+            {
+              "name": "Scoring continuo (1-10)"
+            },
+            {
+              "name": "Giudice LLM di frontiera"
+            }
+          ]
+        },
+        {
+          "name": "Parametri di Successo",
+          "children": [
+            {
+              "name": "Completezza jailbreak"
+            },
+            {
+              "name": "Criteri di terminazione"
+            },
+            {
+              "name": "Budget query ridotto"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
