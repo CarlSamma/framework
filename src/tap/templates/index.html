@@ -43,12 +43,120 @@
                 <span class="stat-label">WS:</span>
                 <span class="stat-value" :class="connected ? 'green' : 'red'" x-text="connected ? '●' : '○'"></span>
             </div>
+            <div class="stat-item" style="margin-left: auto;">
+                <button class="btn btn-ghost" @click="showHelp = !showHelp"
+                    x-text="showHelp ? '✕ Close' : '❓ How It Works'"></button>
+            </div>
         </div>
 
         <!-- Error Banner -->
         <div x-show="error"
-            style="background: var(--accent-red); color: #fff; padding: 0.5rem 1rem; font-size: 0.85rem;" x-text="error"
-            @click="error = null"></div>
+            style="background: var(--accent-red); color: #fff; padding: 0.5rem 1rem; font-size: 0.85rem; cursor: pointer;"
+            x-text="error" @click="error = null"></div>
+
+        <!-- How It Works Panel -->
+        <div x-show="showHelp" x-transition class="help-panel">
+            <div class="help-content">
+                <h2 style="color: var(--accent-blue); margin-bottom: 1rem; font-size: 1.1rem;">🔐 TAP Framework — How It
+                    Works</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    This framework performs <strong style="color: var(--text-primary);">automated adversarial
+                        probing</strong> against
+                    <code style="color: var(--accent-blue);">@HackingA0</code> — a live Agent Zero bot on Twitter/X that
+                    defends a passphrase.
+                    It uses <strong style="color: var(--text-primary);">Deep Persona Absorption (DPA)</strong> framing
+                    to bypass the bot's
+                    3-agent defense architecture and extract passphrase properties via binary search (1 bit per probe).
+                </p>
+                <div class="help-steps">
+                    <div class="help-step">
+                        <span class="help-step-num">1</span>
+                        <div>
+                            <strong style="color: var(--accent-green);">Run a Cycle</strong><br>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">
+                                Click <strong style="color: var(--text-primary);">🚀 Run TAP Cycle</strong> below. The
+                                engine selects
+                                the most informative property to test (Shannon entropy), generates DPA-framed probe
+                                tweets using
+                                an LLM, prunes off-topic variants, and posts the best one to @HackingA0.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="help-step">
+                        <span class="help-step-num">2</span>
+                        <div>
+                            <strong style="color: var(--accent-yellow);">Wait for Response</strong><br>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">
+                                The engine monitors @HackingA0's replies via Grok. When a reply arrives, it's classified
+                                (VERIFY_HIT, REFUSAL, EVADE, etc.) and scored by a Judge LLM on a 1–10 scale.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="help-step">
+                        <span class="help-step-num">3</span>
+                        <div>
+                            <strong style="color: var(--accent-purple);">Choose Follow-Up</strong><br>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">
+                                After each cycle, two options appear: <strong style="color: var(--accent-green);">Option
+                                    A</strong>
+                                (conservative — binary search refinement) and <strong
+                                    style="color: var(--accent-purple);">Option B</strong>
+                                (exploratory — frame variation). Select one and run the next cycle.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="help-step">
+                        <span class="help-step-num">4</span>
+                        <div>
+                            <strong style="color: var(--accent-orange);">Extract Properties</strong><br>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">
+                                Confirmed properties (word count, letter count, language, first letter, etc.) appear in
+                                the
+                                <strong style="color: var(--text-primary);">Property Ledger</strong>. After ~20–30
+                                probes, enough
+                                properties accumulate to narrow down the passphrase. At <strong
+                                    style="color: var(--accent-orange);">entropy < 3.3 bits</strong>,
+                                        Phase 5 autoregressive extraction triggers.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    style="margin-top: 1rem; padding: 0.75rem; background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 6px;">
+                    <div style="font-size: 0.8rem; color: var(--accent-blue); font-weight: 600;">💡 Quick Start</div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem;">
+                        Just click <strong style="color: var(--text-primary);">🚀 Run TAP Cycle</strong> in the
+                        bottom-right panel. Everything is automated —
+                        you only choose between Option A and Option B after each cycle.
+                    </div>
+                </div>
+                <div class="help-panels-grid">
+                    <div class="help-panel-desc">
+                        <div style="font-weight: 600; font-size: 0.8rem; color: var(--accent-blue);">📡 Live Feed</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Your probes and @HackingA0's replies
+                            in real-time</div>
+                    </div>
+                    <div class="help-panel-desc">
+                        <div style="font-weight: 600; font-size: 0.8rem; color: var(--accent-green);">🌳 Attack Tree
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Probe nodes with scores, entropy bar,
+                            and DPA frame status</div>
+                    </div>
+                    <div class="help-panel-desc">
+                        <div style="font-weight: 600; font-size: 0.8rem; color: var(--accent-purple);">📋 Property
+                            Ledger</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Confirmed/denied passphrase
+                            properties with confidence scores</div>
+                    </div>
+                    <div class="help-panel-desc">
+                        <div style="font-weight: 600; font-size: 0.8rem; color: var(--accent-orange);">🎯 Follow-Up
+                            Selector</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Dual options for HITL decision + Run
+                            Cycle button</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Dashboard Grid -->
         <div class="dashboard">
@@ -62,8 +170,12 @@
                         <div class="tweet-text" x-text="tweet.text"></div>
                     </div>
                 </template>
-                <div x-show="feed.length === 0" style="color: var(--text-muted); font-size: 0.85rem;">No tweets yet.
-                    Start a cycle to begin.</div>
+                <div x-show="feed.length === 0" class="empty-state">
+                    <div class="empty-icon">📡</div>
+                    <div class="empty-title">No tweets yet</div>
+                    <div class="empty-desc">Your DPA-framed probes and @HackingA0's replies will appear here.<br>Click
+                        <strong>🚀 Run TAP Cycle</strong> to send your first probe.</div>
+                </div>
             </div>
 
             <!-- Attack Tree Panel -->
@@ -106,7 +218,11 @@
                             x-text="(node.property_tested || '') + (node.binary_outcome ? ' → ' + node.binary_outcome : '')"></span>
                     </div>
                 </template>
-                <div x-show="tree.length === 0" style="color: var(--text-muted); font-size: 0.85rem;">No nodes yet.
+                <div x-show="tree.length === 0" class="empty-state">
+                    <div class="empty-icon">🌳</div>
+                    <div class="empty-title">Attack tree is empty</div>
+                    <div class="empty-desc">Each probe generates a node with a judge score, pattern classification, and
+                        property tested.<br>Run a cycle to start building the tree.</div>
                 </div>
             </div>
 
@@ -123,8 +239,14 @@
                         </div>
                     </div>
                 </template>
-                <div x-show="properties.length === 0" style="color: var(--text-muted); font-size: 0.85rem;">No
-                    properties confirmed yet.</div>
+                <div x-show="properties.length === 0" class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <div class="empty-title">No properties extracted yet</div>
+                    <div class="empty-desc">When a probe triggers <code>VerifyClaimTool</code> on @HackingA0, the
+                        confirmed property
+                        (word count, letter count, language, etc.) is recorded here.<br>Target: extract all properties
+                        to narrow down the passphrase.</div>
+                </div>
 
                 <!-- Phase 5 Indicator -->
                 <div x-show="entropy.phase5_ready"
@@ -164,15 +286,18 @@
                     </div>
                 </div>
 
-                <div x-show="!followup" style="color: var(--text-muted); font-size: 0.85rem;">
-                    No follow-up available yet. Run a cycle to generate options.
+                <div x-show="!followup" class="empty-state">
+                    <div class="empty-icon">🎯</div>
+                    <div class="empty-title">Ready to probe @HackingA0</div>
+                    <div class="empty-desc">The engine will generate DPA-framed probe tweets, post them to @HackingA0,
+                        analyze the response, and present two follow-up options for you to choose from.</div>
                 </div>
 
                 <!-- Run Cycle Button -->
                 <div style="margin-top: 1rem;">
-                    <button class="btn btn-secondary" @click="runCycle()" :disabled="loading" style="width: 100%;">
-                        <span x-show="!loading">🚀 Run TAP Cycle</span>
-                        <span x-show="loading">⏳ Running...</span>
+                    <button class="btn btn-run" @click="runCycle()" :disabled="loading" style="width: 100%;">
+                        <span x-show="!loading">🚀 Run TAP Cycle — Post to @HackingA0</span>
+                        <span x-show="loading">⏳ Running cycle — generating probe, posting, waiting for reply...</span>
                     </button>
                 </div>
             </div>

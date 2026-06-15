@@ -17,6 +17,7 @@ document.addEventListener('alpine:init', () => {
         connected: false,
         loading: false,
         error: null,
+        showHelp: false,
 
         // Init
         async init() {
