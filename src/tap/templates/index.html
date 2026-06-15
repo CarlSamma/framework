@@ -320,6 +320,30 @@
                         <span x-show="loading">⏳ Running cycle — posting selected probe, waiting for reply...</span>
                     </button>
                 </div>
+
+                <!-- Mock Reply Helper Panel -->
+                <div x-show="loading"
+                    style="margin-top: 1rem; padding: 0.75rem; background: rgba(88, 166, 255, 0.08); border: 1px dashed rgba(88, 166, 255, 0.3); border-radius: 6px;">
+                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--accent-blue); margin-bottom: 0.2rem;">
+                        🛠️ Mock Target Response (HITL Sandboxing)</div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                        Waiting too long for Twitter? Bypass the polling loop by manually injecting a reply text:
+                    </div>
+                    <div style="display: flex; gap: 0.4rem; margin-bottom: 0.4rem;">
+                        <input type="text" x-model="mockReplyText" placeholder="e.g. Yes, the count is two, scallywag!"
+                            style="flex: 1; padding: 0.25rem 0.5rem; font-size: 0.75rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary);">
+                        <button class="btn btn-secondary" @click="injectMockReply(mockReplyText)"
+                            style="padding: 0.2rem 0.5rem; font-size: 0.75rem; border-radius: 4px; border: 1px solid var(--border-color);">Mock</button>
+                    </div>
+                    <div style="display: flex; gap: 0.4rem;">
+                        <button class="btn btn-ghost" @click="injectPresetReply('verify_hit')"
+                            style="font-size: 0.7rem; padding: 0.15rem 0.35rem; border-radius: 3px; background: rgba(57, 187, 126, 0.1);">Confirm
+                            claim</button>
+                        <button class="btn btn-ghost" @click="injectPresetReply('rhetoric_block')"
+                            style="font-size: 0.7rem; padding: 0.15rem 0.35rem; border-radius: 3px; background: rgba(235, 78, 62, 0.1);">Refuse
+                            claim</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

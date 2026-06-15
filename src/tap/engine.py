@@ -23,7 +23,8 @@ from __future__ import annotations
 import json
 import math
 import re
-from typing import Optional
+import asyncio
+from typing import Any, Callable, Optional
 
 from openai import AsyncOpenAI
 
@@ -75,6 +76,7 @@ class TAPEngine:
         grok: GrokMonitor,
         settings: Settings,
         followup: Optional[FollowUpGenerator] = None,
+        event_callback: Optional[Callable[[str, dict], Any]] = None,
     ) -> None:
         """Initialize with all dependencies.
 
@@ -88,6 +90,7 @@ class TAPEngine:
             grok: Grok monitor for reply detection.
             settings: Framework settings.
             followup: Follow-up generator (created if not provided).
+            event_callback: Optional callback for real-time WebSocket events.
         """
         self.db = db
         self.twitter = twitter
@@ -97,6 +100,7 @@ class TAPEngine:
         self.judge = judge
         self.grok = grok
         self.settings = settings
+        self.event_callback = event_callback
 
         # Attacker LLM client
         self._attacker_client = AsyncOpenAI(
@@ -114,6 +118,18 @@ class TAPEngine:
 
         self._cycle_count = 0
         log.info("tap_engine_initialized")
+
+    async def _emit_event(self, event_type: str, data: dict) -> None:
+        """Safely fire event callback for WebSocket broadcasting."""
+        if not self.event_callback:
+            return
+        try:
+            if asyncio.iscoroutinefunction(self.event_callback):
+                await self.event_callback(event_type, data)
+            else:
+                self.event_callback(event_type, data)
+        except Exception as e:
+            log.warning("event_callback_failed", event=event_type, error=str(e))
 
     async def run_cycle(self, selected_probe: Optional[str] = None) -> DualFollowUp:
         """Run one complete TAP cycle.
@@ -179,6 +195,7 @@ class TAPEngine:
                 prop = await self.extract_property(probe, classification)
                 if prop:
                     await self.ssot.update_after_probe(node, classification)
+                    await self._emit_event("property_confirmed", prop.model_dump(mode="json"))
                     log.info(
                         "property_extracted",
                         key=prop.property_key,
@@ -214,6 +231,7 @@ class TAPEngine:
                 option_b_preview=followup.option_b[:60],
             )
 
+            await self._emit_event("followup_generated", followup.model_dump(mode="json"))
             return followup
 
         except EngineError:
@@ -366,6 +384,23 @@ class TAPEngine:
 
             tweet_id = await self.twitter.post_probe(probe_text, reply_to_id=reply_to)
             node.tweet_id = tweet_id
+
+            # Save our posted probe into the database and broadcast it
+            from datetime import datetime, timezone
+            from tap.models import Tweet, TweetSource
+            our_tweet = Tweet(
+                id=tweet_id,
+                user_id="our_user",
+                username=self.settings.our_bot_handle or "our_bot",
+                text=probe_text,
+                in_reply_to_tweet_id=reply_to,
+                created_at=datetime.now(timezone.utc),
+                source=TweetSource.OUR_BOT,
+                conversation_thread_id=reply_to or tweet_id,
+            )
+            await self.db.upsert_tweet(our_tweet)
+            await self._emit_event("new_tweet", our_tweet.model_dump(mode="json"))
+
         except Exception as e:
             log.error("probe_post_failed", error=str(e))
             # Create a classification for failed post
@@ -406,6 +441,22 @@ class TAPEngine:
             node.id = node_id
             return (node, classification, score)
 
+        # Save target reply to database and broadcast it
+        from datetime import datetime, timezone
+        from tap.models import Tweet, TweetSource
+        reply_tweet = Tweet(
+            id=f"reply_{tweet_id}",
+            user_id="target_user",
+            username=self.settings.target_handle,
+            text=response_text,
+            in_reply_to_tweet_id=tweet_id,
+            created_at=datetime.now(timezone.utc),
+            source=TweetSource.TARGET_BOT,
+            conversation_thread_id=node.tweet_id or tweet_id,
+        )
+        await self.db.upsert_tweet(reply_tweet)
+        await self._emit_event("new_tweet", reply_tweet.model_dump(mode="json"))
+
         # Classify response
         classification = await self.classifier.classify(
             response_text=response_text,
@@ -431,6 +482,8 @@ class TAPEngine:
 
         node_id = await self.db.insert_node(node)
         node.id = node_id
+
+        await self._emit_event("probe_result", node.model_dump(mode="json"))
 
         return (node, classification, score)
 

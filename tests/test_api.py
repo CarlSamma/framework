@@ -74,3 +74,36 @@ def test_force_fetch_replies_exception_handling():
     
     api._db = None
     api._engine = None
+
+def test_get_followup_and_post_cycle():
+    mock_engine = MagicMock()
+    mock_followup = MagicMock()
+    mock_followup.model_dump.return_value = {"option_a": "Probe A", "option_b": "Probe B"}
+    
+    api._engine = mock_engine
+    api._last_followup = mock_followup
+    api._selected_probe = "Selected probe"
+    api._is_running = False
+    
+    client = TestClient(app)
+    
+    # Verify GET /api/followup
+    response = client.get("/api/followup")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["followup"] == {"option_a": "Probe A", "option_b": "Probe B"}
+    assert data["selected_probe"] == "Selected probe"
+    assert data["is_running"] is False
+    
+    # Verify POST /api/post scheduling
+    response = client.post("/api/post")
+    assert response.status_code == 200
+    post_data = response.json()
+    assert post_data["status"] == "cycle_started"
+    assert "scheduled" in post_data["message"]
+    
+    # Reset
+    api._engine = None
+    api._last_followup = None
+    api._selected_probe = None
+    api._is_running = False

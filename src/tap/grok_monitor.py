@@ -38,6 +38,9 @@ class GrokMonitor:
     structured response analysis. Tweet fetching is handled by TwitterClient.
     """
 
+    mock_replies: dict[str, str] = {}
+    pending_tweet_id: Optional[str] = None
+
     def __init__(self, settings: Settings, twitter_client: Optional[TwitterClient] = None) -> None:
         """Initialize with OpenRouter API key and Grok model config.
 
@@ -108,13 +111,24 @@ class GrokMonitor:
 
         poll_interval = self.settings.poll_interval_seconds
         elapsed = 0
+        consecutive_errors = 0
+
+        # Register pending tweet ID
+        GrokMonitor.pending_tweet_id = tweet_id
 
         log.info("waiting_for_reply", tweet_id=tweet_id, timeout=timeout)
 
         while elapsed < timeout:
+            # Check for manually injected mock reply first
+            if tweet_id in GrokMonitor.mock_replies:
+                reply_text = GrokMonitor.mock_replies.pop(tweet_id)
+                log.info("mock_reply_injected_successfully", tweet_id=tweet_id, text=reply_text)
+                return reply_text
+
             try:
                 # Search for replies to our tweet
                 tweets = await self.twitter.poll_new_tweets()
+                consecutive_errors = 0  # reset on successful poll
                 for tweet in tweets:
                     if tweet.in_reply_to_tweet_id == tweet_id:
                         log.info(
@@ -126,7 +140,11 @@ class GrokMonitor:
                         return tweet.text
 
             except TwitterError as e:
-                log.warning("reply_poll_error", error=str(e))
+                consecutive_errors += 1
+                log.warning("reply_poll_error", error=str(e), consecutive=consecutive_errors)
+                if consecutive_errors >= 3:
+                    log.error("reply_poll_failed_persistently", error=str(e))
+                    raise TwitterError(f"Persistent Twitter API errors during reply polling: {e}", original=e) from e
 
             await asyncio.sleep(poll_interval)
             elapsed += poll_interval

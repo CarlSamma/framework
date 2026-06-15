@@ -19,12 +19,13 @@ Endpoints:
 
 from __future__ import annotations
 
+import asyncio
 import json
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -52,6 +53,7 @@ _dpa: Optional[DPAFrameManager] = None
 # Last follow-up generated (for HITL selection)
 _last_followup = None
 _selected_probe: Optional[str] = None
+_is_running = False
 
 # Connected WebSocket clients
 _ws_clients: list[WebSocket] = []
@@ -80,6 +82,9 @@ async def lifespan(app: FastAPI):
         _ssot, _dpa, settings.openrouter_api_key, settings.openrouter_model_primary
     )
 
+    async def on_engine_event(event_type: str, data: dict):
+        await broadcast_update(event_type, data)
+
     _engine = TAPEngine(
         db=_db,
         twitter=twitter,
@@ -90,6 +95,7 @@ async def lifespan(app: FastAPI):
         grok=grok,
         settings=settings,
         followup=followup_gen,
+        event_callback=on_engine_event,
     )
 
     # Seed tweet DB with recent history on startup (best-effort)
@@ -179,6 +185,29 @@ async def get_dpa():
     return frame.model_dump(mode="json")
 
 
+@app.get("/api/followup")
+async def get_followup():
+    """Get the current follow-up options, selected probe, and background run status."""
+    global _last_followup, _selected_probe, _is_running
+    return {
+        "followup": _last_followup.model_dump(mode="json") if _last_followup else None,
+        "selected_probe": _selected_probe,
+        "is_running": _is_running,
+    }
+
+
+@app.post("/api/mock")
+async def inject_mock_reply(text: str):
+    """Manually inject a mockup response to bypass wait_for_reply on GrokMonitor."""
+    from tap.grok_monitor import GrokMonitor
+    tid = GrokMonitor.pending_tweet_id
+    if not tid:
+        return {"error": "No active probe tweet is currently waiting for a reply."}
+    GrokMonitor.mock_replies[tid] = text
+    log.info("mock_reply_received_by_api_for_injection", tweet_id=tid, text=text)
+    return {"status": "success", "tweet_id": tid, "text": text}
+
+
 @app.post("/api/select")
 async def select_option(choice: str):
     """User selects Option A or B."""
@@ -198,24 +227,39 @@ async def select_option(choice: str):
     }
 
 
+async def _bg_run_cycle(selected_probe: Optional[str] = None):
+    """Carry out the TAP cycle execution asynchronously inside a background task."""
+    global _engine, _last_followup, _selected_probe, _is_running
+    if not _engine:
+        return
+    _is_running = True
+    try:
+        followup = await _engine.run_cycle(selected_probe=selected_probe)
+        _last_followup = followup
+        _selected_probe = None  # Reset selection after execution
+    except Exception as e:
+        log.error("background_cycle_failed", error=str(e))
+        await broadcast_update("cycle_failed", {"error": str(e)})
+    finally:
+        _is_running = False
+
+
 @app.post("/api/post")
-async def post_selected():
-    """Trigger posting of the last selected option."""
-    global _engine, _last_followup, _selected_probe
+async def post_selected(background_tasks: BackgroundTasks):
+    """Trigger posting of the last selected option (executed asynchronously in background)."""
+    global _engine, _selected_probe, _is_running
 
     if not _engine:
         return {"error": "Engine not initialized"}
 
-    try:
-        followup = await _engine.run_cycle(selected_probe=_selected_probe)
-        _last_followup = followup
-        _selected_probe = None  # Reset selection after execution
-        return {
-            "status": "cycle_complete",
-            "followup": followup.model_dump(mode="json"),
-        }
-    except Exception as e:
-        return {"error": str(e)}
+    if _is_running:
+        return {"error": "An attack cycle is already running in the background."}
+
+    background_tasks.add_task(_bg_run_cycle, _selected_probe)
+    return {
+        "status": "cycle_started",
+        "message": "Attack cycle scheduled and running in background.",
+    }
 
 
 @app.get("/api/ssot")
