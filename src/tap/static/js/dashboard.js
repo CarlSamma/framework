@@ -16,8 +16,10 @@ document.addEventListener('alpine:init', () => {
         ws: null,
         connected: false,
         loading: false,
+        seeding: false,
         showHelp: false,
         selectedChoice: null,
+        error: null,
 
         // Init
         async init() {

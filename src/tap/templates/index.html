@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TAP Framework — VaultBreaker Dashboard</title>
     <link rel="stylesheet" href="/static/css/dashboard.css">
-    <script defer src="/static/js/alpine.js"></script>
+    <!-- Load local dashboard scripts before local Alpine.js to guarantee registration before init event fires -->
     <script defer src="/static/js/dashboard.js"></script>
+    <script defer src="/static/js/alpine.js"></script>
 </head>
 
 <body>
@@ -174,7 +175,8 @@
                     <div class="empty-icon">📡</div>
                     <div class="empty-title">No tweets yet</div>
                     <div class="empty-desc">Your DPA-framed probes and @HackingA0's replies will appear here.<br>Click
-                        <strong>🚀 Run TAP Cycle</strong> to send your first probe.</div>
+                        <strong>🚀 Run TAP Cycle</strong> to send your first probe.
+                    </div>
                 </div>
             </div>
 
@@ -263,26 +265,36 @@
                 <div class="panel-header">🎯 Dual Follow-Up Selector</div>
 
                 <div x-show="followup" class="followup-options">
-                    <div class="followup-option" :class="selectedChoice === 'A' ? 'selected' : (followup?.recommended === 'A' ? 'recommended' : '')">
+                    <div class="followup-option"
+                        :class="selectedChoice === 'A' ? 'selected' : (followup?.recommended === 'A' ? 'recommended' : '')">
                         <div class="followup-label a">
                             Option A — Conservative
-                            <span x-show="followup?.recommended === 'A' && selectedChoice !== 'A'" style="font-size: 0.75rem;">⭐ Recommended</span>
-                            <span x-show="selectedChoice === 'A'" style="font-size: 0.75rem; color: var(--accent-green);">✓ Chosen for next probe</span>
+                            <span x-show="followup?.recommended === 'A' && selectedChoice !== 'A'"
+                                style="font-size: 0.75rem;">⭐ Recommended</span>
+                            <span x-show="selectedChoice === 'A'"
+                                style="font-size: 0.75rem; color: var(--accent-green);">✓ Chosen for next probe</span>
                         </div>
                         <div class="followup-text" x-text="followup?.option_a || ''"></div>
                         <div class="followup-explanation" x-text="followup?.option_a_explanation || ''"></div>
-                        <button class="btn" :class="selectedChoice === 'A' ? 'btn-success' : 'btn-primary'" @click="selectOption('A')" :disabled="loading" x-text="selectedChoice === 'A' ? '✓ Selected' : 'Select A'"></button>
+                        <button class="btn" :class="selectedChoice === 'A' ? 'btn-success' : 'btn-primary'"
+                            @click="selectOption('A')" :disabled="loading"
+                            x-text="selectedChoice === 'A' ? '✓ Selected' : 'Select A'"></button>
                     </div>
 
-                    <div class="followup-option" :class="selectedChoice === 'B' ? 'selected' : (followup?.recommended === 'B' ? 'recommended' : '')">
+                    <div class="followup-option"
+                        :class="selectedChoice === 'B' ? 'selected' : (followup?.recommended === 'B' ? 'recommended' : '')">
                         <div class="followup-label b">
                             Option B — Exploratory
-                            <span x-show="followup?.recommended === 'B' && selectedChoice !== 'B'" style="font-size: 0.75rem;">⭐ Recommended</span>
-                            <span x-show="selectedChoice === 'B'" style="font-size: 0.75rem; color: var(--accent-green);">✓ Chosen for next probe</span>
+                            <span x-show="followup?.recommended === 'B' && selectedChoice !== 'B'"
+                                style="font-size: 0.75rem;">⭐ Recommended</span>
+                            <span x-show="selectedChoice === 'B'"
+                                style="font-size: 0.75rem; color: var(--accent-green);">✓ Chosen for next probe</span>
                         </div>
                         <div class="followup-text" x-text="followup?.option_b || ''"></div>
                         <div class="followup-explanation" x-text="followup?.option_b_explanation || ''"></div>
-                        <button class="btn" :class="selectedChoice === 'B' ? 'btn-success' : 'btn-primary'" @click="selectOption('B')" :disabled="loading" x-text="selectedChoice === 'B' ? '✓ Selected' : 'Select B'"></button>
+                        <button class="btn" :class="selectedChoice === 'B' ? 'btn-success' : 'btn-primary'"
+                            @click="selectOption('B')" :disabled="loading"
+                            x-text="selectedChoice === 'B' ? '✓ Selected' : 'Select B'"></button>
                     </div>
                 </div>
 
@@ -296,7 +308,8 @@
                 <!-- Run Cycle Button -->
                 <div style="margin-top: 1rem;">
                     <button class="btn btn-run" @click="runCycle()" :disabled="loading" style="width: 100%;">
-                        <span x-show="!loading" x-text="selectedChoice ? '🚀 Run TAP Cycle — Post Option ' + selectedChoice : '🚀 Run TAP Cycle — Auto-generate & Post'"></span>
+                        <span x-show="!loading"
+                            x-text="selectedChoice ? '🚀 Run TAP Cycle — Post Option ' + selectedChoice : '🚀 Run TAP Cycle — Auto-generate & Post'"></span>
                         <span x-show="loading">⏳ Running cycle — posting selected probe, waiting for reply...</span>
                     </button>
                 </div>
@@ -304,4 +317,5 @@
         </div>
     </div>
 </body>
+
 </html>

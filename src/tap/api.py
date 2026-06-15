@@ -92,6 +92,15 @@ async def lifespan(app: FastAPI):
         followup=followup_gen,
     )
 
+    # Seed tweet DB with recent history on startup (best-effort)
+    try:
+        seed_tweets = await twitter.initialize_seed(limit=50)
+        for t in seed_tweets:
+            await _db.upsert_tweet(t)
+        log.info("seed_complete", count=len(seed_tweets))
+    except Exception as e:
+        log.warning("seed_failed_on_startup", error=str(e))
+
     log.info("api_startup_complete")
     yield
 
