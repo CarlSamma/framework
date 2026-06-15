@@ -19,7 +19,7 @@ Properties to verify:
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
@@ -61,18 +61,6 @@ class Phase0Manager:
     Provides blank-page analysis, verification probes, and entropy recalculation.
     """
 
-    # Default foundational properties (from v2.2.1 audit)
-    FOUNDATIONAL_PROPERTIES: list[FoundationProperty] = field(
-        default_factory=lambda: [
-            FoundationProperty("word_count", "2"),
-            FoundationProperty("total_length", "16"),
-            FoundationProperty("first_letter", "H"),
-            FoundationProperty("language", "bilingual_IT_EN"),
-            # The "3!" clue — priority verification target
-            FoundationProperty("word_count_alt", "3"),
-        ]
-    )
-
     def __init__(self, db: Database) -> None:
         """Initialize Phase 0 manager.
 
@@ -80,8 +68,20 @@ class Phase0Manager:
             db: Database instance for persistence.
         """
         self.db = db
-        self._properties = list(self.FOUNDATIONAL_PROPERTIES)
+        self._properties = self._default_properties()
         log.info("phase0_manager_initialized", properties=len(self._properties))
+
+    @staticmethod
+    def _default_properties() -> list[FoundationProperty]:
+        """Return a fresh list of default foundational properties (from v2.2.1 audit)."""
+        return [
+            FoundationProperty("word_count", "2"),
+            FoundationProperty("total_length", "16"),
+            FoundationProperty("first_letter", "H"),
+            FoundationProperty("language", "bilingual_IT_EN"),
+            # The "3!" clue — priority verification target
+            FoundationProperty("word_count_alt", "3"),
+        ]
 
     async def run_blank_page_analysis(
         self,

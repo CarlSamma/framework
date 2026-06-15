@@ -97,15 +97,17 @@ class SSOTEngine:
     Provides property tracking, entropy calculation, and JSON export.
     """
 
-    def __init__(self, db: Database, ssot_path: str) -> None:
+    def __init__(self, db: Database, ssot_path: str, target_handle: str = "HackingA0") -> None:
         """Initialize with database and markdown output path.
 
         Args:
             db: Database instance for persistent storage.
             ssot_path: File path for the living markdown document.
+            target_handle: Target Twitter handle for SSOT document header.
         """
         self.db = db
         self.ssot_path = ssot_path
+        self.target_handle = target_handle
         self._new_confirmation_flag = False
         self._env = jinja2.Environment(
             autoescape=False,
@@ -118,13 +120,13 @@ class SSOTEngine:
     ) -> None:
         """Update all SSOT tables and regenerate markdown after a probe result.
 
+        Note: The node has already been inserted by the engine (execute_probe).
+        This method only updates the properties table and regenerates markdown.
+
         Args:
-            node: The TAP node with probe results.
+            node: The TAP node with probe results (already persisted).
             classification: The response classification.
         """
-        # Store the node
-        await self.db.insert_node(node)
-
         # If property confirmed/denied, update properties table
         if classification.property_tested and classification.boolean_result is not None:
             prop = Property(
@@ -268,7 +270,7 @@ class SSOTEngine:
             # Render template
             template = self._env.from_string(_MARKDOWN_TEMPLATE)
             content = template.render(
-                target_handle=self.db.db_path,  # Will be replaced with actual handle
+                target_handle=self.target_handle,
                 timestamp=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
                 confirmed_count=len(properties),
                 entropy=entropy,

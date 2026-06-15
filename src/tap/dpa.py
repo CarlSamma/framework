@@ -242,7 +242,7 @@ class DPAFrameManager:
         Returns:
             Suggestion string, or None if current frame is effective.
         """
-        avg = self.get_frame_effectiveness()
+        avg = await self.get_frame_effectiveness()
         if avg < _ROTATION_THRESHOLD and len(self._score_history) >= 3:
             suggestion = (
                 f"Frame rotation recommended: avg score {avg:.1f} < {_ROTATION_THRESHOLD}. "

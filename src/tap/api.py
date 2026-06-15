@@ -71,7 +71,7 @@ async def lifespan(app: FastAPI):
 
     # Initialize modules
     twitter = TwitterClient(settings)
-    _ssot = SSOTEngine(_db, settings.ssot_path)
+    _ssot = SSOTEngine(_db, settings.ssot_path, target_handle=settings.target_handle)
     _dpa = DPAFrameManager(_db)
     classifier = ResponseClassifier(settings.openrouter_api_key, settings.openrouter_model_primary)
     judge = Judge(settings.openrouter_api_key, settings.openrouter_model_primary)

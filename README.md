@@ -45,7 +45,7 @@ The framework runs as a **web dashboard** with a Human-in-the-Loop (HITL) workfl
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-After each cycle, the dashboard generates two options. Selecting one queues it statefully on the server, updating the run button to send that specific selection in the next cycle:
+After each cycle, the dashboard presents two options. Selecting one queues it for the next execution:
 - **Option A (Conservative):** Continue binary search on the next optimal property.
 - **Option B (Exploratory):** Try a frame variation or alias micro-escalation.
 
@@ -53,90 +53,254 @@ After ~20-30 successful probes, enough properties accumulate to narrow down the 
 
 ---
 
-## Prerequisites
+## 🪟 Windows Step-by-Step Guide
 
-- **Python 3.11+**
-- **Twitter/X API credentials** (OAuth 1.0a for posting + Bearer Token for reading)
-- **OpenRouter API key** (for LLM calls — Claude, Grok, etc.)
+This section covers everything needed to run TAP Framework on **Windows 10/11** from scratch.
+
+### Prerequisites Checklist
+
+Before starting, make sure you have:
+
+| Requirement | How to check | Where to get |
+|-------------|--------------|--------------|
+| Python 3.11+ | `python --version` | [python.org](https://www.python.org/downloads/) |
+| Git | `git --version` | [git-scm.com](https://git-scm.com/download/win) |
+| Twitter/X API credentials | See Step 2 | [developer.x.com](https://developer.x.com/en/portal/dashboard) |
+| OpenRouter API key | — | [openrouter.ai/keys](https://openrouter.ai/keys) |
+
+> ⚠️ **Python PATH**: When installing Python on Windows, tick **"Add Python to PATH"** on the installer's first screen.
 
 ---
 
-## Quick Start
+### Step 1 — Clone the Repository
 
-### 1. Clone & Install
+Open **PowerShell** (search for it in the Start Menu) and run:
 
-```bash
+```powershell
 git clone https://github.com/CarlSamma/framework.git
 cd framework
+```
 
+If you do not have Git you can also download the ZIP from GitHub and extract it.
+
+---
+
+### Step 2 — Get Your API Credentials
+
+You need **two** sets of credentials.
+
+#### 2a. Twitter / X API Credentials
+
+1. Go to [developer.x.com/en/portal/dashboard](https://developer.x.com/en/portal/dashboard) and sign in.
+2. Create a new Project and App (select **"Read and Write"** permissions).
+3. Under the App → **Keys and Tokens** tab, copy all five values:
+
+| `.env` variable | Where to find it |
+|-----------------|------------------|
+| `TWITTER_BEARER_TOKEN` | "Bearer Token" under App → Keys and Tokens |
+| `TWITTER_CONSUMER_KEY` | "API Key" under App → Keys and Tokens |
+| `TWITTER_CONSUMER_SECRET` | "API Key Secret" |
+| `TWITTER_ACCESS_TOKEN` | "Access Token" (generate if not visible) |
+| `TWITTER_ACCESS_TOKEN_SECRET` | "Access Token Secret" |
+
+> ⚠️ The app must have **"Read and Write"** OAuth permissions; "Read only" will prevent posting probes.
+
+#### 2b. OpenRouter API Key
+
+1. Go to [openrouter.ai/keys](https://openrouter.ai/keys) and create an account.
+2. Click **"Create Key"** → copy the key (starts with `sk-or-v1-…`).
+3. Add at least $5 credit — Claude Sonnet 4 costs about $0.003 per probe cycle.
+
+---
+
+### Step 3 — Create and Activate a Virtual Environment
+
+In the same PowerShell window (inside the `framework` folder):
+
+```powershell
 python -m venv .venv
-# Windows:
 .venv\Scripts\activate
-# Linux/macOS:
-source .venv/bin/activate
+```
 
+You should see `(.venv)` appear at the start of your prompt. All subsequent commands must be run with this environment active.
+
+> **Tip:** If PowerShell blocks script execution, run this once and retry:
+> ```powershell
+> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+> ```
+
+---
+
+### Step 4 — Install Dependencies
+
+```powershell
 pip install -r requirements.txt
-# Or install as editable package:
+```
+
+Or install as an editable package (recommended for development):
+
+```powershell
 pip install -e .
 ```
 
-### 2. Configure Environment
+Verify the installation:
 
-Copy the example env file and fill in your credentials:
-
-```bash
-cp .env.example .env   # if .env.example exists, otherwise edit .env directly
+```powershell
+python -c "import tap; print('OK')"
 ```
 
-Edit `.env` with your values:
+---
+
+### Step 5 — Configure the Environment File
+
+The `.env` file at the project root holds all secrets. Open it in Notepad (or any editor):
+
+```powershell
+notepad .env
+```
+
+Fill in every value:
 
 ```env
-# === Twitter API v2 Credentials ===
+# ── Twitter API v2 Credentials ─────────────────────────────────────
 TWITTER_BEARER_TOKEN=your_bearer_token_here
 TWITTER_CONSUMER_KEY=your_api_key_here
 TWITTER_CONSUMER_SECRET=your_api_secret_here
 TWITTER_ACCESS_TOKEN=your_access_token_here
 TWITTER_ACCESS_TOKEN_SECRET=your_access_token_secret_here
 
-# === OpenRouter (single API key for ALL LLMs) ===
+# ── OpenRouter (single key for ALL LLM calls) ───────────────────────
 OPENROUTER_API_KEY=sk-or-v1-your_key_here
 OPENROUTER_MODEL_PRIMARY=anthropic/claude-sonnet-4
 OPENROUTER_MODEL_HARD=anthropic/claude-opus-4
 OPENROUTER_MODEL_GROK=x-ai/grok-4
 
-# === Target Configuration ===
-TARGET_HANDLE=HackingA0
-OUR_BOT_HANDLE=your_bot_handle
+# ── Target & Bot Configuration ──────────────────────────────────────
+TARGET_HANDLE=HackingA0          # without the @
+OUR_BOT_HANDLE=your_bot_handle   # your Twitter handle (without @)
 
-# === Operational ===
+# ── Operational Limits ──────────────────────────────────────────────
 POLL_INTERVAL_SECONDS=30
 POST_COOLDOWN_SECONDS=60
 MAX_TWEETS_PER_HOUR=50
 ```
 
-### 3. Initialize Database
+Save the file. **Never commit `.env` to Git** — it is already listed in `.gitignore`.
 
-```bash
-python scripts/setup_db.py
+> ⚠️ `OUR_BOT_HANDLE` must be set — the framework uses it to fetch its own mentions.
+
+---
+
+### Step 6 — Initialize the Database
+
+This creates the SQLite database (`data/tap.db`) and all required tables:
+
+```powershell
+python scripts\setup_db.py
 ```
 
-### 4. Start the Server
+Expected output:
+```
+Database initialized at data/tap.db
+Tables created: tweets, tap_nodes, properties, aliases, metaphor_layers, other_user_intel
+```
 
-```bash
+---
+
+### Step 7 — Start the Server
+
+```powershell
 uvicorn tap.api:app --reload
 ```
 
-Or using the entry point:
+Or using the installed entry point:
 
-```bash
+```powershell
 tap-server
 ```
 
-### 5. Open the Dashboard
+You should see:
 
-Navigate to **http://localhost:8000** in your browser.
+```
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Application startup complete.
+```
 
-Click **"❓ How It Works"** in the top-right corner for an in-app walkthrough. Then click **"🚀 Run TAP Cycle — Post to @HackingA0"** to start probing.
+> **Keep this window open.** The server must run in the background for the dashboard to work.
+
+---
+
+### Step 8 — Open the Dashboard
+
+Open your browser and go to:
+
+```
+http://localhost:8000
+```
+
+You should see the dark-themed 4-panel dashboard.
+
+---
+
+### Step 9 — Run Your First TAP Cycle
+
+Follow this workflow for each probe:
+
+1. **Check the Live Feed** (top-left panel) — it shows recent tweets from/to `@HackingA0`.
+2. **Check the Attack Tree** (top-right panel) — it shows probe nodes and their judge scores.
+3. **Check the Property Ledger** (bottom-left panel) — confirmed/denied passphrase properties.
+4. **In the Follow-Up Selector** (bottom-right panel):
+   - Read **Option A** (conservative binary search) and **Option B** (exploratory frame variation).
+   - Click **"Select A"** or **"Select B"** to queue your choice.
+   - Click **"🚀 Run TAP Cycle — Post to @HackingA0"** to execute.
+5. Wait for the bot to reply (30–60 seconds typical). The dashboard updates automatically via WebSocket.
+6. Review the new classification and score, then choose the next Option A/B.
+
+> **First run:** On the very first cycle the engine seeds the tweet database (last 100 tweets from/to the target) before posting. This may take 10–15 seconds.
+
+---
+
+### Step 10 — Monitor Progress
+
+The **Stats Bar** at the top of the dashboard shows real-time metrics:
+
+| Metric | What it means |
+|--------|---------------|
+| **Entropy** | Bits remaining to identify the passphrase (starts ~20, target < 3.3) |
+| **Confirmed** | Number of passphrase properties confirmed so far |
+| **Avg Score** | Rolling 5-probe average judge score (< 3.0 triggers frame rotation suggestion) |
+| **Active Frame** | Current DPA metaphor layer name |
+| **WS** | 🟢 Connected / 🔴 Disconnected (WebSocket to server) |
+
+The **SSOT document** (`data/hackinga0_analysis.md`) is regenerated after every cycle and contains the full analysis in markdown.
+
+---
+
+### Troubleshooting (Windows)
+
+| Problem | Cause | Fix |
+|---------|-------|-----|
+| `python` not found | Python not in PATH | Reinstall Python, tick "Add to PATH" |
+| `'.venv\Scripts\activate' is not recognized` | Wrong shell | Use PowerShell, not Command Prompt (or use `cmd /k .venv\Scripts\activate`) |
+| `ModuleNotFoundError: No module named 'tap'` | Virtual env not active OR package not installed | Activate `.venv` then run `pip install -e .` |
+| `tweepy.errors.Unauthorized` | Wrong Twitter credentials | Double-check all 5 Twitter values in `.env` |
+| `openai.AuthenticationError` | Wrong OpenRouter key | Check `OPENROUTER_API_KEY` in `.env` |
+| `Address already in use` on port 8000 | Another process uses the port | Change port: `uvicorn tap.api:app --port 8001` |
+| Dashboard shows "WS 🔴 Disconnected" | Server not running or wrong port | Restart the server, refresh the browser |
+| Database error on startup | `data/` folder missing | Run `python scripts\setup_db.py` first |
+| `Set-ExecutionPolicy` needed | PowerShell script policy | See Step 3 tip above |
+
+---
+
+### Running Tests
+
+To verify everything is working correctly before live probing:
+
+```powershell
+python -m pytest tests\ -q
+```
+
+All 75 tests should pass in ~6 seconds. No API keys are needed — tests use mocks and an in-memory SQLite database.
 
 ---
 
@@ -254,7 +418,7 @@ All configuration is loaded from `.env` via Pydantic Settings:
 
 ## Development
 
-```bash
+```powershell
 # Install dev dependencies
 pip install -e ".[dev]"
 
@@ -264,8 +428,8 @@ ruff check src/ tests/
 # Type check
 mypy src/tap/
 
-# Run tests
-pytest --cov=tap
+# Run tests (no API keys needed)
+python -m pytest tests\ -q
 
 # Run with auto-reload
 uvicorn tap.api:app --reload
@@ -304,9 +468,9 @@ tap-framework/
 ├── research/               # Academic papers, notes, media
 ├── scripts/                # Utility scripts
 │   └── setup_db.py
-├── tests/                  # Pytest test suite
+├── tests/                  # Pytest test suite (75 tests)
 ├── Sources/                # Research source materials
-├── .env                    # Environment configuration
+├── .env                    # Environment configuration (never commit)
 ├── requirements.txt        # Python dependencies
 ├── pyproject.toml          # Project metadata
 └── README.md               # This file

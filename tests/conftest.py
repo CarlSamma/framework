@@ -68,7 +68,7 @@ async def db(tmp_path) -> Database:
 @pytest_asyncio.fixture
 async def ssot(db, tmp_path) -> SSOTEngine:
     """SSOT engine with test database."""
-    return SSOTEngine(db, str(tmp_path / "test_ssot.md"))
+    return SSOTEngine(db, str(tmp_path / "test_ssot.md"), target_handle="HackingA0")
 
 
 @pytest_asyncio.fixture

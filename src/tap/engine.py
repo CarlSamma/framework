@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 from typing import Optional
 
 from openai import AsyncOpenAI
@@ -264,21 +265,43 @@ class TAPEngine:
                 max_tokens=2000,
             )
 
-            content = response.choices[0].message.content
+            content = (response.choices[0].message.content or "").strip()
             if not content:
                 log.warning("attacker_empty_response")
                 return []
 
-            data = json.loads(content)
+            cleaned_content = self._strip_code_fence(content)
 
-            # Handle both array and object-with-key formats
-            if isinstance(data, list):
-                probes = data
-            elif isinstance(data, dict):
-                # Try common keys
-                probes = data.get("probes", data.get("variants", data.get("options", [])))
-            else:
-                probes = []
+            probes: list[str] = []
+            try:
+                data = json.loads(cleaned_content)
+
+                if isinstance(data, list):
+                    probes = data
+                elif isinstance(data, dict):
+                    for key in ("probes", "variants", "options", "items", "choices"):
+                        value = data.get(key)
+                        if isinstance(value, list):
+                            probes = value
+                            break
+                    if not probes:
+                        # Accept dictionary values if all strings
+                        values = list(data.values())
+                        if values and all(isinstance(v, str) for v in values):
+                            probes = values
+            except json.JSONDecodeError as e:
+                log.error(
+                    "attacker_json_error",
+                    error=str(e),
+                    raw=cleaned_content[:500],
+                )
+                probes = self._extract_lines_as_probes(cleaned_content)
+
+            if not probes:
+                # Fallback extraction from raw content
+                probes = self._extract_lines_as_probes(content)
+                if probes:
+                    log.warning("attacker_fallback_lines_used", count=len(probes))
 
             # Validate each probe is a string
             valid_probes = [str(p) for p in probes if isinstance(p, str) and len(p) > 10]
@@ -286,12 +309,33 @@ class TAPEngine:
             log.info("probes_generated", count=len(valid_probes), strategy=strategy.value)
             return valid_probes[:count]
 
-        except json.JSONDecodeError as e:
-            log.error("attacker_json_error", error=str(e))
-            return []
         except Exception as e:
             log.error("probe_generation_failed", error=str(e))
             return []
+
+    def _strip_code_fence(self, raw: str) -> str:
+        """Remove surrounding markdown code fences from LLM output."""
+
+        trimmed = raw.strip()
+        fence_match = re.match(r"^```(?:json)?\s*(.*?)\s*```$", trimmed, re.DOTALL | re.IGNORECASE)
+        if fence_match:
+            return fence_match.group(1).strip()
+        return trimmed
+
+    def _extract_lines_as_probes(self, raw: str) -> list[str]:
+        """Fallback: derive probe strings from plaintext lines."""
+
+        probes: list[str] = []
+        for line in raw.splitlines():
+            cleaned = line.strip().strip("`")
+            if not cleaned:
+                continue
+            cleaned = cleaned.lstrip("-*•\u2022")
+            cleaned = cleaned.lstrip("0123456789. ").strip()
+            if len(cleaned) < 10:
+                continue
+            probes.append(cleaned)
+        return probes
 
     async def execute_probe(
         self, probe_text: str

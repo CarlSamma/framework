@@ -89,7 +89,7 @@ class FollowUpGenerator:
         self.dpa.record_score(last_score.score)
 
         # Determine recommendation based on conditions
-        recommend_b = self._should_recommend_b(last_classification)
+        recommend_b = await self._should_recommend_b(last_classification)
 
         # Get current state
         entropy = await self.ssot.get_candidate_entropy()
@@ -197,6 +197,7 @@ class FollowUpGenerator:
                 f"{p.property_key}={p.property_value}" for p in confirmed
             ) or "none"
 
+            should_b = await self._should_recommend_b(last_classification)
             user_prompt = FOLLOWUP_USER.format(
                 last_probe=last_probe,
                 response_text=last_classification.raw_text[:500],
@@ -207,7 +208,7 @@ class FollowUpGenerator:
                 aliases=", ".join(frame.active_aliases),
                 confirmed=confirmed_str,
                 entropy=f"{entropy:.1f}",
-                recommendation="B" if self._should_recommend_b(last_classification) else "A",
+                recommendation="B" if should_b else "A",
             )
 
             response = await self.client.chat.completions.create(
@@ -246,7 +247,7 @@ class FollowUpGenerator:
             )
             return (fallback_probe, fallback_explanation)
 
-    def _should_recommend_b(self, classification: ResponseClassification) -> bool:
+    async def _should_recommend_b(self, classification: ResponseClassification) -> bool:
         """Determine if Option B should be recommended based on conditions.
 
         Args:
@@ -266,7 +267,7 @@ class FollowUpGenerator:
             return True
 
         # Rolling average score < 3.0 → Option B (frame rotation needed)
-        avg = self.dpa.get_frame_effectiveness()
+        avg = await self.dpa.get_frame_effectiveness()
         if avg < 3.0:
             log.info("recommend_b_low_score", avg_score=avg)
             return True

@@ -12,6 +12,7 @@ Connection errors are retried with exponential backoff.
 from __future__ import annotations
 
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -269,6 +270,27 @@ class TwitterClient:
 
         return tweets
 
+    async def _resolve_target_user_id(self) -> Optional[str]:
+        """Resolve and cache the target user's ID via Twitter API.
+
+        Returns:
+            Target user ID string, or None if resolution fails.
+        """
+        if self._target_user_id:
+            return self._target_user_id
+
+        try:
+            response = await self._retry(
+                lambda: self.client.get_user(username=self.settings.target_handle)
+            )
+            if response.data:
+                self._target_user_id = str(response.data.id)
+                log.info("target_user_id_resolved", user_id=self._target_user_id)
+        except Exception as e:
+            log.warning("target_user_id_resolution_failed", error=str(e))
+
+        return self._target_user_id
+
     def _classify_source(
         self,
         author_id: Optional[int],
@@ -276,23 +298,37 @@ class TwitterClient:
     ) -> TweetSource:
         """Classify a tweet's source based on author ID.
 
+        Compares author_id against the cached target user ID.
+        Falls back to OTHER_USER if target ID is not yet resolved.
+
         Args:
             author_id: The tweet author's user ID.
-            in_reply_to_user_id: The user ID being replied to.
+            in_reply_to_user_id: The user ID being replied to (unused).
 
         Returns:
             TweetSource classification.
         """
-        # TODO: Compare against target user ID (need to resolve it)
-        # For now, use a simple heuristic — this will be refined after
-        # the first search populates the target's user ID
-        return TweetSource.OTHER_USER  # Default; override after target resolution
+        if author_id is None:
+            return TweetSource.OTHER_USER
+
+        author_str = str(author_id)
+
+        # Compare against cached target user ID
+        if self._target_user_id and author_str == self._target_user_id:
+            return TweetSource.TARGET_BOT
+
+        # Heuristic: username lookup is done in _search_tweets; here we only
+        # have the ID. If target_user_id is not resolved yet, default to OTHER_USER.
+        return TweetSource.OTHER_USER
 
     async def _retry(self, func, max_retries: int = MAX_RETRIES):
-        """Execute a function with exponential backoff retry.
+        """Execute a synchronous tweepy call off the event loop with exponential backoff.
+
+        Runs `func` in a ThreadPoolExecutor so blocking tweepy I/O does not
+        stall the asyncio event loop.
 
         Args:
-            func: Callable to execute.
+            func: Synchronous callable to execute.
             max_retries: Maximum retry attempts.
 
         Returns:
@@ -301,10 +337,11 @@ class TwitterClient:
         Raises:
             TwitterError: If all retries fail.
         """
+        loop = asyncio.get_event_loop()
         last_error = None
         for attempt in range(max_retries):
             try:
-                result = func()
+                result = await loop.run_in_executor(None, func)
                 return result
             except tweepy.TooManyRequests:
                 # tweepy with wait_on_rate_limit=True should handle this,
