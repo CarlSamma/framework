@@ -196,6 +196,18 @@ async def get_followup():
     }
 
 
+@app.get("/api/status")
+async def get_status():
+    """Return real-time cycle execution status for UI state restoration on reconnect."""
+    global _is_running
+    return {
+        "is_running": _is_running,
+        "pending_tweet_id": GrokMonitor.pending_tweet_id,
+        "has_followup": _last_followup is not None,
+        "selected_probe": _selected_probe,
+    }
+
+
 @app.post("/api/mock")
 async def inject_mock_reply(text: str):
     """Manually inject a mockup response to bypass wait_for_reply on GrokMonitor."""
@@ -302,8 +314,11 @@ async def force_fetch_replies():
         tweets = await _engine.twitter.initialize_seed(limit=50)
         added_count = 0
         for t in tweets:
+            exists = await _db.tweet_exists(t.id)
             await _db.upsert_tweet(t)
-            added_count += 1
+            if not exists:
+                added_count += 1
+                await broadcast_update("new_tweet", t.model_dump(mode="json"))
 
         log.info("manually_forced_fetch_complete", count=added_count)
         return {"status": "success", "count": added_count}

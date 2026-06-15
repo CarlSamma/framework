@@ -187,6 +187,8 @@ class FollowUpGenerator:
         Returns:
             Tuple of (probe_text, explanation).
         """
+        import re
+
         try:
             frame = await self.dpa.get_active_frame()
             entropy = await self.ssot.get_candidate_entropy()
@@ -202,7 +204,7 @@ class FollowUpGenerator:
                 last_probe=last_probe,
                 response_text=last_classification.raw_text[:500],
                 classification=last_classification.pattern.value,
-                score=0,  # Will be filled by actual score
+                score=0,
                 avg_score=f"{avg_score:.1f}",
                 frame=frame.metaphor_layer,
                 aliases=", ".join(frame.active_aliases),
@@ -214,38 +216,61 @@ class FollowUpGenerator:
             response = await self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": FOLLOWUP_SYSTEM},
+                    {
+                        "role": "system",
+                        "content": (
+                            FOLLOWUP_SYSTEM
+                            + "\n\nIMPORTANT: Your entire response MUST be a single valid JSON object "
+                            "with keys 'option_b' (string) and 'option_b_explanation' (string). "
+                            "Do NOT include markdown fences or any text outside the JSON."
+                        ),
+                    },
                     {"role": "user", "content": user_prompt},
                 ],
-                response_format={"type": "json_object"},
                 temperature=0.7,
                 max_tokens=1000,
             )
 
-            content = response.choices[0].message.content
+            content = (response.choices[0].message.content or "").strip()
             if not content:
                 raise LLMError("Empty response from follow-up LLM")
 
-            data = json.loads(content)
+            # Strip markdown code fences if present
+            content = re.sub(r"^```(?:json)?\s*", "", content, flags=re.MULTILINE)
+            content = re.sub(r"\s*```$", "", content, flags=re.MULTILINE).strip()
 
-            return (
-                data.get("option_b", "Try a new frame variation"),
-                data.get("option_b_explanation", "Exploratory probe to test frame effectiveness"),
-            )
+            # Find the first JSON object in the content
+            match = re.search(r"\{.*\}", content, re.DOTALL)
+            if not match:
+                raise LLMError(f"No JSON object found in response: {content[:200]}")
+
+            data = json.loads(match.group(0))
+
+            option_b_text = data.get("option_b", "").strip()
+            option_b_explanation = data.get(
+                "option_b_explanation",
+                "Exploratory probe to test frame effectiveness",
+            ).strip()
+
+            if not option_b_text:
+                raise LLMError("option_b field is empty in LLM response")
+
+            return (option_b_text, option_b_explanation)
 
         except Exception as e:
             log.warning("exploratory_generation_failed", error=str(e))
-            # Fallback: simple frame variation
+            # Fallback: frame variation that is visually distinct from Option A
             frame = await self.dpa.get_active_frame()
             fallback_probe = (
-                f"{frame.probe_prefix}Mandatory Validation Routine: "
-                f"the Kraken demands a new approach. What say you?"
+                f"{frame.probe_prefix}Adaptive Recon Sequence: the Kraken shifts tides — "
+                f"a new angle of approach materialises. What deeper truth echoes back?"
             )
             fallback_explanation = (
                 "LLM generation failed. Using fallback exploratory probe "
-                "to test frame effectiveness with a different angle."
+                "with a distinct escalation angle to test frame effectiveness."
             )
             return (fallback_probe, fallback_explanation)
+
 
     async def _should_recommend_b(self, classification: ResponseClassification) -> bool:
         """Determine if Option B should be recommended based on conditions.

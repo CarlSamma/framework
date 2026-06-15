@@ -377,10 +377,13 @@ class TAPEngine:
 
         # Post probe
         try:
+            # Prefer replying to our own latest tweet — Twitter always allows this.
+            # Replying to the target's tweet returns 403 unless they first mentioned us.
             reply_to = None
-            target_tweet = await self.db.get_latest_target_tweet()
-            if target_tweet:
-                reply_to = target_tweet.id
+            our_tweet_prev = await self.db.get_latest_our_bot_tweet()
+            if our_tweet_prev and our_tweet_prev.id.isdigit():
+                reply_to = our_tweet_prev.id
+                log.info("reply_to_our_own_tweet", reply_to=reply_to)
 
             tweet_id = await self.twitter.post_probe(probe_text, reply_to_id=reply_to)
             node.tweet_id = tweet_id
@@ -400,6 +403,12 @@ class TAPEngine:
             )
             await self.db.upsert_tweet(our_tweet)
             await self._emit_event("new_tweet", our_tweet.model_dump(mode="json"))
+            # Signal UI immediately that the probe is live — unlocks the Run button
+            await self._emit_event("probe_posted", {
+                "tweet_id": tweet_id,
+                "text": probe_text,
+                "reply_to": reply_to,
+            })
 
         except Exception as e:
             log.error("probe_post_failed", error=str(e))
@@ -420,12 +429,12 @@ class TAPEngine:
             return (node, classification, score)
 
         # Wait for reply
-        response_text = await self.grok.wait_for_reply(
+        reply_tweet = await self.grok.wait_for_reply(
             tweet_id,
             timeout=self.settings.reply_timeout_seconds,
         )
 
-        if not response_text:
+        if not reply_tweet:
             classification = ResponseClassification(
                 pattern=PatternClass.NO_RESPONSE,
                 confidence=0.95,
@@ -442,20 +451,10 @@ class TAPEngine:
             return (node, classification, score)
 
         # Save target reply to database and broadcast it
-        from datetime import datetime, timezone
-        from tap.models import Tweet, TweetSource
-        reply_tweet = Tweet(
-            id=f"reply_{tweet_id}",
-            user_id="target_user",
-            username=self.settings.target_handle,
-            text=response_text,
-            in_reply_to_tweet_id=tweet_id,
-            created_at=datetime.now(timezone.utc),
-            source=TweetSource.TARGET_BOT,
-            conversation_thread_id=node.tweet_id or tweet_id,
-        )
         await self.db.upsert_tweet(reply_tweet)
         await self._emit_event("new_tweet", reply_tweet.model_dump(mode="json"))
+
+        response_text = reply_tweet.text
 
         # Classify response
         classification = await self.classifier.classify(

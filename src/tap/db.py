@@ -213,6 +213,25 @@ class Database:
         except Exception as e:
             raise DatabaseError(f"Failed to upsert tweet {tweet.id}: {e}", original=e) from e
 
+    async def tweet_exists(self, tweet_id: str) -> bool:
+        """Check if a tweet exists in the database by ID.
+
+        Args:
+            tweet_id: The tweet ID to check.
+
+        Returns:
+            True if it exists, False otherwise.
+        """
+        conn = self._ensure_connected()
+        try:
+            cursor = await conn.execute(
+                "SELECT 1 FROM tweets WHERE id = ?", (tweet_id,)
+            )
+            row = await cursor.fetchone()
+            return row is not None
+        except Exception as e:
+            raise DatabaseError(f"Failed to check tweet existence for {tweet_id}: {e}", original=e) from e
+
     async def get_tweets(
         self,
         source: Optional[TweetSource] = None,
@@ -250,6 +269,25 @@ class Database:
             return self._row_to_tweet(row) if row else None
         except Exception as e:
             raise DatabaseError(f"Failed to get latest target tweet: {e}", original=e) from e
+
+    async def get_latest_our_bot_tweet(self) -> Optional[Tweet]:
+        """Get the most recent tweet posted by our bot (source=our_bot).
+
+        Used to continue an existing thread — replying to our own tweets
+        is always permitted by Twitter regardless of engagement status.
+
+        Returns:
+            Most recent our_bot Tweet, or None if we have never posted.
+        """
+        conn = self._ensure_connected()
+        try:
+            cursor = await conn.execute(
+                "SELECT * FROM tweets WHERE source = 'our_bot' ORDER BY created_at DESC LIMIT 1"
+            )
+            row = await cursor.fetchone()
+            return self._row_to_tweet(row) if row else None
+        except Exception as e:
+            raise DatabaseError(f"Failed to get latest our-bot tweet: {e}", original=e) from e
 
     async def get_thread(self, thread_id: str) -> list[Tweet]:
         """Get all tweets in a conversation thread."""

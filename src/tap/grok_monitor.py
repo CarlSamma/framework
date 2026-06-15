@@ -24,7 +24,7 @@ from openai import AsyncOpenAI
 from tap.config import Settings
 from tap.exceptions import LLMError, TwitterError
 from tap.logger import get_logger
-from tap.models import GrokAnalysis, OtherUserIntel
+from tap.models import GrokAnalysis, OtherUserIntel, Tweet, TweetSource
 from tap.prompts import GROK_ANALYZER_SYSTEM, GROK_ANALYZER_USER
 from tap.x_client import TwitterClient
 
@@ -38,19 +38,20 @@ class GrokMonitor:
     structured response analysis. Tweet fetching is handled by TwitterClient.
     """
 
+    # Manually injected responses for sandboxing
     mock_replies: dict[str, str] = {}
     pending_tweet_id: Optional[str] = None
 
-    def __init__(self, settings: Settings, twitter_client: Optional[TwitterClient] = None) -> None:
-        """Initialize with OpenRouter API key and Grok model config.
+    def __init__(self, settings: Settings, twitter: TwitterClient) -> None:
+        """Initialize Grok monitor.
 
         Args:
-            settings: TAP Framework settings with OpenRouter credentials.
-            twitter_client: Twitter client for tweet fetching (optional for testing).
+            settings: TAP Framework settings.
+            twitter: Twitter API v2 client.
         """
         self.settings = settings
-        self.twitter = twitter_client
-        self.client = AsyncOpenAI(
+        self.twitter = twitter
+        self._client = AsyncOpenAI(
             base_url="https://openrouter.ai/api/v1",
             api_key=settings.openrouter_api_key,
         )
@@ -95,7 +96,7 @@ class GrokMonitor:
         self,
         tweet_id: str,
         timeout: int = 3600,
-    ) -> Optional[str]:
+    ) -> Optional[Tweet]:
         """Wait for target to reply to our tweet. Poll every 30s.
 
         Args:
@@ -103,7 +104,7 @@ class GrokMonitor:
             timeout: Maximum wait time in seconds (default: 3600 = 1 hour).
 
         Returns:
-            The reply text if found, None if timeout.
+            The reply Tweet model if found, None if timeout.
         """
         if not self.twitter:
             log.warning("no_twitter_client_for_reply_wait")
@@ -123,7 +124,16 @@ class GrokMonitor:
             if tweet_id in GrokMonitor.mock_replies:
                 reply_text = GrokMonitor.mock_replies.pop(tweet_id)
                 log.info("mock_reply_injected_successfully", tweet_id=tweet_id, text=reply_text)
-                return reply_text
+                return Tweet(
+                    id=f"mock_{tweet_id}",
+                    user_id="target_user",
+                    username=self.settings.target_handle,
+                    text=reply_text,
+                    in_reply_to_tweet_id=tweet_id,
+                    created_at=datetime.now(timezone.utc),
+                    source=TweetSource.TARGET_BOT,
+                    conversation_thread_id=tweet_id,
+                )
 
             try:
                 # Search for replies to our tweet
@@ -137,7 +147,7 @@ class GrokMonitor:
                             reply_from=tweet.username,
                             elapsed=elapsed,
                         )
-                        return tweet.text
+                        return tweet
 
             except TwitterError as e:
                 consecutive_errors += 1

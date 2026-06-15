@@ -139,7 +139,7 @@ pip install -r requirements.txt
 
 Or install as an editable package (recommended for development):
 
-```powershell
+```powershell **ottimo**
 pip install -e .
 ```
 

@@ -15,7 +15,9 @@ document.addEventListener('alpine:init', () => {
         followup: null,
         ws: null,
         connected: false,
-        loading: false,
+        loading: false,       // true only during LLM generation + posting (a few seconds)
+        awaitingReply: false, // true while waiting for @HackingA0 to reply (up to 1h)
+        pendingTweetId: null, // tweet ID of the live probe
         seeding: false,
         fetching: false,
         showHelp: false,
@@ -27,9 +29,24 @@ document.addEventListener('alpine:init', () => {
         async init() {
             await this.refreshAll();
             await this.fetchFollowup();
+            await this.restoreStatus();   // restore awaitingReply if server already mid-cycle
             this.connectWebSocket();
             // Auto-refresh every 30 seconds
             setInterval(() => this.refreshAll(), 30000);
+        },
+
+        // Restore state on page load (in case user reloaded mid-cycle)
+        async restoreStatus() {
+            try {
+                const s = await this.api('/api/status');
+                if (s.is_running && s.pending_tweet_id) {
+                    this.awaitingReply = true;
+                    this.pendingTweetId = s.pending_tweet_id;
+                    this.loading = false;
+                }
+            } catch (e) {
+                console.warn('[Status] Could not restore status:', e);
+            }
         },
 
         // WebSocket
@@ -40,6 +57,8 @@ document.addEventListener('alpine:init', () => {
             this.ws.onopen = () => {
                 this.connected = true;
                 console.log('[WS] Connected');
+                // Re-sync server state whenever we (re)connect
+                this.restoreStatus();
             };
 
             this.ws.onmessage = (event) => {
@@ -76,27 +95,45 @@ document.addEventListener('alpine:init', () => {
                         this.feed.unshift(msg.data);
                     }
                     break;
+
+                case 'probe_posted':
+                    // Probe is live on Twitter — unlock button immediately
+                    this.loading = false;
+                    this.awaitingReply = true;
+                    this.pendingTweetId = msg.data.tweet_id;
+                    console.log('[Probe] Posted live, tweet_id:', msg.data.tweet_id);
+                    break;
+
                 case 'probe_result':
                     if (!this.tree.some(n => n.id === msg.data.id || n.tweet_id === msg.data.tweet_id)) {
                         this.tree.unshift(msg.data);
                     }
                     this.refreshAll();
                     break;
+
                 case 'property_confirmed':
                     if (!this.properties.some(p => p.property_key === msg.data.property_key)) {
                         this.properties.push(msg.data);
                     }
                     break;
+
                 case 'followup_generated':
+                    // Reply received + followup ready — clear wait state, show options
                     this.followup = msg.data;
                     this.selectedChoice = null;
                     this.loading = false;
+                    this.awaitingReply = false;
+                    this.pendingTweetId = null;
                     this.refreshAll();
                     break;
+
                 case 'cycle_failed':
                     this.error = `Attack cycle failed: ${msg.data.error}`;
                     this.loading = false;
+                    this.awaitingReply = false;
+                    this.pendingTweetId = null;
                     break;
+
                 default:
                     console.log('[WS] Unknown event:', msg.event);
             }
@@ -107,9 +144,7 @@ document.addEventListener('alpine:init', () => {
             try {
                 const data = await this.api('/api/followup');
                 this.followup = data.followup;
-                if (data.is_running) {
-                    this.loading = true;
-                }
+                // Never set loading=true here — restoreStatus handles awaitingReply
                 if (data.selected_probe && data.followup) {
                     if (data.selected_probe === data.followup.option_a) {
                         this.selectedChoice = 'A';
@@ -150,7 +185,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         async selectOption(choice) {
-            this.loading = true;
+            // No loading spinner needed — just a quick API call
             try {
                 const result = await this.api(`/api/select?choice=${choice}`, { method: 'POST' });
                 if (result.error) {
@@ -160,25 +195,24 @@ document.addEventListener('alpine:init', () => {
                 }
             } catch (e) {
                 this.error = e.message;
-            } finally {
-                this.loading = false;
             }
         },
 
         async runCycle() {
+            // Guard: don't fire if already generating/posting
+            if (this.loading) return;
             this.loading = true;
             this.error = null;
+            this.followup = null;
+            this.selectedChoice = null;
             try {
                 const result = await this.api('/api/post', { method: 'POST' });
                 if (result.error) {
                     this.error = result.error;
                     this.loading = false;
-                } else {
-                    // Start is asynchronous! Wait for followup_generated over WebSocket
-                    this.followup = null;
-                    this.selectedChoice = null;
-                    console.log('[Cycle] Started cycle in background...');
                 }
+                // On success: loading stays true only until probe_posted WS event (~3s)
+                // Then awaitingReply=true takes over (button re-enabled)
             } catch (e) {
                 this.error = e.message;
                 this.loading = false;

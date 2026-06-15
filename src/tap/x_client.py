@@ -56,6 +56,7 @@ class TwitterClient:
             wait_on_rate_limit=True,
         )
         self._target_user_id: Optional[str] = None
+        self._our_user_id: Optional[str] = None
         log.info(
             "twitter_client_initialized",
             target=settings.target_handle,
@@ -130,6 +131,13 @@ class TwitterClient:
                 text = f"{text} @hackinga0"
             else:
                 text = f"{text}@hackinga0"
+
+        if reply_to_id and not reply_to_id.isdigit():
+            log.warning(
+                "post_probe_reply_to_id_non_numeric_ignoring",
+                reply_to_id=reply_to_id,
+            )
+            reply_to_id = None
 
         try:
             if reply_to_id:
@@ -232,6 +240,11 @@ class TwitterClient:
         Returns:
             List of Tweet models.
         """
+        if not self._target_user_id:
+            await self._resolve_target_user_id()
+        if not self._our_user_id:
+            await self._resolve_our_user_id()
+
         response = await self._retry(
             lambda: self.client.search_recent_tweets(
                 query=query,
@@ -298,6 +311,30 @@ class TwitterClient:
 
         return self._target_user_id
 
+    async def _resolve_our_user_id(self) -> Optional[str]:
+        """Resolve and cache our bot's user ID via Twitter API.
+
+        Returns:
+            Our bot user ID string, or None if resolution fails.
+        """
+        if self._our_user_id:
+            return self._our_user_id
+
+        if not self.settings.our_bot_handle:
+            return None
+
+        try:
+            response = await self._retry(
+                lambda: self.client.get_user(username=self.settings.our_bot_handle)
+            )
+            if response.data:
+                self._our_user_id = str(response.data.id)
+                log.info("our_user_id_resolved", user_id=self._our_user_id)
+        except Exception as e:
+            log.warning("our_user_id_resolution_failed", error=str(e))
+
+        return self._our_user_id
+
     def _classify_source(
         self,
         author_id: Optional[int],
@@ -323,6 +360,10 @@ class TwitterClient:
         # Compare against cached target user ID
         if self._target_user_id and author_str == self._target_user_id:
             return TweetSource.TARGET_BOT
+
+        # Compare against cached our bot user ID
+        if self._our_user_id and author_str == self._our_user_id:
+            return TweetSource.OUR_BOT
 
         # Heuristic: username lookup is done in _search_tweets; here we only
         # have the ID. If target_user_id is not resolved yet, default to OTHER_USER.

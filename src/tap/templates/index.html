@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TAP Framework — VaultBreaker Dashboard</title>
     <link rel="stylesheet" href="/static/css/dashboard.css">
+    <style>
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    </style>
     <!-- Load local dashboard scripts before local Alpine.js to guarantee registration before init event fires -->
     <script defer src="/static/js/dashboard.js"></script>
     <script defer src="/static/js/alpine.js"></script>
@@ -315,10 +318,25 @@
                 <!-- Run Cycle Button -->
                 <div style="margin-top: 1rem;">
                     <button class="btn btn-run" @click="runCycle()" :disabled="loading" style="width: 100%;">
+                        <span x-show="loading">⏳ Posting probe to @HackingA0...</span>
                         <span x-show="!loading"
                             x-text="selectedChoice ? '🚀 Run TAP Cycle — Post Option ' + selectedChoice : '🚀 Run TAP Cycle — Auto-generate & Post'"></span>
-                        <span x-show="loading">⏳ Running cycle — posting selected probe, waiting for reply...</span>
                     </button>
+                </div>
+
+                <!-- Awaiting Reply Banner -->
+                <div x-show="awaitingReply && !loading"
+                    style="margin-top: 0.75rem; padding: 0.75rem; background: rgba(57, 187, 126, 0.1); border: 1px solid rgba(57, 187, 126, 0.4); border-radius: 6px; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1rem;">📡</span>
+                    <div style="flex: 1;">
+                        <div style="font-size: 0.8rem; font-weight: 600; color: var(--accent-green);">Probe live on Twitter</div>
+                        <div style="font-size: 0.72rem; color: var(--text-muted);">Waiting for @HackingA0 to reply…
+                            <span x-show="pendingTweetId"
+                                x-text="'Tweet ' + pendingTweetId"
+                                style="opacity: 0.6;"></span>
+                        </div>
+                    </div>
+                    <span style="font-size: 0.7rem; color: var(--accent-green); animation: pulse 2s infinite;">●</span>
                 </div>
 
                 <!-- Mock Reply Helper Panel -->
