@@ -51,6 +51,7 @@ _dpa: Optional[DPAFrameManager] = None
 
 # Last follow-up generated (for HITL selection)
 _last_followup = None
+_selected_probe: Optional[str] = None
 
 # Connected WebSocket clients
 _ws_clients: list[WebSocket] = []
@@ -172,7 +173,7 @@ async def get_dpa():
 @app.post("/api/select")
 async def select_option(choice: str):
     """User selects Option A or B."""
-    global _last_followup
+    global _last_followup, _selected_probe
 
     if not _last_followup:
         return {"error": "No follow-up available. Run a cycle first."}
@@ -180,10 +181,10 @@ async def select_option(choice: str):
     if choice not in ("A", "B"):
         return {"error": "Invalid choice. Must be 'A' or 'B'."}
 
-    selected = _last_followup.option_a if choice == "A" else _last_followup.option_b
+    _selected_probe = _last_followup.option_a if choice == "A" else _last_followup.option_b
     return {
         "choice": choice,
-        "probe_text": selected,
+        "probe_text": _selected_probe,
         "ready_to_post": True,
     }
 
@@ -191,11 +192,15 @@ async def select_option(choice: str):
 @app.post("/api/post")
 async def post_selected():
     """Trigger posting of the last selected option."""
+    global _engine, _last_followup, _selected_probe
+
     if not _engine:
         return {"error": "Engine not initialized"}
 
     try:
-        followup = await _engine.run_cycle()
+        followup = await _engine.run_cycle(selected_probe=_selected_probe)
+        _last_followup = followup
+        _selected_probe = None  # Reset selection after execution
         return {
             "status": "cycle_complete",
             "followup": followup.model_dump(mode="json"),

@@ -16,8 +16,8 @@ document.addEventListener('alpine:init', () => {
         ws: null,
         connected: false,
         loading: false,
-        error: null,
         showHelp: false,
+        selectedChoice: null,
 
         // Init
         async init() {
@@ -114,11 +114,11 @@ document.addEventListener('alpine:init', () => {
         async selectOption(choice) {
             this.loading = true;
             try {
-                const result = await this.api(`/api/select?choice=${choice}`);
+                const result = await this.api(`/api/select?choice=${choice}`, { method: 'POST' });
                 if (result.error) {
                     this.error = result.error;
                 } else {
-                    alert(`Selected Option ${choice}:\n\n${result.probe_text}`);
+                    this.selectedChoice = choice;
                 }
             } catch (e) {
                 this.error = e.message;
@@ -136,6 +136,7 @@ document.addEventListener('alpine:init', () => {
                     this.error = result.error;
                 } else {
                     this.followup = result.followup;
+                    this.selectedChoice = null;
                     await this.refreshAll();
                 }
             } catch (e) {

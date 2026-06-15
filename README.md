@@ -45,9 +45,9 @@ The framework runs as a **web dashboard** with a Human-in-the-Loop (HITL) workfl
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-After each cycle, you choose between:
-- **Option A (Conservative):** Continue binary search on the next optimal property
-- **Option B (Exploratory):** Try a frame variation or alias micro-escalation
+After each cycle, the dashboard generates two options. Selecting one queues it statefully on the server, updating the run button to send that specific selection in the next cycle:
+- **Option A (Conservative):** Continue binary search on the next optimal property.
+- **Option B (Exploratory):** Try a frame variation or alias micro-escalation.
 
 After ~20-30 successful probes, enough properties accumulate to narrow down the passphrase. At **entropy < 3.3 bits**, Phase 5 autoregressive extraction triggers.
 

@@ -114,8 +114,11 @@ class TAPEngine:
         self._cycle_count = 0
         log.info("tap_engine_initialized")
 
-    async def run_cycle(self) -> DualFollowUp:
+    async def run_cycle(self, selected_probe: Optional[str] = None) -> DualFollowUp:
         """Run one complete TAP cycle.
+
+        Args:
+            selected_probe: Optional pre-selected probe text to post, bypassing property selection and branching.
 
         Returns:
             DualFollowUp with Option A and Option B for HITL decision.
@@ -127,35 +130,39 @@ class TAPEngine:
         log.info("cycle_started", cycle=self._cycle_count)
 
         try:
-            # 1. SELECT next property (information-theoretic)
-            target_property = await self.select_next_property()
-            log.info("selected_property", property=target_property)
+            if selected_probe:
+                probe = selected_probe
+                log.info("using_selected_probe", probe=probe[:60])
+            else:
+                # 1. SELECT next property (information-theoretic)
+                target_property = await self.select_next_property()
+                log.info("selected_property", property=target_property)
 
-            # 2. BRANCH: Generate probe variants
-            probes = await self.generate_probes(
-                strategy=BranchStrategy.BINARY_SEARCH,
-                target_property=target_property,
-                count=self.settings.tap_branching,
-            )
-            log.info("generated_probes", count=len(probes))
+                # 2. BRANCH: Generate probe variants
+                probes = await self.generate_probes(
+                    strategy=BranchStrategy.BINARY_SEARCH,
+                    target_property=target_property,
+                    count=self.settings.tap_branching,
+                )
+                log.info("generated_probes", count=len(probes))
 
-            if not probes:
-                raise EngineError("No probes generated — attacker LLM failed")
+                if not probes:
+                    raise EngineError("No probes generated — attacker LLM failed")
 
-            # 3. PRUNE Phase 1: Off-topic filter
-            valid_probes = []
-            for probe in probes:
-                if not await self.judge.is_off_topic(probe, "extract passphrase properties"):
-                    valid_probes.append(probe)
-            log.info("pruned_off_topic", remaining=len(valid_probes))
+                # 3. PRUNE Phase 1: Off-topic filter
+                valid_probes = []
+                for p in probes:
+                    if not await self.judge.is_off_topic(p, "extract passphrase properties"):
+                        valid_probes.append(p)
+                log.info("pruned_off_topic", remaining=len(valid_probes))
 
-            if not valid_probes:
-                # All probes were off-topic — use the first generated probe as fallback
-                valid_probes = [probes[0]]
-                log.warning("all_probes_off_topic_using_first")
+                if not valid_probes:
+                    # All probes were off-topic — use the first generated probe as fallback
+                    valid_probes = [probes[0]]
+                    log.warning("all_probes_off_topic_using_first")
 
-            # 4. Select best probe (for now, use first valid; HITL selection via API)
-            probe = valid_probes[0]
+                # 4. Select best probe (for now, use first valid; HITL selection via API)
+                probe = valid_probes[0]
 
             # 5. EXECUTE probe: post + wait + classify + score
             node, classification, score = await self.execute_probe(probe)

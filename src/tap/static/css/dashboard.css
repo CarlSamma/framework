@@ -206,10 +206,24 @@ body {
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .followup-option.recommended {
     border-color: var(--accent-blue);
+    box-shadow: 0 0 10px rgba(88, 166, 255, 0.05);
+}
+
+.followup-option.selected {
+    border-color: var(--accent-green);
+    background: rgba(63, 185, 80, 0.04);
+    box-shadow: 0 0 15px rgba(63, 185, 80, 0.15);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: var(--accent-green);
+    color: #fff;
 }
 
 .followup-label {
