@@ -245,6 +245,29 @@ async def get_entropy():
     return await _engine.get_engine_status()
 
 
+@app.post("/api/fetch")
+async def force_fetch_replies():
+    """Manually force fetching and saving of new replies/tweets from/to @HackingA0."""
+    global _db, _engine
+
+    if not _engine or not _db:
+        return {"error": "Engine or Database not initialized"}
+
+    try:
+        # Fetch the latest tweets using initialize_seed (which search to:HackingA0 OR from:HackingA0)
+        tweets = await _engine.twitter.initialize_seed(limit=50)
+        added_count = 0
+        for t in tweets:
+            await _db.upsert_tweet(t)
+            added_count += 1
+
+        log.info("manually_forced_fetch_complete", count=added_count)
+        return {"status": "success", "count": added_count}
+    except Exception as e:
+        log.error("manually_forced_fetch_failed", error=str(e))
+        return {"error": str(e)}
+
+
 @app.get("/", response_class=HTMLResponse)
 async def root():
     """Serve the dashboard HTML."""

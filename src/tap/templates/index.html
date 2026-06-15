@@ -163,7 +163,14 @@
         <div class="dashboard">
             <!-- Live Feed Panel -->
             <div class="panel feed-panel">
-                <div class="panel-header">📡 Live Feed</div>
+                <div class="panel-header">
+                    <span>📡 Live Feed</span>
+                    <button class="btn btn-secondary" @click="fetchReplies()" :disabled="fetching"
+                        style="font-size: 0.75rem; padding: 0.25rem 0.6rem; text-transform: none; letter-spacing: normal;">
+                        <span x-show="!fetching">🔄 Fetch Replies</span>
+                        <span x-show="fetching">⏳ Fetching...</span>
+                    </button>
+                </div>
                 <template x-for="tweet in feed" :key="tweet.id">
                     <div class="tweet-item">
                         <span class="tweet-user" x-text="'@' + tweet.username"></span>

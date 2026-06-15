@@ -17,6 +17,7 @@ document.addEventListener('alpine:init', () => {
         connected: false,
         loading: false,
         seeding: false,
+        fetching: false,
         showHelp: false,
         selectedChoice: null,
         error: null,
@@ -145,6 +146,24 @@ document.addEventListener('alpine:init', () => {
                 this.error = e.message;
             } finally {
                 this.loading = false;
+            }
+        },
+
+        async fetchReplies() {
+            this.fetching = true;
+            this.error = null;
+            try {
+                const result = await this.api('/api/fetch', { method: 'POST' });
+                if (result.error) {
+                    this.error = result.error;
+                } else {
+                    console.log(`[Fetch] Completed: fetched/upserted ${result.count} tweets`);
+                    await this.refreshAll();
+                }
+            } catch (e) {
+                this.error = e.message;
+            } finally {
+                this.fetching = false;
             }
         },
 
