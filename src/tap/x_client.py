@@ -124,6 +124,13 @@ class TwitterClient:
         Raises:
             TwitterError: If posting fails.
         """
+        # Ensure that every posted message contains "@hackinga0"
+        if "@hackinga0" not in text.lower():
+            if text and not text[-1].isspace():
+                text = f"{text} @hackinga0"
+            else:
+                text = f"{text}@hackinga0"
+
         try:
             if reply_to_id:
                 response = await self._retry(
