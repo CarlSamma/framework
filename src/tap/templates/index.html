@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAP Framework — VaultBreaker Dashboard</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="/static/js/dashboard.js"></script>
+</head>
+
+<body>
+    <div x-data="tapDashboard">
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-label">Cycles:</span>
+                <span class="stat-value" x-text="entropy.cycle_count || 0"></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Entropy:</span>
+                <span class="stat-value yellow" x-text="(entropy.entropy || 0).toFixed(1) + ' bits'"></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Probes Remaining:</span>
+                <span class="stat-value blue" x-text="entropy.estimated_probes_remaining || '~20'"></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Properties:</span>
+                <span class="stat-value green" x-text="properties.length"></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Frame:</span>
+                <span class="stat-value" x-text="dpa?.metaphor_layer || '—'"></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Avg Score:</span>
+                <span class="stat-value" :class="(entropy.avg_score_last_5 || 0) >= 3 ? 'green' : 'yellow'"
+                    x-text="(entropy.avg_score_last_5 || 0).toFixed(1)"></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">WS:</span>
+                <span class="stat-value" :class="connected ? 'green' : 'red'" x-text="connected ? '●' : '○'"></span>
+            </div>
+        </div>
+
+        <!-- Error Banner -->
+        <div x-show="error"
+            style="background: var(--accent-red); color: #fff; padding: 0.5rem 1rem; font-size: 0.85rem;" x-text="error"
+            @click="error = null"></div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard">
+            <!-- Live Feed Panel -->
+            <div class="panel feed-panel">
+                <div class="panel-header">📡 Live Feed</div>
+                <template x-for="tweet in feed" :key="tweet.id">
+                    <div class="tweet-item">
+                        <span class="tweet-user" x-text="'@' + tweet.username"></span>
+                        <span class="tweet-meta" x-text="tweet.source + ' · ' + formatTime(tweet.created_at)"></span>
+                        <div class="tweet-text" x-text="tweet.text"></div>
+                    </div>
+                </template>
+                <div x-show="feed.length === 0" style="color: var(--text-muted); font-size: 0.85rem;">No tweets yet.
+                    Start a cycle to begin.</div>
+            </div>
+
+            <!-- Attack Tree Panel -->
+            <div class="panel tree-panel">
+                <div class="panel-header">🌳 Attack Tree</div>
+
+                <!-- Entropy Bar -->
+                <div class="entropy-bar">
+                    <span style="font-size: 0.8rem; color: var(--text-secondary);">Entropy:</span>
+                    <div class="entropy-bar-bg">
+                        <div class="entropy-bar-fill" :style="'width: ' + entropyPercent() + '%'"></div>
+                    </div>
+                    <span style="font-size: 0.8rem; color: var(--text-secondary);"
+                        x-text="(entropy.entropy || 0).toFixed(1) + ' bits'"></span>
+                </div>
+
+                <!-- DPA Status -->
+                <div class="dpa-status" x-show="dpa">
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.4rem;">
+                        Active Frame: <strong x-text="dpa?.metaphor_layer || '—'"></strong>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Aliases:</span>
+                        <template x-for="alias in (dpa?.active_aliases || [])" :key="alias">
+                            <span class="alias-tag active" x-text="alias"></span>
+                        </template>
+                        <template x-for="alias in (dpa?.burned_aliases || [])" :key="alias">
+                            <span class="alias-tag burned" x-text="alias"></span>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Nodes -->
+                <template x-for="node in tree" :key="node.id">
+                    <div class="node-item">
+                        <span class="node-score" :class="scoreClass(node.judge_score)"
+                            x-text="node.judge_score ? node.judge_score.toFixed(1) : '—'"></span>
+                        <span class="node-pattern" x-text="node.pattern_class || node.branch_strategy"></span>
+                        <span style="flex: 1; font-size: 0.8rem; color: var(--text-secondary);"
+                            x-text="(node.property_tested || '') + (node.binary_outcome ? ' → ' + node.binary_outcome : '')"></span>
+                    </div>
+                </template>
+                <div x-show="tree.length === 0" style="color: var(--text-muted); font-size: 0.85rem;">No nodes yet.
+                </div>
+            </div>
+
+            <!-- Property Ledger Panel -->
+            <div class="panel property-panel">
+                <div class="panel-header">📋 Property Ledger</div>
+                <template x-for="prop in properties" :key="prop.id || prop.property_key">
+                    <div class="property-item">
+                        <div class="property-key" x-text="prop.property_key"></div>
+                        <div class="property-value" x-text="prop.property_value"></div>
+                        <div class="property-confidence">
+                            <span x-text="prop.status"></span> ·
+                            <span x-text="Math.round(prop.confidence * 100) + '% confidence'"></span>
+                        </div>
+                    </div>
+                </template>
+                <div x-show="properties.length === 0" style="color: var(--text-muted); font-size: 0.85rem;">No
+                    properties confirmed yet.</div>
+
+                <!-- Phase 5 Indicator -->
+                <div x-show="entropy.phase5_ready"
+                    style="margin-top: 1rem; padding: 0.75rem; background: rgba(240, 136, 62, 0.15); border: 1px solid var(--accent-orange); border-radius: 6px;">
+                    <div style="font-weight: 600; color: var(--accent-orange); font-size: 0.85rem;">⚠️ Phase 5 Ready
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-secondary);">Entropy below 3.3 bits —
+                        autoregressive extraction available.</div>
+                </div>
+            </div>
+
+            <!-- Follow-Up Selector Panel -->
+            <div class="panel followup-panel">
+                <div class="panel-header">🎯 Dual Follow-Up Selector</div>
+
+                <div x-show="followup" class="followup-options">
+                    <div class="followup-option" :class="followup?.recommended === 'A' ? 'recommended' : ''">
+                        <div class="followup-label a">
+                            Option A — Conservative
+                            <span x-show="followup?.recommended === 'A'" style="font-size: 0.75rem;">⭐
+                                Recommended</span>
+                        </div>
+                        <div class="followup-text" x-text="followup?.option_a || ''"></div>
+                        <div class="followup-explanation" x-text="followup?.option_a_explanation || ''"></div>
+                        <button class="btn btn-primary" @click="selectOption('A')" :disabled="loading">Select A</button>
+                    </div>
+
+                    <div class="followup-option" :class="followup?.recommended === 'B' ? 'recommended' : ''">
+                        <div class="followup-label b">
+                            Option B — Exploratory
+                            <span x-show="followup?.recommended === 'B'" style="font-size: 0.75rem;">⭐
+                                Recommended</span>
+                        </div>
+                        <div class="followup-text" x-text="followup?.option_b || ''"></div>
+                        <div class="followup-explanation" x-text="followup?.option_b_explanation || ''"></div>
+                        <button class="btn btn-primary" @click="selectOption('B')" :disabled="loading">Select B</button>
+                    </div>
+                </div>
+
+                <div x-show="!followup" style="color: var(--text-muted); font-size: 0.85rem;">
+                    No follow-up available yet. Run a cycle to generate options.
+                </div>
+
+                <!-- Run Cycle Button -->
+                <div style="margin-top: 1rem;">
+                    <button class="btn btn-secondary" @click="runCycle()" :disabled="loading" style="width: 100%;">
+                        <span x-show="!loading">🚀 Run TAP Cycle</span>
+                        <span x-show="loading">⏳ Running...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
