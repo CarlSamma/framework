@@ -47,6 +47,12 @@
                 <span class="stat-label">WS:</span>
                 <span class="stat-value" :class="connected ? 'green' : 'red'" x-text="connected ? '●' : '○'"></span>
             </div>
+            <div class="stat-item">
+                <span class="stat-label">Stream:</span>
+                <span class="stat-value" :class="streamConnected ? 'green' : 'yellow'"
+                    x-text="streamConnected ? '⚡ Real-time' : '📡 Polling'"
+                    :title="streamConnected ? 'Activity API stream connected — instant reply detection' : 'Using polling fallback — 30s delay'"></span>
+            </div>
             <div class="stat-item" style="margin-left: auto;">
                 <button class="btn btn-ghost" @click="showHelp = !showHelp"
                     x-text="showHelp ? '✕ Close' : '❓ How It Works'"></button>

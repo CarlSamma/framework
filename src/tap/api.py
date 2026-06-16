@@ -36,6 +36,7 @@ from tap.dpa import DPAFrameManager
 from tap.engine import TAPEngine
 from tap.followup import FollowUpGenerator
 from tap.grok_monitor import GrokMonitor
+from tap.stream_listener import StreamListener
 from tap.judge import Judge
 from tap.logger import get_logger, setup_logging
 from tap.ssot import SSOTEngine
@@ -77,7 +78,10 @@ async def lifespan(app: FastAPI):
     _dpa = DPAFrameManager(_db)
     classifier = ResponseClassifier(settings.openrouter_api_key, settings.openrouter_model_primary)
     judge = Judge(settings.openrouter_api_key, settings.openrouter_model_primary)
-    grok = GrokMonitor(settings, twitter)
+
+    # Initialize stream listener for real-time reply detection
+    stream = StreamListener(settings)
+    grok = GrokMonitor(settings, twitter, stream=stream)
     followup_gen = FollowUpGenerator(
         _ssot, _dpa, settings.openrouter_api_key, settings.openrouter_model_primary
     )
@@ -98,6 +102,18 @@ async def lifespan(app: FastAPI):
         event_callback=on_engine_event,
     )
 
+    # Resolve target user ID and start stream listener
+    try:
+        target_user = await twitter._resolve_target_user_id()
+        if target_user:
+            stream.set_target_user_id(target_user)
+            await stream.start()
+            log.info("stream_listener_started", target_user_id=target_user)
+        else:
+            log.warning("stream_listener_not_started_no_target_user_id")
+    except Exception as e:
+        log.warning("stream_listener_start_failed", error=str(e))
+
     # Seed tweet DB with recent history on startup (best-effort)
     try:
         seed_tweets = await twitter.initialize_seed(limit=50)
@@ -111,6 +127,8 @@ async def lifespan(app: FastAPI):
     yield
 
     # Teardown
+    if stream:
+        await stream.stop()
     if _db:
         await _db.close()
     log.info("api_shutdown_complete")
@@ -199,12 +217,16 @@ async def get_followup():
 @app.get("/api/status")
 async def get_status():
     """Return real-time cycle execution status for UI state restoration on reconnect."""
-    global _is_running
+    global _is_running, _engine
+    stream_connected = False
+    if _engine and hasattr(_engine, 'grok') and _engine.grok.stream:
+        stream_connected = _engine.grok.stream.is_connected
     return {
         "is_running": _is_running,
         "pending_tweet_id": GrokMonitor.pending_tweet_id,
         "has_followup": _last_followup is not None,
         "selected_probe": _selected_probe,
+        "stream_connected": stream_connected,
     }
 
 
