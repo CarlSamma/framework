@@ -208,6 +208,29 @@ async def get_status():
     }
 
 
+@app.post("/api/reset")
+async def force_reset():
+    """Force-reset the engine state when stuck.
+
+    Resets the _is_running flag and clears any pending tweet ID
+    so a new cycle can be started.
+    """
+    global _is_running
+
+    was_running = _is_running
+    _is_running = False
+    GrokMonitor.pending_tweet_id = None
+
+    log.info("force_reset_called", was_running=was_running)
+    await broadcast_update("force_reset", {"was_running": was_running})
+
+    return {
+        "status": "reset",
+        "was_running": was_running,
+        "message": "Engine state reset. You can now start a new cycle.",
+    }
+
+
 @app.post("/api/mock")
 async def inject_mock_reply(text: str):
     """Manually inject a mockup response to bypass wait_for_reply on GrokMonitor."""

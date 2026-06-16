@@ -119,7 +119,8 @@ class GrokMonitor:
 
         log.info("waiting_for_reply", tweet_id=tweet_id, timeout=timeout)
 
-        while elapsed < timeout:
+        try:
+          while elapsed < timeout:
             # Check for manually injected mock reply first
             if tweet_id in GrokMonitor.mock_replies:
                 reply_text = GrokMonitor.mock_replies.pop(tweet_id)
@@ -159,8 +160,11 @@ class GrokMonitor:
             await asyncio.sleep(poll_interval)
             elapsed += poll_interval
 
-        log.warning("reply_timeout", tweet_id=tweet_id, elapsed=elapsed)
-        return None
+          log.warning("reply_timeout", tweet_id=tweet_id, elapsed=elapsed)
+          return None
+        finally:
+          # Always clear pending tweet ID when polling ends (reply found, timeout, or exception)
+          GrokMonitor.pending_tweet_id = None
 
     async def analyze_response(
         self,

@@ -134,6 +134,14 @@ document.addEventListener('alpine:init', () => {
                     this.pendingTweetId = null;
                     break;
 
+                case 'force_reset':
+                    console.log('[WS] Force reset received');
+                    this.loading = false;
+                    this.awaitingReply = false;
+                    this.pendingTweetId = null;
+                    this.error = null;
+                    break;
+
                 default:
                     console.log('[WS] Unknown event:', msg.event);
             }
@@ -247,6 +255,19 @@ document.addEventListener('alpine:init', () => {
                     console.log('[Mock] Injected reply successfully:', text);
                     this.mockReplyText = '';
                 }
+            } catch (e) {
+                this.error = e.message;
+            }
+        },
+
+        async forceReset() {
+            try {
+                const result = await this.api('/api/reset', { method: 'POST' });
+                this.loading = false;
+                this.awaitingReply = false;
+                this.pendingTweetId = null;
+                this.error = null;
+                console.log('[Reset] Engine state reset:', result.message);
             } catch (e) {
                 this.error = e.message;
             }
