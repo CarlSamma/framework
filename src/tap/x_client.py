@@ -1,9 +1,10 @@
 """Module 2: Twitter/X API Client.
 
 Manages Twitter API v2 for seed ingestion, polling, and posting.
-Uses dual OAuth strategy:
+Uses triple OAuth strategy:
 - OAuth 1.0a (consumer_key + access_token): For POSTING tweets/replies
 - OAuth 2.0 Bearer: For search/read endpoints
+- OAuth 2.0 User Token: For Activity API subscriptions and elevated-scoped ops
 
 tweepy handles rate limits automatically via wait_on_rate_limit=True.
 Connection errors are retried with exponential backoff.
@@ -12,16 +13,21 @@ Connection errors are retried with exponential backoff.
 from __future__ import annotations
 
 import asyncio
+import base64
+import hashlib
+import hmac
+import json
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from typing import Optional
 
+import httpx
 import tweepy
 
 from tap.config import Settings
 from tap.exceptions import TwitterError
 from tap.logger import get_logger
-from tap.models import Tweet, TweetSource
+from tap.models import ActivitySubscriptionFilter, Tweet, TweetSource
 
 log = get_logger("x_client")
 
@@ -29,19 +35,26 @@ log = get_logger("x_client")
 MAX_RETRIES = 3
 RETRY_BACKOFF_BASE = 2  # seconds
 
+# X Activity API endpoints
+_ACTIVITY_SUBSCRIPTIONS_URL = "https://api.x.com/2/activity/subscriptions"
+_ACTIVITY_STREAM_URL = "https://api.x.com/2/activity/stream"
+
 
 class TwitterClient:
     """Twitter API v2 client for TAP Framework.
 
-    Uses tweepy.Client with dual OAuth:
+    Uses tweepy.Client with triple OAuth:
     - OAuth 1.0a credentials for write operations (post_tweet, reply)
     - Bearer token for read operations (search, get mentions)
+    - OAuth 2.0 User Token for Activity API subscriptions and elevated ops
 
     Rate limiting is handled automatically by tweepy (wait_on_rate_limit=True).
+    Also provides Activity API subscription management for real-time
+    event-driven monitoring with filter support.
     """
 
     def __init__(self, settings: Settings) -> None:
-        """Initialize with tweepy client using dual OAuth.
+        """Initialize with tweepy client using triple OAuth.
 
         Args:
             settings: TAP Framework settings with Twitter credentials.
@@ -57,9 +70,15 @@ class TwitterClient:
         )
         self._target_user_id: Optional[str] = None
         self._our_user_id: Optional[str] = None
+
+        # OAuth 2.0 User Context client (for Activity API subscriptions)
+        self._oauth2_token: Optional[str] = settings.twitter_oauth2_access_token
+        self._oauth2_http: Optional[httpx.AsyncClient] = None
+
         log.info(
             "twitter_client_initialized",
             target=settings.target_handle,
+            has_oauth2=bool(self._oauth2_token),
         )
 
     async def initialize_seed(self, limit: int = 100) -> list[Tweet]:
@@ -368,6 +387,181 @@ class TwitterClient:
         # Heuristic: username lookup is done in _search_tweets; here we only
         # have the ID. If target_user_id is not resolved yet, default to OTHER_USER.
         return TweetSource.OTHER_USER
+
+    # =========================================================================
+    # Activity API — Subscription Management (OAuth 2.0 User Context)
+    # =========================================================================
+
+    def _get_oauth2_headers(self) -> dict[str, str]:
+        """Get HTTP headers for OAuth 2.0 User Context requests.
+
+        Prefers the OAuth 2.0 User Access Token when available.
+        Falls back to Bearer token for read-only access.
+
+        Returns:
+            Dictionary of HTTP headers.
+        """
+        token = self._oauth2_token or self.settings.twitter_bearer_token
+        return {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        }
+
+    async def create_activity_subscription(
+        self,
+        event_type: str = "post.create",
+        subscription_filter: Optional[ActivitySubscriptionFilter] = None,
+    ) -> dict:
+        """Create an Activity API subscription for real-time event delivery.
+
+        Uses OAuth 2.0 User Context (required for Activity API subscriptions).
+        Supports filtered streams via ActivitySubscriptionFilter.
+
+        Args:
+            event_type: Event type to subscribe to. One of:
+                'post.create', 'post.delete', 'chat.received', 'dm.received'.
+            subscription_filter: Optional filter for keyword/user_id isolation.
+
+        Returns:
+            Subscription response dict from the API.
+
+        Raises:
+            TwitterError: If subscription creation fails.
+        """
+        body: dict = {"event_type": event_type}
+
+        if subscription_filter:
+            filter_dict: dict = {}
+            if subscription_filter.user_ids:
+                filter_dict["user_id"] = (
+                    subscription_filter.user_ids[0]
+                    if len(subscription_filter.user_ids) == 1
+                    else subscription_filter.user_ids
+                )
+            if subscription_filter.keywords:
+                filter_dict["keywords"] = subscription_filter.keywords
+            if filter_dict:
+                body["filter"] = filter_dict
+
+        headers = self._get_oauth2_headers()
+
+        try:
+            async with httpx.AsyncClient(timeout=httpx.Timeout(30)) as client:
+                response = await client.post(
+                    _ACTIVITY_SUBSCRIPTIONS_URL,
+                    headers=headers,
+                    json=body,
+                )
+
+                if response.status_code not in (200, 201):
+                    raise TwitterError(
+                        f"Subscription creation failed: {response.status_code} — {response.text[:200]}",
+                        status_code=response.status_code,
+                    )
+
+                data = response.json()
+                log.info(
+                    "activity_subscription_created",
+                    event_type=event_type,
+                    has_filter=subscription_filter is not None,
+                    response=data,
+                )
+                return data
+
+        except httpx.HTTPError as e:
+            raise TwitterError(
+                f"Activity subscription HTTP error: {e}", original=e
+            ) from e
+
+    async def delete_activity_subscription(self, subscription_id: str) -> bool:
+        """Delete an Activity API subscription.
+
+        Args:
+            subscription_id: The subscription ID to delete.
+
+        Returns:
+            True if deletion was successful.
+
+        Raises:
+            TwitterError: If deletion fails.
+        """
+        headers = self._get_oauth2_headers()
+        url = f"{_ACTIVITY_SUBSCRIPTIONS_URL}/{subscription_id}"
+
+        try:
+            async with httpx.AsyncClient(timeout=httpx.Timeout(30)) as client:
+                response = await client.delete(url, headers=headers)
+
+                if response.status_code not in (200, 204):
+                    raise TwitterError(
+                        f"Subscription deletion failed: {response.status_code} — {response.text[:200]}",
+                        status_code=response.status_code,
+                    )
+
+                log.info("activity_subscription_deleted", subscription_id=subscription_id)
+                return True
+
+        except httpx.HTTPError as e:
+            raise TwitterError(
+                f"Subscription deletion HTTP error: {e}", original=e
+            ) from e
+
+    async def list_activity_subscriptions(self) -> list[dict]:
+        """List all active Activity API subscriptions.
+
+        Returns:
+            List of subscription dicts.
+
+        Raises:
+            TwitterError: If listing fails.
+        """
+        headers = self._get_oauth2_headers()
+
+        try:
+            async with httpx.AsyncClient(timeout=httpx.Timeout(30)) as client:
+                response = await client.get(
+                    _ACTIVITY_SUBSCRIPTIONS_URL,
+                    headers=headers,
+                )
+
+                if response.status_code != 200:
+                    raise TwitterError(
+                        f"Subscription listing failed: {response.status_code} — {response.text[:200]}",
+                        status_code=response.status_code,
+                    )
+
+                data = response.json()
+                subscriptions = data.get("data", [])
+                log.info("activity_subscriptions_listed", count=len(subscriptions))
+                return subscriptions
+
+        except httpx.HTTPError as e:
+            raise TwitterError(
+                f"Subscription listing HTTP error: {e}", original=e
+            ) from e
+
+    async def verify_crc(self, crc_token: str) -> dict:
+        """Generate CRC response token for webhook verification.
+
+        X requires this challenge-response for webhook URL verification.
+        Uses the consumer secret to HMAC-SHA256 sign the crc_token.
+
+        Args:
+            crc_token: The crc_token from the X verification request.
+
+        Returns:
+            Dict with 'response_token' in the format 'sha256=<base64_hash>'.
+        """
+        consumer_secret = self.settings.twitter_consumer_secret
+        sha256_hash = hmac.new(
+            consumer_secret.encode("utf-8"),
+            crc_token.encode("utf-8"),
+            hashlib.sha256,
+        ).digest()
+        response_token = base64.b64encode(sha256_hash).decode("utf-8")
+        result = {"response_token": f"sha256={response_token}"}
+        log.info("crc_verified")
+        return result
 
     async def _retry(self, func, max_retries: int = MAX_RETRIES):
         """Execute a synchronous tweepy call off the event loop with exponential backoff.

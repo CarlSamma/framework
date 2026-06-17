@@ -285,20 +285,41 @@ async def select_option(choice: str):
 
 
 async def _bg_run_cycle(selected_probe: Optional[str] = None):
-    """Carry out the TAP cycle execution asynchronously inside a background task."""
+    """Carry out the TAP cycle execution asynchronously inside a background task.
+
+    Applies a hard timeout to prevent _is_running from getting stuck
+    when the reply detection mechanism (stream or polling) fails.
+    """
     global _engine, _last_followup, _selected_probe, _is_running
     if not _engine:
         return
     _is_running = True
+    await broadcast_update("cycle_status", {"is_running": True})
     try:
-        followup = await _engine.run_cycle(selected_probe=selected_probe)
+        # Hard timeout: 2x the configured reply timeout, capped at 10 minutes
+        # This prevents the UI from getting stuck if stream/polling fails
+        max_cycle_time = min(
+            _engine.settings.reply_timeout_seconds * 2,
+            600,  # 10 minutes max
+        )
+        followup = await asyncio.wait_for(
+            _engine.run_cycle(selected_probe=selected_probe),
+            timeout=max_cycle_time,
+        )
         _last_followup = followup
         _selected_probe = None  # Reset selection after execution
+    except asyncio.TimeoutError:
+        log.error("background_cycle_timeout", timeout_seconds=max_cycle_time)
+        await broadcast_update("cycle_timeout", {
+            "error": f"Cycle timed out after {max_cycle_time}s — no reply received",
+            "hint": "Check if stream listener is connected. Use /api/reset to retry.",
+        })
     except Exception as e:
         log.error("background_cycle_failed", error=str(e))
         await broadcast_update("cycle_failed", {"error": str(e)})
     finally:
         _is_running = False
+        await broadcast_update("cycle_status", {"is_running": False})
 
 
 @app.post("/api/post")
@@ -377,7 +398,8 @@ async def webhook_receiver(event: dict):
     """Webhook receiver for X Activity API events.
 
     When configured as a webhook URL in the X developer portal,
-    this endpoint receives real-time post.create and post.delete events.
+    this endpoint receives real-time post.create, post.delete,
+    chat.received, and dm.received events.
     Events are forwarded to the StreamListener for processing.
 
     Also supports CRC challenge response required by X for webhook verification.
@@ -385,23 +407,17 @@ async def webhook_receiver(event: dict):
     Args:
         event: JSON event payload from X Activity API.
     """
+    global _engine
+
     # Handle CRC challenge (X requires this for webhook verification)
     crc_token = event.get("crc_token")
     if crc_token:
-        import hashlib
-        import hmac
-        import base64
-        consumer_secret = get_settings().twitter_consumer_secret
-        sha256_hash = hmac.new(
-            consumer_secret.encode("utf-8"),
-            crc_token.encode("utf-8"),
-            hashlib.sha256,
-        ).digest()
-        response_token = base64.b64encode(sha256_hash).decode("utf-8")
-        return {"response_token": f"sha256={response_token}"}
+        if _engine and hasattr(_engine, 'twitter'):
+            return await _engine.twitter.verify_crc(crc_token)
+        # Fallback if engine not available
+        return {"error": "Engine not initialized for CRC verification"}
 
     # Forward event to stream listener if available
-    global _engine
     if _engine and hasattr(_engine, 'grok') and _engine.grok.stream:
         stream = _engine.grok.stream
         try:

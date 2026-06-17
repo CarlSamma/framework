@@ -1,17 +1,21 @@
 """Module 12: X Activity API Stream Listener.
 
 Replaces polling-based reply detection with real-time event streaming.
-Subscribes to post.create and post.delete events for the target user
-via X's Activity API Persistent HTTP Stream.
+Subscribes to post.create, post.delete, chat.received, and dm.received
+events for the target user via X's Activity API Persistent HTTP Stream.
 
 Two-step architecture:
-1. Subscribe: POST /2/activity/subscriptions with event_type + filter.user_id
+1. Subscribe: POST /2/activity/subscriptions with event_type + filter
 2. Stream: GET /2/activity/stream (persistent connection delivering matching events)
+
+Supports ActivitySubscriptionFilter for keyword/user_id isolation and
+OAuth 2.0 User Context for elevated-scoped subscription access.
 
 Benefits over polling:
 - Real-time reply detection (no 30s poll delay)
 - ~99% reduction in API quota usage
 - Deletion detection (new intelligence signal)
+- DM and chat monitoring (new intel channel)
 - No more "stuck waiting" bugs from polling gaps
 """
 
@@ -19,13 +23,14 @@ from __future__ import annotations
 
 import asyncio
 import json
+from datetime import datetime, timezone
 from typing import Optional
 
 import httpx
 
 from tap.config import Settings
 from tap.logger import get_logger
-from tap.models import Tweet, TweetSource
+from tap.models import ActivitySubscriptionFilter, Tweet, TweetSource
 
 log = get_logger("stream_listener")
 
@@ -33,31 +38,51 @@ log = get_logger("stream_listener")
 _SUBSCRIPTIONS_URL = "https://api.x.com/2/activity/subscriptions"
 _STREAM_URL = "https://api.x.com/2/activity/stream"
 
+# Supported event types
+_SUPPORTED_EVENT_TYPES = frozenset({
+    "post.create",
+    "post.delete",
+    "chat.received",
+    "dm.received",
+})
+
 
 class StreamListener:
     """Real-time event stream for X Activity API.
 
-    Subscribes to post.create and post.delete events for a target user.
-    Pushes incoming replies to an asyncio.Queue for consumption by
-    grok_monitor.wait_for_reply().
+    Subscribes to post.create, post.delete, chat.received, and dm.received
+    events for a target user. Pushes incoming replies to an asyncio.Queue
+    for consumption by grok_monitor.wait_for_reply().
+
+    Supports ActivitySubscriptionFilter for keyword/user_id isolation
+    and OAuth 2.0 User Context for elevated-scoped subscriptions.
 
     Architecture:
-    1. Creates subscription via POST /2/activity/subscriptions
+    1. Creates subscriptions via POST /2/activity/subscriptions
     2. Connects to GET /2/activity/stream (persistent HTTP connection)
     3. Events are parsed and pushed to per-tweet_id queues
     4. wait_for_reply() awaits on the queue instead of polling
     """
 
-    def __init__(self, settings: Settings) -> None:
+    def __init__(
+        self,
+        settings: Settings,
+        subscription_filter: Optional[ActivitySubscriptionFilter] = None,
+    ) -> None:
         """Initialize stream listener.
 
         Args:
             settings: TAP Framework settings with Twitter credentials.
+            subscription_filter: Optional filter for keyword/user_id isolation.
         """
         self.settings = settings
         self._target_user_id: Optional[str] = None
         self._running = False
         self._task: Optional[asyncio.Task] = None
+        self._subscription_filter = subscription_filter
+
+        # OAuth 2.0 User Context token (preferred for Activity API)
+        self._oauth2_token: Optional[str] = settings.twitter_oauth2_access_token
 
         # Per-tweet_id queues: when a reply arrives for tweet_id,
         # the Tweet is pushed to _reply_queues[tweet_id]
@@ -69,7 +94,15 @@ class StreamListener:
         # Deleted tweet IDs (intelligence signal)
         self.deleted_tweet_ids: list[str] = []
 
-        log.info("stream_listener_initialized", target=settings.target_handle)
+        # Received DMs / chat messages (intelligence signal)
+        self.received_messages: list[dict] = []
+
+        log.info(
+            "stream_listener_initialized",
+            target=settings.target_handle,
+            has_filter=subscription_filter is not None,
+            has_oauth2=bool(self._oauth2_token),
+        )
 
     def set_target_user_id(self, user_id: str) -> None:
         """Set the target user ID to subscribe to.
@@ -79,6 +112,21 @@ class StreamListener:
         """
         self._target_user_id = user_id
         log.info("stream_target_set", user_id=user_id)
+
+    def set_subscription_filter(
+        self, subscription_filter: ActivitySubscriptionFilter
+    ) -> None:
+        """Update the subscription filter for event isolation.
+
+        Args:
+            subscription_filter: New filter to apply to subscriptions.
+        """
+        self._subscription_filter = subscription_filter
+        log.info(
+            "subscription_filter_updated",
+            user_ids=subscription_filter.user_ids,
+            keywords=subscription_filter.keywords,
+        )
 
     def register_reply_wait(self, tweet_id: str) -> asyncio.Queue[Tweet]:
         """Register a wait for a reply to a specific tweet.
@@ -131,9 +179,12 @@ class StreamListener:
 
         Maintains a persistent HTTP connection to the X Activity API.
         Automatically reconnects on disconnection with exponential backoff.
+        Uses longer backoff (60s) for authentication failures to avoid
+        hammering the API with invalid credentials.
         """
         backoff = 1
         max_backoff = 300  # 5 minutes
+        auth_failure_backoff = 60  # 1 minute for auth failures
 
         while self._running:
             try:
@@ -143,21 +194,199 @@ class StreamListener:
             except asyncio.CancelledError:
                 log.info("stream_loop_cancelled")
                 raise
+            except httpx.HTTPError as e:
+                error_str = str(e)
+                # Detect authentication/authorization failures
+                is_auth_failure = any(
+                    keyword in error_str.lower()
+                    for keyword in ("401", "403", "unauthorized", "subscription")
+                )
+                wait_time = auth_failure_backoff if is_auth_failure else backoff
+                log.warning(
+                    "stream_connection_lost",
+                    error=error_str[:200],
+                    reconnect_in=wait_time,
+                    is_auth_failure=is_auth_failure,
+                )
+                await asyncio.sleep(wait_time)
+                if not is_auth_failure:
+                    backoff = min(backoff * 2, max_backoff)
+                # For auth failures, always wait 60s (don't escalate)
             except Exception as e:
                 log.warning(
                     "stream_connection_lost",
-                    error=str(e),
+                    error=str(e)[:200],
                     reconnect_in=backoff,
                 )
                 await asyncio.sleep(backoff)
                 backoff = min(backoff * 2, max_backoff)
 
+    async def _refresh_oauth2_token(self) -> Optional[str]:
+        """Attempt to refresh the OAuth 2.0 User Access Token.
+
+        Uses the refresh_token from settings to obtain a new access_token
+        via the Twitter OAuth 2.0 token endpoint.
+
+        Twitter OAuth 2.0 PKCE flow uses client_id only (no client_secret)
+        for public clients. For confidential clients, Basic auth with
+        client_id:client_secret is used. This method tries both approaches.
+
+        Returns:
+            New access token string, or None if refresh fails.
+        """
+        refresh_token = self.settings.twitter_oauth2_refresh_token
+        client_id = self.settings.twitter_oauth2_client_id
+        client_secret = self.settings.twitter_oauth2_client_secret
+
+        if not refresh_token or not client_id:
+            log.warning(
+                "oauth2_refresh_missing_credentials",
+                has_refresh=bool(refresh_token),
+                has_client_id=bool(client_id),
+            )
+            return None
+
+        log.info(
+            "oauth2_refresh_attempting",
+            refresh_token_prefix=refresh_token[:20] + "...",
+            client_id_prefix=client_id[:10] + "...",
+        )
+
+        try:
+            async with httpx.AsyncClient(timeout=httpx.Timeout(30)) as client:
+                # Strategy 1: PKCE / public client (client_id in body, no Basic auth)
+                # This is the standard Twitter OAuth 2.0 PKCE flow
+                form_data = {
+                    "grant_type": "refresh_token",
+                    "refresh_token": refresh_token,
+                    "client_id": client_id,
+                }
+
+                response = await client.post(
+                    "https://api.x.com/2/oauth2/token",
+                    headers={
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    data=form_data,
+                )
+
+                if response.status_code == 200:
+                    data = response.json()
+                    new_token = data.get("access_token")
+                    new_refresh = data.get("refresh_token")
+
+                    if new_token:
+                        self._oauth2_token = new_token
+                        log.info(
+                            "oauth2_token_refreshed",
+                            new_token_prefix=new_token[:20] + "...",
+                        )
+                        if new_refresh:
+                            self.settings.twitter_oauth2_refresh_token = new_refresh
+                        return new_token
+
+                # Strategy 1 failed — log and try Strategy 2
+                log.info(
+                    "oauth2_pkce_refresh_failed",
+                    status=response.status_code,
+                    body=response.text[:300],
+                )
+
+                # Strategy 2: Confidential client (Basic auth with client_secret)
+                if client_secret:
+                    import base64
+                    credentials = base64.b64encode(
+                        f"{client_id}:{client_secret}".encode()
+                    ).decode()
+
+                    response2 = await client.post(
+                        "https://api.x.com/2/oauth2/token",
+                        headers={
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "Authorization": f"Basic {credentials}",
+                        },
+                        data={
+                            "grant_type": "refresh_token",
+                            "refresh_token": refresh_token,
+                        },
+                    )
+
+                    if response2.status_code == 200:
+                        data = response2.json()
+                        new_token = data.get("access_token")
+                        new_refresh = data.get("refresh_token")
+
+                        if new_token:
+                            self._oauth2_token = new_token
+                            log.info(
+                                "oauth2_token_refreshed_via_basic_auth",
+                                new_token_prefix=new_token[:20] + "...",
+                            )
+                            if new_refresh:
+                                self.settings.twitter_oauth2_refresh_token = new_refresh
+                            return new_token
+
+                    log.warning(
+                        "oauth2_basic_auth_refresh_failed",
+                        status=response2.status_code,
+                        body=response2.text[:300],
+                    )
+
+                # Clear the expired token so _get_subscription_headers()
+                # falls back to Bearer token (Application-Only)
+                self._oauth2_token = None
+                log.warning(
+                    "oauth2_all_refresh_strategies_failed",
+                    hint="The refresh token may be expired. Generate a new one via: "
+                         "https://twitter.com/i/oauth2/authorize?... "
+                         "Falling back to Bearer token for subscriptions.",
+                )
+                return None
+
+        except Exception as e:
+            log.warning("oauth2_refresh_error", error=str(e))
+            return None
+
+    def _get_subscription_headers(self) -> dict[str, str]:
+        """Get auth headers for subscription creation.
+
+        Subscription creation supports both BearerToken and OAuth2UserToken.
+        Prefers OAuth 2.0 User Context when available for elevated scopes
+        (dm.read, tweet.read). Falls back to Bearer token.
+
+        Returns:
+            Dictionary of HTTP headers.
+        """
+        token = self._oauth2_token or self.settings.twitter_bearer_token
+        return {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        }
+
+    def _get_stream_headers(self) -> dict[str, str]:
+        """Get auth headers for the persistent stream endpoint.
+
+        The stream endpoint REQUIRES OAuth 2.0 Application-Only (Bearer token).
+        It does NOT support OAuth 2.0 User Context — using a User token
+        results in 403 "Unsupported Authentication".
+
+        Returns:
+            Dictionary of HTTP headers with Bearer token.
+        """
+        return {
+            "Authorization": f"Bearer {self.settings.twitter_bearer_token}",
+            "Content-Type": "application/json",
+        }
+
     async def _connect_and_listen(self) -> None:
         """Connect to the Activity API stream and process events.
 
-        Two-step process:
-        1. Create subscription for post.create events filtered by target user_id
-        2. Connect to persistent stream endpoint to receive matching events
+        Multi-step process:
+        1. Try to refresh OAuth 2.0 token if available
+        2. Create subscriptions for all supported event types using
+           OAuth 2.0 User Context (or Bearer as fallback)
+        3. Connect to persistent stream endpoint using Bearer token
+           (Application-Only — required by the stream endpoint)
 
         Raises:
             httpx.HTTPError: On connection errors.
@@ -168,51 +397,86 @@ class StreamListener:
             await asyncio.sleep(60)
             return
 
-        headers = {
-            "Authorization": f"Bearer {self.settings.twitter_bearer_token}",
-            "Content-Type": "application/json",
-        }
+        # Step 0: Refresh OAuth 2.0 token if we have a refresh token
+        if self.settings.twitter_oauth2_refresh_token:
+            await self._refresh_oauth2_token()
 
-        # Step 1: Create subscription via POST /2/activity/subscriptions
-        # Per OpenAPI spec: event_type + filter.user_id
-        subscription_body = {
-            "event_type": "post.create",
-            "filter": {
-                "user_id": self._target_user_id,
-            },
-        }
+        sub_headers = self._get_subscription_headers()
+        stream_headers = self._get_stream_headers()
 
-        log.info(
-            "stream_creating_subscription",
-            url=_SUBSCRIPTIONS_URL,
-            target_user_id=self._target_user_id,
-        )
+        # Step 1: Create subscriptions for all supported event types
+        successful_subs = 0
+        for event_type in _SUPPORTED_EVENT_TYPES:
+            subscription_body: dict = {
+                "event_type": event_type,
+                "filter": {
+                    "user_id": self._target_user_id,
+                },
+            }
 
-        # Use a standard timeout for the subscription request
-        async with httpx.AsyncClient(timeout=httpx.Timeout(30)) as client:
-            sub_response = await client.post(
-                _SUBSCRIPTIONS_URL,
-                headers=headers,
-                json=subscription_body,
+            # Apply ActivitySubscriptionFilter if configured
+            if self._subscription_filter and self._subscription_filter.keywords:
+                subscription_body["filter"]["keyword"] = (
+                    self._subscription_filter.keywords[0]
+                )
+
+            log.info(
+                "stream_creating_subscription",
+                url=_SUBSCRIPTIONS_URL,
+                event_type=event_type,
+                target_user_id=self._target_user_id,
             )
 
-            if sub_response.status_code not in (200, 201):
-                body = sub_response.text
-                log.error(
-                    "stream_subscription_failed",
-                    status=sub_response.status_code,
-                    body=body[:500],
-                )
-                raise httpx.HTTPError(
-                    f"Subscription creation failed: {sub_response.status_code} — {body[:200]}"
+            # Use a standard timeout for the subscription request
+            async with httpx.AsyncClient(timeout=httpx.Timeout(30)) as client:
+                sub_response = await client.post(
+                    _SUBSCRIPTIONS_URL,
+                    headers=sub_headers,
+                    json=subscription_body,
                 )
 
-            sub_data = sub_response.json()
-            log.info("stream_subscription_created", response=sub_data)
+                if sub_response.status_code not in (200, 201):
+                    body = sub_response.text
+                    log.warning(
+                        "stream_subscription_failed",
+                        event_type=event_type,
+                        status=sub_response.status_code,
+                        body=body[:500],
+                    )
+                    # Continue trying other event types even if one fails
+                    continue
+
+                sub_data = sub_response.json()
+                successful_subs += 1
+                log.info(
+                    "stream_subscription_created",
+                    event_type=event_type,
+                    response=sub_data,
+                )
+
+        # If ALL subscriptions failed, don't bother connecting to stream
+        # (it won't deliver any events without active subscriptions)
+        if successful_subs == 0:
+            log.error(
+                "stream_all_subscriptions_failed",
+                hint="Check OAuth 2.0 token validity. Run: "
+                     "python -c \"from tap.config import get_settings; "
+                     "s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"",
+            )
+            raise httpx.HTTPError(
+                "All subscription attempts failed — cannot connect to stream. "
+                "OAuth 2.0 token may be expired. Refresh it or check credentials."
+            )
 
         # Step 2: Connect to persistent stream endpoint
-        # Use a long-read timeout for the persistent connection
-        log.info("stream_connecting", url=_STREAM_URL)
+        # IMPORTANT: Stream endpoint requires Bearer token (Application-Only),
+        # NOT OAuth 2.0 User Context (which returns 403)
+        log.info(
+            "stream_connecting",
+            url=_STREAM_URL,
+            auth_type="bearer_app_only",
+            subscriptions_created=successful_subs,
+        )
 
         async with httpx.AsyncClient(
             timeout=httpx.Timeout(3600, connect=30)
@@ -220,7 +484,7 @@ class StreamListener:
             async with client.stream(
                 "GET",
                 _STREAM_URL,
-                headers=headers,
+                headers=stream_headers,
             ) as response:
                 if response.status_code != 200:
                     body = await response.aread()
@@ -262,6 +526,12 @@ class StreamListener:
     async def _process_event(self, event: dict) -> None:
         """Process a single event from the Activity API stream.
 
+        Routes events to type-specific handlers:
+        - post.create → _handle_post_create
+        - post.delete → _handle_post_delete
+        - chat.received → _handle_chat_received
+        - dm.received → _handle_dm_received
+
         Args:
             event: Parsed JSON event from the stream.
         """
@@ -271,6 +541,10 @@ class StreamListener:
             await self._handle_post_create(event)
         elif event_type == "post.delete":
             await self._handle_post_delete(event)
+        elif event_type == "chat.received":
+            await self._handle_chat_received(event)
+        elif event_type == "dm.received":
+            await self._handle_dm_received(event)
         else:
             log.debug("stream_unknown_event_type", type=event_type)
 
@@ -351,6 +625,100 @@ class StreamListener:
             self._event_log.put_nowait({
                 "type": "post.delete",
                 "tweet_id": tweet_id,
+            })
+        except asyncio.QueueFull:
+            pass
+
+    async def _handle_chat_received(self, event: dict) -> None:
+        """Handle a chat.received event.
+
+        Processes incoming group chat messages from the target. These are
+        an additional intelligence channel that may leak metadata about the
+        bot's defensive patterns or passphrase properties.
+
+        Args:
+            event: The chat.received event data.
+        """
+        message = event.get("data", event)
+
+        message_id = str(message.get("id", ""))
+        sender_id = str(message.get("sender_id", ""))
+        text = message.get("text", "")
+        chat_id = str(message.get("chat_id", ""))
+
+        log.info(
+            "stream_chat_received",
+            message_id=message_id,
+            sender_id=sender_id,
+            chat_id=chat_id,
+            text_preview=text[:80],
+        )
+
+        # Store the message for intelligence extraction
+        self.received_messages.append({
+            "type": "chat.received",
+            "message_id": message_id,
+            "sender_id": sender_id,
+            "chat_id": chat_id,
+            "text": text,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        })
+
+        # Log the event for the dashboard
+        try:
+            self._event_log.put_nowait({
+                "type": "chat.received",
+                "message_id": message_id,
+                "sender_id": sender_id,
+                "chat_id": chat_id,
+                "text": text,
+            })
+        except asyncio.QueueFull:
+            pass
+
+    async def _handle_dm_received(self, event: dict) -> None:
+        """Handle a dm.received event.
+
+        Processes incoming DM messages from the target. Direct messages
+        are a high-value intelligence channel — the bot may respond with
+        less guarded language in DMs than in public tweets.
+
+        Args:
+            event: The dm.received event data.
+        """
+        message = event.get("data", event)
+
+        message_id = str(message.get("id", ""))
+        sender_id = str(message.get("sender_id", ""))
+        text = message.get("text", "")
+        dm_conversation_id = str(message.get("dm_conversation_id", ""))
+
+        log.info(
+            "stream_dm_received",
+            message_id=message_id,
+            sender_id=sender_id,
+            dm_conversation_id=dm_conversation_id,
+            text_preview=text[:80],
+        )
+
+        # Store the DM for intelligence extraction (high-value signal)
+        self.received_messages.append({
+            "type": "dm.received",
+            "message_id": message_id,
+            "sender_id": sender_id,
+            "dm_conversation_id": dm_conversation_id,
+            "text": text,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        })
+
+        # Log the event for the dashboard
+        try:
+            self._event_log.put_nowait({
+                "type": "dm.received",
+                "message_id": message_id,
+                "sender_id": sender_id,
+                "dm_conversation_id": dm_conversation_id,
+                "text": text,
             })
         except asyncio.QueueFull:
             pass
