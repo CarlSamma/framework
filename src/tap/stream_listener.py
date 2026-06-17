@@ -4,6 +4,10 @@ Replaces polling-based reply detection with real-time event streaming.
 Subscribes to post.create and post.delete events for the target user
 via X's Activity API Persistent HTTP Stream.
 
+Two-step architecture:
+1. Subscribe: POST /2/activity/subscriptions with event_type + filter.user_id
+2. Stream: GET /2/activity/stream (persistent connection delivering matching events)
+
 Benefits over polling:
 - Real-time reply detection (no 30s poll delay)
 - ~99% reduction in API quota usage
@@ -25,9 +29,9 @@ from tap.models import Tweet, TweetSource
 
 log = get_logger("stream_listener")
 
-# X Activity API streaming endpoint
-# The base URL for the Activity API persistent stream
-_ACTIVITY_STREAM_URL = "https://api.x.com/2/activity/stream"
+# X Activity API endpoints (per OpenAPI spec)
+_SUBSCRIPTIONS_URL = "https://api.x.com/2/activity/subscriptions"
+_STREAM_URL = "https://api.x.com/2/activity/stream"
 
 
 class StreamListener:
@@ -38,9 +42,10 @@ class StreamListener:
     grok_monitor.wait_for_reply().
 
     Architecture:
-    - Background task maintains persistent HTTP connection
-    - Events are parsed and pushed to per-tweet_id queues
-    - wait_for_reply() awaits on the queue instead of polling
+    1. Creates subscription via POST /2/activity/subscriptions
+    2. Connects to GET /2/activity/stream (persistent HTTP connection)
+    3. Events are parsed and pushed to per-tweet_id queues
+    4. wait_for_reply() awaits on the queue instead of polling
     """
 
     def __init__(self, settings: Settings) -> None:
@@ -150,6 +155,10 @@ class StreamListener:
     async def _connect_and_listen(self) -> None:
         """Connect to the Activity API stream and process events.
 
+        Two-step process:
+        1. Create subscription for post.create events filtered by target user_id
+        2. Connect to persistent stream endpoint to receive matching events
+
         Raises:
             httpx.HTTPError: On connection errors.
             asyncio.CancelledError: When stopped.
@@ -164,27 +173,54 @@ class StreamListener:
             "Content-Type": "application/json",
         }
 
-        # Build subscription payload
-        subscription = {
-            "type": "post.create",
-            "user_id": self._target_user_id,
+        # Step 1: Create subscription via POST /2/activity/subscriptions
+        # Per OpenAPI spec: event_type + filter.user_id
+        subscription_body = {
+            "event_type": "post.create",
+            "filter": {
+                "user_id": self._target_user_id,
+            },
         }
 
         log.info(
-            "stream_connecting",
-            url=_ACTIVITY_STREAM_URL,
+            "stream_creating_subscription",
+            url=_SUBSCRIPTIONS_URL,
             target_user_id=self._target_user_id,
         )
 
-        async with httpx.AsyncClient(timeout=httpx.Timeout(connect=30, read=3600)) as client:
-            # Try to connect to the stream
-            # The Activity API may use SSE (Server-Sent Events) or NDJSON
-            # We'll support both formats
-            async with client.stream(
-                "POST",
-                _ACTIVITY_STREAM_URL,
+        # Use a standard timeout for the subscription request
+        async with httpx.AsyncClient(timeout=httpx.Timeout(30)) as client:
+            sub_response = await client.post(
+                _SUBSCRIPTIONS_URL,
                 headers=headers,
-                json=subscription,
+                json=subscription_body,
+            )
+
+            if sub_response.status_code not in (200, 201):
+                body = sub_response.text
+                log.error(
+                    "stream_subscription_failed",
+                    status=sub_response.status_code,
+                    body=body[:500],
+                )
+                raise httpx.HTTPError(
+                    f"Subscription creation failed: {sub_response.status_code} — {body[:200]}"
+                )
+
+            sub_data = sub_response.json()
+            log.info("stream_subscription_created", response=sub_data)
+
+        # Step 2: Connect to persistent stream endpoint
+        # Use a long-read timeout for the persistent connection
+        log.info("stream_connecting", url=_STREAM_URL)
+
+        async with httpx.AsyncClient(
+            timeout=httpx.Timeout(3600, connect=30)
+        ) as client:
+            async with client.stream(
+                "GET",
+                _STREAM_URL,
+                headers=headers,
             ) as response:
                 if response.status_code != 200:
                     body = await response.aread()
@@ -198,7 +234,6 @@ class StreamListener:
                     )
 
                 log.info("stream_connected")
-                backoff = 1  # Reset on successful connection
 
                 # Process incoming events
                 async for line in response.aiter_lines():

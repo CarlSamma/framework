@@ -372,6 +372,47 @@ async def force_fetch_replies():
         return {"error": str(e)}
 
 
+@app.post("/api/webhook")
+async def webhook_receiver(event: dict):
+    """Webhook receiver for X Activity API events.
+
+    When configured as a webhook URL in the X developer portal,
+    this endpoint receives real-time post.create and post.delete events.
+    Events are forwarded to the StreamListener for processing.
+
+    Also supports CRC challenge response required by X for webhook verification.
+
+    Args:
+        event: JSON event payload from X Activity API.
+    """
+    # Handle CRC challenge (X requires this for webhook verification)
+    crc_token = event.get("crc_token")
+    if crc_token:
+        import hashlib
+        import hmac
+        import base64
+        consumer_secret = get_settings().twitter_consumer_secret
+        sha256_hash = hmac.new(
+            consumer_secret.encode("utf-8"),
+            crc_token.encode("utf-8"),
+            hashlib.sha256,
+        ).digest()
+        response_token = base64.b64encode(sha256_hash).decode("utf-8")
+        return {"response_token": f"sha256={response_token}"}
+
+    # Forward event to stream listener if available
+    global _engine
+    if _engine and hasattr(_engine, 'grok') and _engine.grok.stream:
+        stream = _engine.grok.stream
+        try:
+            await stream._process_event(event)
+            log.info("webhook_event_processed", event_type=event.get("type", "unknown"))
+        except Exception as e:
+            log.error("webhook_event_processing_failed", error=str(e))
+
+    return {"status": "ok"}
+
+
 @app.get("/", response_class=HTMLResponse)
 async def root():
     """Serve the dashboard HTML."""
