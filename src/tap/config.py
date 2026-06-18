@@ -50,7 +50,7 @@ class Settings(BaseSettings):
         description="Primary model for routine tasks",
     )
     openrouter_model_hard: str = Field(
-        default="anthropic/claude-opus-4",
+        default="x-ai/grok-4.3",
         description="Hard model for complex reasoning (engine, followup)",
     )
     openrouter_model_grok: str = Field(
