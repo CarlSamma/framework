@@ -20,7 +20,7 @@ import json
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 import httpx
 import tweepy
@@ -372,6 +372,23 @@ class TwitterClient:
     # Internal Helpers
     # =========================================================================
 
+    def _get_reply_to_id(self, tweet_data: Any) -> Optional[str]:
+        """Extract the ID of the tweet being replied to from referenced_tweets.
+
+        In v2 API, the reply-to ID is stored in referenced_tweets with type 'replied_to'.
+
+        Args:
+            tweet_data: The tweepy.Tweet object.
+
+        Returns:
+            The parent tweet ID as a string, or None.
+        """
+        if hasattr(tweet_data, "referenced_tweets") and tweet_data.referenced_tweets:
+            for ref in tweet_data.referenced_tweets:
+                if ref.type == "replied_to":
+                    return str(ref.id)
+        return None
+
     async def get_mentions(self, since_id: Optional[str] = None) -> list[Tweet]:
         """Get mentions of our bot handle.
 
@@ -403,7 +420,8 @@ class TwitterClient:
                     id=user_id,
                     since_id=since_id,
                     max_results=100,
-                    tweet_fields=["created_at", "conversation_id", "in_reply_to_user_id"],
+                    tweet_fields=["created_at", "conversation_id", "in_reply_to_user_id", "referenced_tweets"],
+                    expansions=["author_id", "referenced_tweets.id"],
                 )
             )
 
@@ -417,9 +435,7 @@ class TwitterClient:
                     user_id=str(tweet_data.author_id) if hasattr(tweet_data, "author_id") else "",
                     username="",  # Will be populated if needed
                     text=tweet_data.text,
-                    in_reply_to_tweet_id=str(tweet_data.in_reply_to_tweet_id)
-                    if hasattr(tweet_data, "in_reply_to_tweet_id") and tweet_data.in_reply_to_tweet_id
-                    else None,
+                    in_reply_to_tweet_id=self._get_reply_to_id(tweet_data),
                     created_at=tweet_data.created_at or datetime.now(timezone.utc),
                     source=TweetSource.OTHER_USER,
                     conversation_thread_id=str(tweet_data.conversation_id)
@@ -459,7 +475,7 @@ class TwitterClient:
                 query=query,
                 max_results=max_results,
                 since_id=since_id,
-                tweet_fields=["created_at", "conversation_id", "in_reply_to_user_id"],
+                tweet_fields=["created_at", "conversation_id", "in_reply_to_user_id", "referenced_tweets"],
                 expansions=["author_id", "referenced_tweets.id"],
             )
         )
@@ -486,9 +502,7 @@ class TwitterClient:
                 user_id=str(tweet_data.author_id) if hasattr(tweet_data, "author_id") else "",
                 username=users.get(tweet_data.author_id, "unknown") if hasattr(tweet_data, "author_id") else "unknown",
                 text=tweet_data.text,
-                in_reply_to_tweet_id=str(tweet_data.in_reply_to_tweet_id)
-                if hasattr(tweet_data, "in_reply_to_tweet_id") and tweet_data.in_reply_to_tweet_id
-                else None,
+                in_reply_to_tweet_id=self._get_reply_to_id(tweet_data),
                 created_at=tweet_data.created_at or datetime.now(timezone.utc),
                 source=source,
                 conversation_thread_id=str(tweet_data.conversation_id)

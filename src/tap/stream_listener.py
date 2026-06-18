@@ -437,6 +437,16 @@ class StreamListener:
 
                 if sub_response.status_code not in (200, 201):
                     body = sub_response.text
+                    
+                    # Handle DuplicateSubscription (400) as success
+                    if sub_response.status_code == 400 and "DuplicateSubscription" in body:
+                        log.info(
+                            "stream_subscription_already_exists",
+                            event_type=event_type,
+                        )
+                        successful_subs += 1
+                        continue
+
                     log.warning(
                         "stream_subscription_failed",
                         event_type=event_type,
