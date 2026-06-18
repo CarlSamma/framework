@@ -1,0 +1,164 @@
+{"path": "data/tap.db", "event": "database_initialized", "level": "info", "timestamp": "2026-06-18T09:39:48.649158Z"}
+{"target": "HackingA0", "has_oauth2": true, "pricing_model": "hybrid_2026", "event": "twitter_client_initialized", "level": "info", "timestamp": "2026-06-18T09:39:48.650037Z"}
+{"path": "data/hackinga0_analysis.md", "event": "ssot_initialized", "level": "info", "timestamp": "2026-06-18T09:39:48.650399Z"}
+{"event": "dpa_manager_initialized", "level": "info", "timestamp": "2026-06-18T09:39:48.651167Z"}
+{"model": "anthropic/claude-sonnet-4", "event": "classifier_initialized", "level": "info", "timestamp": "2026-06-18T09:39:48.846953Z"}
+{"model": "anthropic/claude-sonnet-4", "event": "judge_initialized", "level": "info", "timestamp": "2026-06-18T09:39:49.008870Z"}
+{"target": "HackingA0", "has_filter": false, "has_oauth2": true, "event": "stream_listener_initialized", "level": "info", "timestamp": "2026-06-18T09:39:49.010003Z"}
+{"model": "x-ai/grok-4", "event": "grok_monitor_initialized", "level": "info", "timestamp": "2026-06-18T09:39:49.162067Z"}
+{"model": "anthropic/claude-sonnet-4", "event": "followup_generator_initialized", "level": "info", "timestamp": "2026-06-18T09:39:49.320346Z"}
+{"event": "tap_engine_initialized", "level": "info", "timestamp": "2026-06-18T09:39:49.673658Z"}
+{"user_id": "2051911746969812998", "event": "target_user_id_resolved", "level": "info", "timestamp": "2026-06-18T09:39:50.215667Z"}
+{"user_id": "2051911746969812998", "event": "stream_target_set", "level": "info", "timestamp": "2026-06-18T09:39:50.216307Z"}
+{"event": "stream_started", "level": "info", "timestamp": "2026-06-18T09:39:50.216808Z"}
+{"target_user_id": "2051911746969812998", "event": "stream_listener_started", "level": "info", "timestamp": "2026-06-18T09:39:50.217545Z"}
+{"refresh_token_prefix": "SmttZFZtaU5QcnAtcXhI...", "client_id_prefix": "ZUpZbms4N2...", "event": "oauth2_refresh_attempting", "level": "info", "timestamp": "2026-06-18T09:39:50.217977Z"}
+{"count": 49, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-18T09:39:50.573005Z"}
+{"count": 49, "event": "seed_complete", "level": "info", "timestamp": "2026-06-18T09:39:50.671433Z"}
+{"event": "api_startup_complete", "level": "info", "timestamp": "2026-06-18T09:39:50.671814Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-18T09:39:50.732824Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth2_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-18T09:39:50.733704Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-18T09:39:50.875163Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth2_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-18T09:39:50.876096Z"}
+{"hint": "The refresh token may be expired. Generate a new one via: https://twitter.com/i/oauth2/authorize?... Falling back to Bearer token for subscriptions.", "event": "oauth2_all_refresh_strategies_failed", "level": "warning", "timestamp": "2026-06-18T09:39:50.877003Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-18T09:39:50.878745Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-18T09:39:51.980623Z"}
+{"event_type": "post.delete", "event": "stream_subscription_already_exists", "level": "info", "timestamp": "2026-06-18T09:39:51.981047Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "chat.received", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-18T09:39:51.981393Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-18T09:39:52.476961Z"}
+{"event_type": "chat.received", "status": 400, "body": "{\"errors\":[{\"message\":\"OauthAccessTokenRequired: OAuth user access token is required for this event type\"}],\"title\":\"Invalid Request\",\"detail\":\"One or more parameters to your request was invalid.\",\"type\":\"https://api.twitter.com/2/problems/invalid-request\"}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-18T09:39:52.477909Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-18T09:39:52.482815Z"}
+{"total": 1, "event": "ws_client_connected", "level": "info", "timestamp": "2026-06-18T09:39:53.368968Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-18T09:39:53.586349Z"}
+{"event_type": "post.create", "event": "stream_subscription_already_exists", "level": "info", "timestamp": "2026-06-18T09:39:53.587080Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "dm.received", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-18T09:39:53.587842Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-18T09:39:54.147381Z"}
+{"event_type": "dm.received", "status": 400, "body": "{\"errors\":[{\"message\":\"OauthAccessTokenRequired: OAuth user access token is required for this event type\"}],\"title\":\"Invalid Request\",\"detail\":\"One or more parameters to your request was invalid.\",\"type\":\"https://api.twitter.com/2/problems/invalid-request\"}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-18T09:39:54.148115Z"}
+{"url": "https://api.x.com/2/activity/stream", "auth_type": "bearer_app_only", "subscriptions_created": 2, "event": "stream_connecting", "level": "info", "timestamp": "2026-06-18T09:39:54.148822Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/activity/stream \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-18T09:40:14.804326Z"}
+{"event": "stream_connected", "level": "info", "timestamp": "2026-06-18T09:40:14.804482Z"}
+{"total": 0, "event": "ws_client_disconnected", "level": "info", "timestamp": "2026-06-18T09:40:27.429354Z"}
+{"total": 1, "event": "ws_client_connected", "level": "info", "timestamp": "2026-06-18T09:40:27.599276Z"}
+{"cycle": 1, "event": "cycle_started", "level": "info", "timestamp": "2026-06-18T09:40:29.789664Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-18T09:40:29.790456Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-18T09:40:29.790771Z"}
+{"property": "word_count", "event": "selected_property", "level": "info", "timestamp": "2026-06-18T09:40:29.792265Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-18T09:40:31.374869Z"}
+{"count": 4, "strategy": "binary_search", "event": "probes_generated", "level": "info", "timestamp": "2026-06-18T09:40:51.475517Z"}
+{"count": 4, "event": "generated_probes", "level": "info", "timestamp": "2026-06-18T09:40:51.476048Z"}
+{"remaining": 2, "event": "pruned_off_topic", "level": "info", "timestamp": "2026-06-18T09:40:51.476540Z"}
+{"reply_to": "2067535229129007233", "event": "reply_to_our_own_tweet", "level": "info", "timestamp": "2026-06-18T09:40:51.479014Z"}
+{"tweet_id": "2067543054106399153", "reply_to": "2067535229129007233", "text_length": 148, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-18T09:40:51.837391Z"}
+{"tweet_id": "2067543054106399153", "timeout": 3600, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-18T09:40:51.842819Z"}
+{"tweet_id": "2067543054106399153", "event": "waiting_via_stream", "level": "info", "timestamp": "2026-06-18T09:40:51.843797Z"}
+{"tweet_id": "2067543054106399153", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-18T09:40:51.847962Z"}
+{"count": 49, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-18T09:45:27.243570Z"}
+{"count": 1, "event": "manually_forced_fetch_complete", "level": "info", "timestamp": "2026-06-18T09:45:27.343267Z"}
+{"count": 49, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-18T09:46:06.163285Z"}
+{"count": 0, "event": "manually_forced_fetch_complete", "level": "info", "timestamp": "2026-06-18T09:46:06.246066Z"}
+{"timeout_seconds": 600, "event": "background_cycle_timeout", "level": "error", "timestamp": "2026-06-18T09:50:29.802665Z"}
+{"total": 0, "event": "ws_client_disconnected", "level": "info", "timestamp": "2026-06-18T09:56:39.082738Z"}
+{"event": "stream_loop_cancelled", "level": "info", "timestamp": "2026-06-18T09:56:39.197013Z"}
+{"event": "stream_stopped", "level": "info", "timestamp": "2026-06-18T09:56:39.198610Z"}
+{"event": "database_closed", "level": "info", "timestamp": "2026-06-18T09:56:39.205103Z"}
+{"event": "api_shutdown_complete", "level": "info", "timestamp": "2026-06-18T09:56:39.205381Z"}
+{"path": "data/tap.db", "event": "database_initialized", "level": "info", "timestamp": "2026-06-18T10:53:43.906687Z"}
+{"target": "HackingA0", "has_oauth2": true, "pricing_model": "hybrid_2026", "event": "twitter_client_initialized", "level": "info", "timestamp": "2026-06-18T10:53:43.907263Z"}
+{"path": "data/hackinga0_analysis.md", "event": "ssot_initialized", "level": "info", "timestamp": "2026-06-18T10:53:43.907518Z"}
+{"event": "dpa_manager_initialized", "level": "info", "timestamp": "2026-06-18T10:53:43.907854Z"}
+{"model": "anthropic/claude-sonnet-4", "event": "classifier_initialized", "level": "info", "timestamp": "2026-06-18T10:53:44.176719Z"}
+{"model": "anthropic/claude-sonnet-4", "event": "judge_initialized", "level": "info", "timestamp": "2026-06-18T10:53:44.315078Z"}
+{"target": "HackingA0", "has_filter": false, "has_oauth2": true, "event": "stream_listener_initialized", "level": "info", "timestamp": "2026-06-18T10:53:44.315507Z"}
+{"model": "x-ai/grok-4", "event": "grok_monitor_initialized", "level": "info", "timestamp": "2026-06-18T10:53:44.445951Z"}
+{"model": "anthropic/claude-sonnet-4", "event": "followup_generator_initialized", "level": "info", "timestamp": "2026-06-18T10:53:44.576966Z"}
+{"event": "tap_engine_initialized", "level": "info", "timestamp": "2026-06-18T10:53:44.708106Z"}
+{"user_id": "2051911746969812998", "event": "target_user_id_resolved", "level": "info", "timestamp": "2026-06-18T10:53:45.056963Z"}
+{"user_id": "2051911746969812998", "event": "stream_target_set", "level": "info", "timestamp": "2026-06-18T10:53:45.057474Z"}
+{"event": "stream_started", "level": "info", "timestamp": "2026-06-18T10:53:45.057737Z"}
+{"target_user_id": "2051911746969812998", "event": "stream_listener_started", "level": "info", "timestamp": "2026-06-18T10:53:45.057920Z"}
+{"refresh_token_prefix": "MUJ0YWZwNmVDOXgyQ1Jk...", "client_id_prefix": "ZUpZbms4N2...", "event": "oauth2_refresh_attempting", "level": "info", "timestamp": "2026-06-18T10:53:45.058319Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-18T10:53:45.368348Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth2_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-18T10:53:45.368769Z"}
+{"count": 50, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-18T10:53:45.382021Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-18T10:53:45.510815Z"}
+{"new_token_prefix": "S2dycjhiVG41dk5JREcy...", "event": "oauth2_token_refreshed_via_basic_auth", "level": "info", "timestamp": "2026-06-18T10:53:45.511565Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "chat.received", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-18T10:53:45.512037Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-18T10:53:45.996807Z"}
+{"event_type": "chat.received", "status": 400, "body": "{\"errors\":[{\"message\":\"FilterInvalid: The authenticated user must match the userId filter for this event type\"}],\"title\":\"Invalid Request\",\"detail\":\"One or more parameters to your request was invalid.\",\"type\":\"https://api.twitter.com/2/problems/invalid-request\"}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-18T10:53:45.998097Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "dm.received", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-18T10:53:45.998613Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-18T10:53:46.328771Z"}
+{"event_type": "dm.received", "status": 400, "body": "{\"errors\":[{\"message\":\"FilterInvalid: The authenticated user must match the userId filter for this event type\"}],\"title\":\"Invalid Request\",\"detail\":\"One or more parameters to your request was invalid.\",\"type\":\"https://api.twitter.com/2/problems/invalid-request\"}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-18T10:53:46.329428Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-18T10:53:46.330188Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-18T10:53:47.064839Z"}
+{"event_type": "post.create", "event": "stream_subscription_already_exists", "level": "info", "timestamp": "2026-06-18T10:53:47.065272Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-18T10:53:47.065553Z"}
+{"count": 50, "event": "seed_complete", "level": "info", "timestamp": "2026-06-18T10:53:47.487055Z"}
+{"event": "api_startup_complete", "level": "info", "timestamp": "2026-06-18T10:53:47.487333Z"}
+{"total": 1, "event": "ws_client_connected", "level": "info", "timestamp": "2026-06-18T10:53:47.693825Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-18T10:53:47.778484Z"}
+{"event_type": "post.delete", "event": "stream_subscription_already_exists", "level": "info", "timestamp": "2026-06-18T10:53:47.778931Z"}
+{"url": "https://api.x.com/2/activity/stream", "auth_type": "bearer_app_only", "subscriptions_created": 2, "event": "stream_connecting", "level": "info", "timestamp": "2026-06-18T10:53:47.779323Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/activity/stream \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-18T10:54:08.169029Z"}
+{"event": "stream_connected", "level": "info", "timestamp": "2026-06-18T10:54:08.169102Z"}
+{"total": 0, "event": "ws_client_disconnected", "level": "info", "timestamp": "2026-06-18T10:54:14.146909Z"}
+{"total": 1, "event": "ws_client_connected", "level": "info", "timestamp": "2026-06-18T10:54:14.235179Z"}
+{"count": 50, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-18T10:54:19.437126Z"}
+{"count": 0, "event": "manually_forced_fetch_complete", "level": "info", "timestamp": "2026-06-18T10:54:19.534260Z"}
+{"cycle": 1, "event": "cycle_started", "level": "info", "timestamp": "2026-06-18T10:54:26.728454Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-18T10:54:26.729449Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-18T10:54:26.729987Z"}
+{"property": "word_count", "event": "selected_property", "level": "info", "timestamp": "2026-06-18T10:54:26.732537Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-18T10:54:28.177025Z"}
+{"count": 4, "strategy": "binary_search", "event": "probes_generated", "level": "info", "timestamp": "2026-06-18T10:54:36.155980Z"}
+{"count": 4, "event": "generated_probes", "level": "info", "timestamp": "2026-06-18T10:54:36.156644Z"}
+{"remaining": 4, "event": "pruned_off_topic", "level": "info", "timestamp": "2026-06-18T10:54:36.157089Z"}
+{"reply_to": "2067543054106399153", "event": "reply_to_our_own_tweet", "level": "info", "timestamp": "2026-06-18T10:54:36.159029Z"}
+{"tweet_id": "2067561612605562985", "reply_to": "2067543054106399153", "text_length": 148, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-18T10:54:36.505324Z"}
+{"tweet_id": "2067561612605562985", "timeout": 3600, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-18T10:54:36.509080Z"}
+{"tweet_id": "2067561612605562985", "event": "waiting_via_stream", "level": "info", "timestamp": "2026-06-18T10:54:36.509456Z"}
+{"tweet_id": "2067561612605562985", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-18T10:54:36.509681Z"}
+{"was_running": true, "event": "force_reset_called", "level": "info", "timestamp": "2026-06-18T10:55:11.501654Z"}
+{"count": 50, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-18T10:55:18.508132Z"}
+{"count": 2, "event": "manually_forced_fetch_complete", "level": "info", "timestamp": "2026-06-18T10:55:18.592514Z"}
+{"cycle": 2, "event": "cycle_started", "level": "info", "timestamp": "2026-06-18T10:55:24.771306Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-18T10:55:24.773914Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-18T10:55:24.774714Z"}
+{"elapsed_seconds": 48, "remaining_seconds": 1751, "min_latency": 1800, "event": "probe_latency_enforced", "level": "info", "timestamp": "2026-06-18T10:55:24.775885Z"}
+{"property": "word_count", "event": "selected_property", "level": "info", "timestamp": "2026-06-18T10:55:24.776716Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-18T10:55:25.277396Z"}
+{"count": 4, "strategy": "binary_search", "event": "probes_generated", "level": "info", "timestamp": "2026-06-18T10:55:32.655312Z"}
+{"count": 4, "event": "generated_probes", "level": "info", "timestamp": "2026-06-18T10:55:32.656301Z"}
+{"remaining": 2, "event": "pruned_off_topic", "level": "info", "timestamp": "2026-06-18T10:55:32.657273Z"}
+{"reply_to": "2067561612605562985", "event": "reply_to_our_own_tweet", "level": "info", "timestamp": "2026-06-18T10:55:32.659539Z"}
+{"tweet_id": "2067561849562734813", "reply_to": "2067561612605562985", "text_length": 148, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-18T10:55:32.999196Z"}
+{"tweet_id": "2067561849562734813", "timeout": 3600, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-18T10:55:33.007396Z"}
+{"tweet_id": "2067561849562734813", "event": "waiting_via_stream", "level": "info", "timestamp": "2026-06-18T10:55:33.008488Z"}
+{"tweet_id": "2067561849562734813", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-18T10:55:33.009269Z"}
+{"was_running": true, "event": "force_reset_called", "level": "info", "timestamp": "2026-06-18T10:56:22.921261Z"}
+{"count": 50, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-18T10:57:01.028804Z"}
+{"count": 0, "event": "manually_forced_fetch_complete", "level": "info", "timestamp": "2026-06-18T10:57:01.119105Z"}
+{"count": 50, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-18T10:57:04.314087Z"}
+{"count": 0, "event": "manually_forced_fetch_complete", "level": "info", "timestamp": "2026-06-18T10:57:04.396582Z"}
+{"count": 50, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-18T10:57:05.366423Z"}
+{"count": 0, "event": "manually_forced_fetch_complete", "level": "info", "timestamp": "2026-06-18T10:57:05.464031Z"}
+{"timeout_seconds": 600, "event": "background_cycle_timeout", "level": "error", "timestamp": "2026-06-18T11:04:26.749374Z"}
+{"timeout_seconds": 600, "event": "background_cycle_timeout", "level": "error", "timestamp": "2026-06-18T11:05:24.786818Z"}
+{"cycle": 3, "event": "cycle_started", "level": "info", "timestamp": "2026-06-18T13:31:48.572930Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-18T13:31:48.573795Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-18T13:31:48.574100Z"}
+{"property": "word_count", "event": "selected_property", "level": "info", "timestamp": "2026-06-18T13:31:48.575479Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-18T13:31:49.500569Z"}
+{"count": 4, "strategy": "binary_search", "event": "probes_generated", "level": "info", "timestamp": "2026-06-18T13:31:55.368941Z"}
+{"count": 4, "event": "generated_probes", "level": "info", "timestamp": "2026-06-18T13:31:55.369263Z"}
+{"remaining": 4, "event": "pruned_off_topic", "level": "info", "timestamp": "2026-06-18T13:31:55.369452Z"}
+{"reply_to": "2067561849562734813", "event": "reply_to_our_own_tweet", "level": "info", "timestamp": "2026-06-18T13:31:55.370410Z"}
+{"tweet_id": "2067601204486537585", "reply_to": "2067561849562734813", "text_length": 147, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-18T13:31:55.902124Z"}
+{"tweet_id": "2067601204486537585", "timeout": 3600, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-18T13:31:55.904745Z"}
+{"tweet_id": "2067601204486537585", "event": "waiting_via_stream", "level": "info", "timestamp": "2026-06-18T13:31:55.904978Z"}
+{"tweet_id": "2067601204486537585", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-18T13:31:55.905143Z"}
+{"timeout_seconds": 600, "event": "background_cycle_timeout", "level": "error", "timestamp": "2026-06-18T13:41:48.585018Z"}
+{"total": 0, "event": "ws_client_disconnected", "level": "info", "timestamp": "2026-06-18T13:46:58.623858Z"}
+{"event": "stream_loop_cancelled", "level": "info", "timestamp": "2026-06-18T13:46:58.735678Z"}
+{"event": "stream_stopped", "level": "info", "timestamp": "2026-06-18T13:46:58.736705Z"}
+{"event": "database_closed", "level": "info", "timestamp": "2026-06-18T13:46:58.748256Z"}
+{"event": "api_shutdown_complete", "level": "info", "timestamp": "2026-06-18T13:46:58.748875Z"}

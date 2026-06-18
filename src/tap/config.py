@@ -82,7 +82,7 @@ class Settings(BaseSettings):
         description="Rate limit safety margin",
     )
     reply_timeout_seconds: int = Field(
-        default=3600,
+        default=200,
         description="How long to wait for bot reply (seconds)",
     )
     tap_width: int = Field(
@@ -106,6 +106,10 @@ class Settings(BaseSettings):
     ssot_path: str = Field(
         default="data/hackinga0_analysis.md",
         description="SSOT living markdown document path",
+    )
+    log_file_path: str = Field(
+        default="data/server.log",
+        description="Path to persistent server log file",
     )
 
     model_config = {

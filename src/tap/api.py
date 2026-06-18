@@ -65,8 +65,8 @@ async def lifespan(app: FastAPI):
     """Application lifespan: initialize and teardown modules."""
     global _db, _engine, _ssot, _dpa
 
-    setup_logging()
     settings = get_settings()
+    setup_logging(log_file_path=settings.log_file_path if settings.log_file_path else None)
 
     # Initialize database
     _db = Database(settings.db_path)
