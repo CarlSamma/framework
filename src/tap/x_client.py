@@ -19,6 +19,7 @@ import hmac
 import json
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Optional
 
 import httpx
@@ -38,6 +39,9 @@ RETRY_BACKOFF_BASE = 2  # seconds
 # X Activity API endpoints
 _ACTIVITY_SUBSCRIPTIONS_URL = "https://api.x.com/2/activity/subscriptions"
 _ACTIVITY_STREAM_URL = "https://api.x.com/2/activity/stream"
+_FILTERED_STREAM_RULES_URL = "https://api.x.com/2/tweets/search/stream/rules"
+_FILTERED_STREAM_URL = "https://api.x.com/2/tweets/search/stream"
+_MEDIA_UPLOAD_URL = "https://upload.twitter.com/1.1/media/upload.json"
 
 
 class TwitterClient:
@@ -46,11 +50,11 @@ class TwitterClient:
     Uses tweepy.Client with triple OAuth:
     - OAuth 1.0a credentials for write operations (post_tweet, reply)
     - Bearer token for read operations (search, get mentions)
-    - OAuth 2.0 User Token for Activity API subscriptions and elevated ops
+    - OAuth 2.0 User Token (with PKCE support) for Activity API and elevated ops
 
     Rate limiting is handled automatically by tweepy (wait_on_rate_limit=True).
-    Also provides Activity API subscription management for real-time
-    event-driven monitoring with filter support.
+    Also provides Activity API subscription management and Filtered Streams
+    for real-time event-driven monitoring (2026 spec).
     """
 
     def __init__(self, settings: Settings) -> None:
@@ -75,10 +79,16 @@ class TwitterClient:
         self._oauth2_token: Optional[str] = settings.twitter_oauth2_access_token
         self._oauth2_http: Optional[httpx.AsyncClient] = None
 
+        # Quota tracking (Hybrid Pricing 2026)
+        self._monthly_reads = 0
+        self._monthly_writes = 0
+        self._quota_reset_time: Optional[datetime] = None
+
         log.info(
             "twitter_client_initialized",
             target=settings.target_handle,
             has_oauth2=bool(self._oauth2_token),
+            pricing_model="hybrid_2026",
         )
 
     async def initialize_seed(self, limit: int = 100) -> list[Tweet]:
@@ -99,6 +109,7 @@ class TwitterClient:
         query = f"to:{self.settings.target_handle} OR from:{self.settings.target_handle}"
         try:
             tweets = await self._search_tweets(query=query, max_results=min(limit, 100))
+            self._update_quota(reads=len(tweets))
             log.info("seed_ingested", count=len(tweets), query=query)
             return tweets
         except Exception as e:
@@ -123,13 +134,14 @@ class TwitterClient:
                 max_results=100,
                 since_id=since_id,
             )
+            self._update_quota(reads=len(tweets))
             if tweets:
                 log.info("new_tweets_polled", count=len(tweets), since_id=since_id)
             return tweets
         except Exception as e:
             raise TwitterError(f"Failed to poll tweets: {e}", original=e) from e
 
-    async def post_probe(self, text: str, reply_to_id: Optional[str] = None) -> str:
+    async def post_probe(self, text: str, reply_to_id: Optional[str] = None, media_ids: Optional[list[str]] = None) -> str:
         """Post a DPA-framed probe as a tweet or reply.
 
         Uses OAuth 1.0a user context (required for posting).
@@ -137,6 +149,7 @@ class TwitterClient:
         Args:
             text: Tweet text content.
             reply_to_id: If replying, the tweet ID to reply to.
+            media_ids: Optional list of media IDs to attach.
 
         Returns:
             The ID of the posted tweet as a string.
@@ -159,28 +172,205 @@ class TwitterClient:
             reply_to_id = None
 
         try:
-            if reply_to_id:
-                response = await self._retry(
-                    lambda: self.client.create_tweet(
-                        text=text,
-                        in_reply_to_tweet_id=reply_to_id,
-                    )
+            response = await self._retry(
+                lambda: self.client.create_tweet(
+                    text=text,
+                    in_reply_to_tweet_id=reply_to_id,
+                    media_ids=media_ids,
                 )
-            else:
-                response = await self._retry(
-                    lambda: self.client.create_tweet(text=text)
-                )
+            )
 
             tweet_id = str(response.data["id"])
+            self._update_quota(writes=1)
             log.info(
                 "probe_posted",
                 tweet_id=tweet_id,
                 reply_to=reply_to_id,
                 text_length=len(text),
+                has_media=bool(media_ids),
             )
             return tweet_id
         except Exception as e:
             raise TwitterError(f"Failed to post probe: {e}", original=e) from e
+
+    # =========================================================================
+    # Media Management (3-Step Chunked Upload)
+    # =========================================================================
+
+    async def upload_media_chunked(
+        self,
+        file_path: str,
+        media_type: str = "image/png",
+        media_category: str = "tweet_image",
+    ) -> str:
+        """Upload media using the 3-step chunked process (INIT, APPEND, FINALIZE).
+
+        Args:
+            file_path: Path to the media file.
+            media_type: MIME type of the media.
+            media_category: 'tweet_image', 'tweet_video', or 'tweet_gif'.
+
+        Returns:
+            The media_id as a string.
+
+        Raises:
+            TwitterError: If upload fails.
+        """
+        path = Path(file_path)
+        if not path.exists():
+            raise TwitterError(f"Media file not found: {file_path}")
+
+        total_bytes = path.stat().st_size
+        auth = tweepy.OAuth1UserHandler(
+            self.settings.twitter_consumer_key,
+            self.settings.twitter_consumer_secret,
+            self.settings.twitter_access_token,
+            self.settings.twitter_access_token_secret,
+        )
+
+        # Step 1: INIT
+        media_id = await self._retry_media_op(
+            lambda api: api.media_upload_init(
+                total_bytes=total_bytes,
+                media_type=media_type,
+                media_category=media_category,
+            ),
+            auth,
+        )
+
+        # Step 2: APPEND
+        segment_index = 0
+        with open(file_path, "rb") as f:
+            while True:
+                chunk = f.read(4 * 1024 * 1024)  # 4MB chunks
+                if not chunk:
+                    break
+                await self._retry_media_op(
+                    lambda api: api.media_upload_append(
+                        media_id=media_id,
+                        segment_index=segment_index,
+                        media_data=base64.b64encode(chunk).decode("utf-8"),
+                    ),
+                    auth,
+                )
+                segment_index += 1
+
+        # Step 3: FINALIZE
+        await self._retry_media_op(
+            lambda api: api.media_upload_finalize(media_id=media_id),
+            auth,
+        )
+
+        log.info("media_uploaded", media_id=media_id, size=total_bytes, category=media_category)
+        return str(media_id)
+
+    async def _retry_media_op(self, func, auth):
+        """Execute a media upload operation using tweepy v1.1 API."""
+        loop = asyncio.get_event_loop()
+        api = tweepy.API(auth)
+        return await loop.run_in_executor(None, func, api)
+
+    # =========================================================================
+    # Filtered Streams (v2 Search Stream)
+    # =========================================================================
+
+    async def add_stream_rules(self, rules: list[str], tag: str = "tap_probe") -> dict:
+        """Add filtering rules to the filtered stream.
+
+        Args:
+            rules: List of rule values (e.g., ["from:HackingA0", "to:our_bot"]).
+            tag: Optional tag for the rules.
+
+        Returns:
+            API response dict.
+        """
+        rule_objs = [{"value": val, "tag": tag} for val in rules]
+        response = await self._retry(
+            lambda: self.client.add_tweet_count_rules(add=rule_objs)
+        )
+        log.info("stream_rules_added", count=len(rules), tag=tag)
+        return response
+
+    async def list_stream_rules(self) -> list:
+        """List active filtered stream rules."""
+        response = await self._retry(lambda: self.client.get_tweet_count_rules())
+        return response.data or []
+
+    async def delete_stream_rules(self, ids: list[str]) -> dict:
+        """Delete filtering rules by ID."""
+        response = await self._retry(
+            lambda: self.client.delete_tweet_count_rules(ids=ids)
+        )
+        log.info("stream_rules_deleted", count=len(ids))
+        return response
+
+    # =========================================================================
+    # Quota & Compliance (2026 Hybrid Model)
+    # =========================================================================
+
+    def _update_quota(self, reads: int = 0, writes: int = 0):
+        """Update internal quota counters.
+
+        In production, these should be persisted to the database.
+        """
+        self._monthly_reads += reads
+        self._monthly_writes += writes
+
+        if self._monthly_reads > 2_000_000:
+            overage = self._monthly_reads - 2_000_000
+            cost = overage * 0.005
+            log.warning("quota_overage_detected", reads=self._monthly_reads, estimated_cost=cost)
+
+    async def get_quota_status(self) -> dict:
+        """Return current estimated quota usage and costs."""
+        cost = 0.0
+        if self._monthly_reads > 2_000_000:
+            cost += (self._monthly_reads - 2_000_000) * 0.005
+        # Write overage rates vary; simplified for example
+        return {
+            "reads": self._monthly_reads,
+            "writes": self._monthly_writes,
+            "estimated_overage_usd": round(cost, 2),
+            "tier_limit": 2_000_000,
+        }
+
+    async def sync_compliance(self, tweet_ids: list[str]) -> list[str]:
+        """Verify existence of tweets for 24-hour compliance.
+
+        X requires offline data to be synchronized within 24 hours.
+        This method checks which IDs still exist.
+
+        Args:
+            tweet_ids: List of tweet IDs to check.
+
+        Returns:
+            List of IDs that have been DELETED or are no longer accessible.
+        """
+        deleted_ids = []
+        # Process in batches of 100
+        for i in range(0, len(tweet_ids), 100):
+            batch = tweet_ids[i : i + 100]
+            response = await self._retry(
+                lambda: self.client.get_tweets(ids=batch)
+            )
+
+            found_ids = set()
+            if response.data:
+                found_ids = {str(t.id) for t in response.data}
+
+            # Any ID in batch not in found_ids is potentially deleted
+            # (Note: error field in response gives more detail on hidden/deleted)
+            for tid in batch:
+                if tid not in found_ids:
+                    deleted_ids.append(tid)
+
+        if deleted_ids:
+            log.info("compliance_sync_found_deletions", count=len(deleted_ids))
+        return deleted_ids
+
+    # =========================================================================
+    # Internal Helpers
+    # =========================================================================
 
     async def get_mentions(self, since_id: Optional[str] = None) -> list[Tweet]:
         """Get mentions of our bot handle.

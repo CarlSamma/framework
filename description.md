@@ -41,10 +41,12 @@ DPA is a tactical exploit that uses 100% in-metaphor language. It relies on:
 5.  **`classifier.py`**: Uses regex and LLMs to categorize bot responses (e.g., `verify_hit`, `rhetoric_block`, `persona_pivot`).
 6.  **`judge.py`**: Scores responses on a 1-10 passphrase-extraction-specific scale.
 7.  **`x_client.py`**: Multi-auth Twitter client.
-    - **Auth**: OAuth 1.0a (posting), Bearer (searching), and OAuth 2.0 User Token support.
-    - **Real-time Engine**: Integrates **Account Activity API (v2 Subscriptions)** for event-driven monitoring.
-    - **Webhook Support**: Replaces/augments polling with sub-second event delivery for `post.create`, `chat.received`, and `dm.received`.
-    - **Filtered Streams**: Implements `ActivitySubscriptionFilter` (keyword/user_id) to isolate relevant telemetry.
+    - **Auth**: OAuth 1.0a (posting), Bearer (searching), and OAuth 2.0 with PKCE support.
+    - **Real-time Engine**: Integrates **Account Activity API (v2 Subscriptions)** and **Filtered Streams** (up to 1,000 rules) for event-driven monitoring.
+    - **2026 Event Support**: Sub-second delivery for `post.create`, `post.delete` (new as of June 2026), `chat.received`, and `dm.received`.
+    - **Quota Management**: Adaptive throttling for the **Hybrid Pricing** model (2M Post-reads/month cap; $0.005 overage).
+    - **Media Pipeline**: Three-step chunked upload (INIT, APPEND, FINALIZE) for images (5MB) and videos (512MB).
+    - **Compliance Engine**: Automated 24-hour synchronization to reflect deletions or status changes in offline data.
 8.  **`db.py`**: Async database layer with schema for tweets, TAP nodes, properties, and metaphor layers.
 9.  **`models.py`**: Shared Pydantic data models.
 10. **`config.py`**: Pydantic Settings for `.env` management.

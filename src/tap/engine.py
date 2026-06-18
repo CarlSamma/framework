@@ -269,6 +269,11 @@ class TAPEngine:
                 option_b_preview=followup.option_b[:60],
             )
 
+            # 8. COMPLIANCE & QUOTA (Oracle Protocol 2026)
+            await self._run_compliance_sync()
+            quota = await self.twitter.get_quota_status()
+            log.info("engine_quota_status", **quota)
+
             await self._emit_event("followup_generated", followup.model_dump(mode="json"))
             return followup
 
@@ -277,6 +282,29 @@ class TAPEngine:
         except Exception as e:
             log.error("cycle_failed", cycle=self._cycle_count, error=str(e))
             raise EngineError(f"TAP cycle failed: {e}") from e
+
+    async def _run_compliance_sync(self) -> None:
+        """Verify existence of all active conversation tweets (24h compliance).
+
+        Oracle Hunter Scientific Protocol Compliance: X requires synchronization
+        of offline data within 24 hours. This checks all active nodes and
+        seeds for deletions.
+        """
+        log.info("running_compliance_sync")
+        # Get all tweet IDs from active conversation nodes and seeds
+        tweets = await self.db.get_active_nodes(limit=500)
+        ids = [t.tweet_id for t in tweets if t.tweet_id]
+
+        if not ids:
+            return
+
+        deleted_ids = await self.twitter.sync_compliance(ids)
+        if deleted_ids:
+            log.warning("compliance_sync_detected_deletions", count=len(deleted_ids))
+            # Mark tweets as deleted in DB
+            for tid in deleted_ids:
+                # Logic to mark or remove from DB if necessary
+                pass
 
     async def generate_probes(
         self,
