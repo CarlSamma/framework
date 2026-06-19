@@ -172,7 +172,7 @@ TWITTER_ACCESS_TOKEN_SECRET=your_access_token_secret_here
 # ── OpenRouter (single key for ALL LLM calls) ───────────────────────
 OPENROUTER_API_KEY=sk-or-v1-your_key_here
 OPENROUTER_MODEL_PRIMARY=anthropic/claude-sonnet-4
-OPENROUTER_MODEL_HARD=anthropic/claude-opus-4
+OPENROUTER_MODEL_HARD=x-ai/grok-4.3
 OPENROUTER_MODEL_GROK=x-ai/grok-4
 
 # ── Target & Bot Configuration ──────────────────────────────────────
@@ -400,7 +400,7 @@ All configuration is loaded from `.env` via Pydantic Settings:
 | `TWITTER_ACCESS_TOKEN_SECRET` | — | Access Token Secret |
 | `OPENROUTER_API_KEY` | — | OpenRouter API key for all LLMs |
 | `OPENROUTER_MODEL_PRIMARY` | `anthropic/claude-sonnet-4` | Primary model (routine tasks) |
-| `OPENROUTER_MODEL_HARD` | `anthropic/claude-opus-4` | Hard model (engine, followup) |
+| `OPENROUTER_MODEL_HARD` | `x-ai/grok-4.3` | Hard model (engine, followup) |
 | `OPENROUTER_MODEL_GROK` | `x-ai/grok-4` | Grok model (response analysis) |
 | `TARGET_HANDLE` | `HackingA0` | Target Twitter handle (without @) |
 | `OUR_BOT_HANDLE` | — | Your bot's Twitter handle |

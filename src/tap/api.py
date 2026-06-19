@@ -36,6 +36,7 @@ from tap.dpa import DPAFrameManager
 from tap.engine import TAPEngine
 from tap.followup import FollowUpGenerator
 from tap.grok_monitor import GrokMonitor
+from tap.stream_listener import StreamListener
 from tap.judge import Judge
 from tap.logger import get_logger, setup_logging
 from tap.ssot import SSOTEngine
@@ -64,8 +65,8 @@ async def lifespan(app: FastAPI):
     """Application lifespan: initialize and teardown modules."""
     global _db, _engine, _ssot, _dpa
 
-    setup_logging()
     settings = get_settings()
+    setup_logging(log_file_path=settings.log_file_path if settings.log_file_path else None)
 
     # Initialize database
     _db = Database(settings.db_path)
@@ -77,7 +78,10 @@ async def lifespan(app: FastAPI):
     _dpa = DPAFrameManager(_db)
     classifier = ResponseClassifier(settings.openrouter_api_key, settings.openrouter_model_primary)
     judge = Judge(settings.openrouter_api_key, settings.openrouter_model_primary)
-    grok = GrokMonitor(settings, twitter)
+
+    # Initialize stream listener for real-time reply detection
+    stream = StreamListener(settings)
+    grok = GrokMonitor(settings, twitter, stream=stream)
     followup_gen = FollowUpGenerator(
         _ssot, _dpa, settings.openrouter_api_key, settings.openrouter_model_primary
     )
@@ -98,6 +102,18 @@ async def lifespan(app: FastAPI):
         event_callback=on_engine_event,
     )
 
+    # Resolve target user ID and start stream listener
+    try:
+        target_user = await twitter._resolve_target_user_id()
+        if target_user:
+            stream.set_target_user_id(target_user)
+            await stream.start()
+            log.info("stream_listener_started", target_user_id=target_user)
+        else:
+            log.warning("stream_listener_not_started_no_target_user_id")
+    except Exception as e:
+        log.warning("stream_listener_start_failed", error=str(e))
+
     # Seed tweet DB with recent history on startup (best-effort)
     try:
         seed_tweets = await twitter.initialize_seed(limit=50)
@@ -111,6 +127,8 @@ async def lifespan(app: FastAPI):
     yield
 
     # Teardown
+    if stream:
+        await stream.stop()
     if _db:
         await _db.close()
     log.info("api_shutdown_complete")
@@ -199,12 +217,39 @@ async def get_followup():
 @app.get("/api/status")
 async def get_status():
     """Return real-time cycle execution status for UI state restoration on reconnect."""
-    global _is_running
+    global _is_running, _engine
+    stream_connected = False
+    if _engine and hasattr(_engine, 'grok') and _engine.grok.stream:
+        stream_connected = _engine.grok.stream.is_connected
     return {
         "is_running": _is_running,
         "pending_tweet_id": GrokMonitor.pending_tweet_id,
         "has_followup": _last_followup is not None,
         "selected_probe": _selected_probe,
+        "stream_connected": stream_connected,
+    }
+
+
+@app.post("/api/reset")
+async def force_reset():
+    """Force-reset the engine state when stuck.
+
+    Resets the _is_running flag and clears any pending tweet ID
+    so a new cycle can be started.
+    """
+    global _is_running
+
+    was_running = _is_running
+    _is_running = False
+    GrokMonitor.pending_tweet_id = None
+
+    log.info("force_reset_called", was_running=was_running)
+    await broadcast_update("force_reset", {"was_running": was_running})
+
+    return {
+        "status": "reset",
+        "was_running": was_running,
+        "message": "Engine state reset. You can now start a new cycle.",
     }
 
 
@@ -240,20 +285,41 @@ async def select_option(choice: str):
 
 
 async def _bg_run_cycle(selected_probe: Optional[str] = None):
-    """Carry out the TAP cycle execution asynchronously inside a background task."""
+    """Carry out the TAP cycle execution asynchronously inside a background task.
+
+    Applies a hard timeout to prevent _is_running from getting stuck
+    when the reply detection mechanism (stream or polling) fails.
+    """
     global _engine, _last_followup, _selected_probe, _is_running
     if not _engine:
         return
     _is_running = True
+    await broadcast_update("cycle_status", {"is_running": True})
     try:
-        followup = await _engine.run_cycle(selected_probe=selected_probe)
+        # Hard timeout: 2x the configured reply timeout, capped at 10 minutes
+        # This prevents the UI from getting stuck if stream/polling fails
+        max_cycle_time = min(
+            _engine.settings.reply_timeout_seconds * 2,
+            600,  # 10 minutes max
+        )
+        followup = await asyncio.wait_for(
+            _engine.run_cycle(selected_probe=selected_probe),
+            timeout=max_cycle_time,
+        )
         _last_followup = followup
         _selected_probe = None  # Reset selection after execution
+    except asyncio.TimeoutError:
+        log.error("background_cycle_timeout", timeout_seconds=max_cycle_time)
+        await broadcast_update("cycle_timeout", {
+            "error": f"Cycle timed out after {max_cycle_time}s — no reply received",
+            "hint": "Check if stream listener is connected. Use /api/reset to retry.",
+        })
     except Exception as e:
         log.error("background_cycle_failed", error=str(e))
         await broadcast_update("cycle_failed", {"error": str(e)})
     finally:
         _is_running = False
+        await broadcast_update("cycle_status", {"is_running": False})
 
 
 @app.post("/api/post")
@@ -325,6 +391,42 @@ async def force_fetch_replies():
     except Exception as e:
         log.error("manually_forced_fetch_failed", error=str(e))
         return {"error": str(e)}
+
+
+@app.post("/api/webhook")
+async def webhook_receiver(event: dict):
+    """Webhook receiver for X Activity API events.
+
+    When configured as a webhook URL in the X developer portal,
+    this endpoint receives real-time post.create, post.delete,
+    chat.received, and dm.received events.
+    Events are forwarded to the StreamListener for processing.
+
+    Also supports CRC challenge response required by X for webhook verification.
+
+    Args:
+        event: JSON event payload from X Activity API.
+    """
+    global _engine
+
+    # Handle CRC challenge (X requires this for webhook verification)
+    crc_token = event.get("crc_token")
+    if crc_token:
+        if _engine and hasattr(_engine, 'twitter'):
+            return await _engine.twitter.verify_crc(crc_token)
+        # Fallback if engine not available
+        return {"error": "Engine not initialized for CRC verification"}
+
+    # Forward event to stream listener if available
+    if _engine and hasattr(_engine, 'grok') and _engine.grok.stream:
+        stream = _engine.grok.stream
+        try:
+            await stream._process_event(event)
+            log.info("webhook_event_processed", event_type=event.get("type", "unknown"))
+        except Exception as e:
+            log.error("webhook_event_processing_failed", error=str(e))
+
+    return {"status": "ok"}
 
 
 @app.get("/", response_class=HTMLResponse)

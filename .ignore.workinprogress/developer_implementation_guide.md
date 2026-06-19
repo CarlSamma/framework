@@ -104,7 +104,7 @@ TWITTER_OAUTH2_REFRESH_TOKEN=      # "OAuth 2.0 Refresh Token"
 # === OpenRouter (single API key for ALL LLMs including Grok) ===
 OPENROUTER_API_KEY=
 OPENROUTER_MODEL_PRIMARY=anthropic/claude-sonnet-4
-OPENROUTER_MODEL_HARD=anthropic/claude-opus-4
+OPENROUTER_MODEL_HARD=x-ai/grok-4.3
 OPENROUTER_MODEL_GROK=x-ai/grok-4
 
 # === Target Configuration ===
@@ -316,7 +316,7 @@ class Settings(BaseSettings):
     # OpenRouter (single API key for ALL LLMs including Grok)
     openrouter_api_key: str
     openrouter_model_primary: str = "anthropic/claude-sonnet-4"
-    openrouter_model_hard: str = "anthropic/claude-opus-4"
+    openrouter_model_hard: str = "x-ai/grok-4.3"
     openrouter_model_grok: str = "x-ai/grok-4"
     
     # Target
@@ -1349,12 +1349,12 @@ async def websocket_live(websocket: WebSocket):
 | 1 | `db.py` | `anthropic/claude-sonnet-4` | CRUD + SQL, well-understood |
 | 1 | `x_client.py` | `anthropic/claude-sonnet-4` | API client, standard pattern |
 | 2 | `ssot.py` | `anthropic/claude-sonnet-4` | Markdown generation, Jinja2 |
-| 2 | `dpa.py` | `anthropic/claude-opus-4` | Critical tactical logic |
+| 2 | `dpa.py` | `x-ai/grok-4.3` | Critical tactical logic |
 | 2 | `classifier.py` | `anthropic/claude-sonnet-4` | Regex + LLM delegation |
 | 3 | `judge.py` | `anthropic/claude-sonnet-4` | Rules + LLM delegation |
 | 3 | `grok_monitor.py` | `anthropic/claude-sonnet-4` | API client pattern |
-| 4 | `engine.py` | `anthropic/claude-opus-4` | Most complex module |
-| 4 | `followup.py` | `anthropic/claude-opus-4` | Information theory logic |
+| 4 | `engine.py` | `x-ai/grok-4.3` | Most complex module |
+| 4 | `followup.py` | `x-ai/grok-4.3` | Information theory logic |
 | 5 | `api.py` | `anthropic/claude-sonnet-4` | FastAPI boilerplate |
 | 5 | `index.html` | `anthropic/claude-sonnet-4` | Frontend, Alpine.js |
 | 6 | `tests/` | `anthropic/claude-sonnet-4` | Test generation |

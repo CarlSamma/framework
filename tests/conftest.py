@@ -44,7 +44,7 @@ def mock_settings(tmp_path) -> Settings:
         twitter_access_token_secret="test_access_token_secret",
         openrouter_api_key="test_openrouter_key",
         openrouter_model_primary="anthropic/claude-sonnet-4",
-        openrouter_model_hard="anthropic/claude-opus-4",
+        openrouter_model_hard="x-ai/grok-4.3",
         openrouter_model_grok="x-ai/grok-4",
         target_handle="HackingA0",
         our_bot_handle="test_bot",

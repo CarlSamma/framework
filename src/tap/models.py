@@ -322,3 +322,26 @@ class DPAFrame(BaseModel):
     frame_coherence_score: float = Field(
         ge=0.0, le=1.0, description="How coherent/stable the current frame is"
     )
+
+
+# =============================================================================
+# Stream / Subscription Models
+# =============================================================================
+
+
+class ActivitySubscriptionFilter(BaseModel):
+    """Filter for X Activity API subscriptions.
+
+    Used to isolate relevant telemetry by keyword and/or user ID.
+    When both are specified, events must match at least one keyword AND
+    at least one user_id (AND-logic between groups, OR-logic within groups).
+    """
+
+    user_ids: list[str] = Field(
+        default_factory=list,
+        description="User IDs to monitor (OR logic — any match triggers delivery)",
+    )
+    keywords: list[str] = Field(
+        default_factory=list,
+        description="Keywords to match in event payload (OR logic — any match triggers delivery)",
+    )

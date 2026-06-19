@@ -18,6 +18,7 @@ document.addEventListener('alpine:init', () => {
         loading: false,       // true only during LLM generation + posting (a few seconds)
         awaitingReply: false, // true while waiting for @HackingA0 to reply (up to 1h)
         pendingTweetId: null, // tweet ID of the live probe
+        streamConnected: false, // true when Activity API stream is connected
         seeding: false,
         fetching: false,
         showHelp: false,
@@ -43,6 +44,9 @@ document.addEventListener('alpine:init', () => {
                     this.awaitingReply = true;
                     this.pendingTweetId = s.pending_tweet_id;
                     this.loading = false;
+                }
+                if (s.stream_connected !== undefined) {
+                    this.streamConnected = s.stream_connected;
                 }
             } catch (e) {
                 console.warn('[Status] Could not restore status:', e);
@@ -132,6 +136,14 @@ document.addEventListener('alpine:init', () => {
                     this.loading = false;
                     this.awaitingReply = false;
                     this.pendingTweetId = null;
+                    break;
+
+                case 'force_reset':
+                    console.log('[WS] Force reset received');
+                    this.loading = false;
+                    this.awaitingReply = false;
+                    this.pendingTweetId = null;
+                    this.error = null;
                     break;
 
                 default:
@@ -247,6 +259,19 @@ document.addEventListener('alpine:init', () => {
                     console.log('[Mock] Injected reply successfully:', text);
                     this.mockReplyText = '';
                 }
+            } catch (e) {
+                this.error = e.message;
+            }
+        },
+
+        async forceReset() {
+            try {
+                const result = await this.api('/api/reset', { method: 'POST' });
+                this.loading = false;
+                this.awaitingReply = false;
+                this.pendingTweetId = null;
+                this.error = null;
+                console.log('[Reset] Engine state reset:', result.message);
             } catch (e) {
                 this.error = e.message;
             }

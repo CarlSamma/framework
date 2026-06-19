@@ -47,6 +47,12 @@
                 <span class="stat-label">WS:</span>
                 <span class="stat-value" :class="connected ? 'green' : 'red'" x-text="connected ? '●' : '○'"></span>
             </div>
+            <div class="stat-item">
+                <span class="stat-label">Stream:</span>
+                <span class="stat-value" :class="streamConnected ? 'green' : 'yellow'"
+                    x-text="streamConnected ? '⚡ Real-time' : '📡 Polling'"
+                    :title="streamConnected ? 'Activity API stream connected — instant reply detection' : 'Using polling fallback — 30s delay'"></span>
+            </div>
             <div class="stat-item" style="margin-left: auto;">
                 <button class="btn btn-ghost" @click="showHelp = !showHelp"
                     x-text="showHelp ? '✕ Close' : '❓ How It Works'"></button>
@@ -337,6 +343,9 @@
                         </div>
                     </div>
                     <span style="font-size: 0.7rem; color: var(--accent-green); animation: pulse 2s infinite;">●</span>
+                    <button class="btn btn-ghost" @click="forceReset()"
+                        style="font-size: 0.65rem; padding: 0.15rem 0.4rem; border: 1px solid var(--accent-red); color: var(--accent-red); border-radius: 3px; white-space: nowrap;"
+                        title="Force reset if reply already came but UI is stuck">Force Reset</button>
                 </div>
 
                 <!-- Mock Reply Helper Panel -->
