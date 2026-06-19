@@ -6,6 +6,7 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-research-orange.svg)]()
+[![Version](https://img.shields.io/badge/version-3.0--Guardian--Grade-blue.svg)]()
 
 ---
 
@@ -300,7 +301,50 @@ To verify everything is working correctly before live probing:
 python -m pytest tests\ -q
 ```
 
-All 75 tests should pass in ~6 seconds. No API keys are needed — tests use mocks and an in-memory SQLite database.
+All 131 tests should pass in ~6 seconds. No API keys are needed — tests use mocks and an in-memory SQLite database.
+
+
+---
+
+## v3.0 Guardian-Grade Enhancements
+
+Version 3.0 introduces a major evolution with production-grade infrastructure:
+
+### Unified LLM Gateway (llm_client.py)
+- **Single gateway** replaces 5 duplicated AsyncOpenAI instances across modules
+- **Circuit breaker**: Trips after 5 consecutive failures, half-open probe after 60s
+- **Model fallback**: Hard model fails -> automatically falls back to primary -> grok
+- **Token tracking**: Cumulative usage + estimated cost per model
+- **Robust JSON parsing**: Code-fence stripping, regex extraction fallback, line extraction
+
+### Prompt Sanitiser (prompt_sanitiser.py)
+Defense layer validating every probe before it reaches Twitter:
+- **Directive injection filter**: Strips 7 hijack patterns (!system:, ignore previous, ACT AS, etc.)
+- **Metaphor compliance**: 32 forbidden literal terms (hack, jailbreak, password, etc.)
+- **Single-property enforcement**: 8 property indicators - rejects compound questions
+- **Twitter format validation**: Length limits, markdown integrity, repetition detection
+- **Batch mode**: Sanitise multiple probes at once with detailed rejection reasons
+
+### Strategy Pattern (strategies/)
+Pluggable probe generation with automated strategy selection:
+- **BinarySearchProvider**: Default - information-theoretic property selection
+- **MetaphorShiftProvider**: Frame rotation when avg score < 3.0
+- **AestheticEvalProvider**: Indirect extraction when 2+ consecutive blocks
+- **Phase5ExtractionProvider**: Autoregressive completion when entropy < 3.3 bits
+- **StrategySelector**: Priority cascade - Phase5 > Aesthetic > MetaphorShift > BinarySearch
+
+### Observability
+- **/health endpoint**: DB, LLM circuit breaker, stream, sanitiser, quota status
+- **/metrics endpoint**: Prometheus-compatible (cycle_count, entropy, LLM cost, DB stats)
+- **/api/events endpoint**: Retrieve persisted WebSocket events for replay/debugging
+- **Correlation IDs**: cycle_id and probe_id propagated through all logs via contextvars
+- **Event log table**: All WebSocket events persisted to event_log table
+
+### Resilience
+- **Circuit breaker** on LLM client prevents cascade failures
+- **Model fallback** ensures continuity when primary model is unavailable
+- **Non-blocking event log** - failures logged but never crash the cycle
+- **Graceful degradation** - health endpoint reports degraded status
 
 ---
 
@@ -325,10 +369,12 @@ The web dashboard has a dark-themed 4-panel layout:
 
 ```
 Phase 0 — Foundation
-├── config.py       Pydantic Settings, .env loading
+├── config.py       Pydantic Settings, .env loading (v3.0: circuit breaker, correlation IDs)
 ├── models.py       Data models (TAPNode, Property, Tweet, etc.)
 ├── prompts.py      LLM prompt templates
-└── logger.py       Structured logging (structlog)
+├── logger.py       Structured logging + correlation ID helpers (v3.0)
+├── llm_client.py   Unified LLM gateway with circuit breaker (v3.0)
+└── prompt_sanitiser.py  Probe validation defense layer (v3.0)
 
 Phase 1 — Infrastructure
 ├── db.py           SQLite database (aiosqlite)
@@ -345,7 +391,14 @@ Phase 3 — Analysis
 
 Phase 4 — Engine
 ├── engine.py       TAP Engine — core orchestrator
-└── followup.py     Dual follow-up generator (Option A/B)
+├── followup.py     Dual follow-up generator (Option A/B)
+└── strategies/     Pluggable probe strategies (v3.0)
+    ├── base.py         PromptProvider ABC + data contracts
+    ├── binary_search.py  Default information-theoretic strategy
+    ├── metaphor_shift.py  Frame rotation strategy
+    ├── aesthetic.py     Indirect extraction strategy
+    ├── phase5.py        Autoregressive extraction strategy
+    └── selector.py      Automated strategy selection
 
 Phase 5 — Interface
 ├── api.py          FastAPI server + WebSocket
@@ -429,7 +482,7 @@ ruff check src/ tests/
 mypy src/tap/
 
 # Run tests (no API keys needed)
-python -m pytest tests\ -q
+python -m pytest tests\ -q  # 131 tests, ~7s
 
 # Run with auto-reload
 uvicorn tap.api:app --reload
@@ -441,8 +494,8 @@ uvicorn tap.api:app --reload
 
 ```
 tap-framework/
-├── src/tap/                # Python package (11 modules)
-│   ├── api.py              # FastAPI server + WebSocket
+├── src/tap/                # Python package (v3.0: 18 modules)
+│   ├── api.py              # FastAPI server + WebSocket (v3.0: /health, /metrics)
 │   ├── classifier.py       # Response pattern classifier
 │   ├── config.py           # Pydantic Settings
 │   ├── db.py               # SQLite database
@@ -452,12 +505,21 @@ tap-framework/
 │   ├── followup.py         # Dual follow-up generator
 │   ├── grok_monitor.py     # Grok reply monitoring
 │   ├── judge.py            # Response scorer
-│   ├── logger.py           # Structured logging
+│   ├── logger.py           # Structured logging + correlation IDs (v3.0)
+│   ├── llm_client.py       # Unified LLM gateway (v3.0)
 │   ├── models.py           # Data models
 │   ├── phase0.py           # Blank-page analysis
 │   ├── prompts.py          # LLM prompt templates
+│   ├── prompt_sanitiser.py # Probe validation defense (v3.0)
 │   ├── ssot.py             # SSOT engine
 │   ├── x_client.py         # Twitter API client
+│   ├── strategies/         # Pluggable probe strategies (v3.0)
+│   │   ├── base.py         # PromptProvider ABC
+│   │   ├── binary_search.py
+│   │   ├── metaphor_shift.py
+│   │   ├── aesthetic.py
+│   │   ├── phase5.py
+│   │   └── selector.py     # Automated selection
 │   ├── static/             # CSS + JS assets
 │   │   ├── css/dashboard.css
 │   │   └── js/dashboard.js
@@ -468,7 +530,7 @@ tap-framework/
 ├── research/               # Academic papers, notes, media
 ├── scripts/                # Utility scripts
 │   └── setup_db.py
-├── tests/                  # Pytest test suite (75 tests)
+├── tests/                  # Pytest test suite (131 tests)
 ├── Sources/                # Research source materials
 ├── .env                    # Environment configuration (never commit)
 ├── requirements.txt        # Python dependencies
@@ -481,6 +543,7 @@ tap-framework/
 ## Documentation
 
 - [Implementation Plan v2.2](docs/implementation-plan.md) — Full technical design
+- [Framework Specs v2.2](framework_specs.md) — Complete technical specifications
 - [Developer Guide v2.2](docs/developer-guide.md) — Module-by-module engineering blueprint
 - [Oracle Q&A Session](docs/oracle-q-and-a.md) — AI Oracle consultation on DPA bypass + binary search
 - [Threat Model](docs/threat-model.md) — Target defensive architecture analysis
