@@ -80,11 +80,11 @@ async def lifespan(app: FastAPI):
 
     # v3.0: Initialize unified LLM client
     _llm_client = LLMClient(settings)
-    log.info(llm_client_ready)
+    log.info("llm_client_ready")
 
     # v3.0: Initialize prompt sanitiser
     _sanitiser = PromptSanitiser(strict_mode=settings.use_prompt_sanitiser)
-    log.info(prompt_sanitiser_ready)
+    log.info("prompt_sanitiser_ready")
 
     # v3.0: Initialize strategy providers and selector
     binary_search = BinarySearchProvider(_llm_client, _sanitiser)
@@ -92,7 +92,7 @@ async def lifespan(app: FastAPI):
     aesthetic_eval = AestheticEvalProvider(_llm_client, _sanitiser)
     phase5 = Phase5ExtractionProvider(_llm_client, _sanitiser)
     _strategy_selector = StrategySelector(binary_search, metaphor_shift, aesthetic_eval, phase5)
-    log.info(strategy_selector_ready)
+    log.info("strategy_selector_ready")
 
     # Initialize modules
     twitter = TwitterClient(settings)
