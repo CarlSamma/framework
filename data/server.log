@@ -850,3 +850,31 @@
 {"total": 1, "event": "ws_client_connected", "level": "info", "timestamp": "2026-06-19T09:38:11.697200Z"}
 {"event": "HTTP Request: GET https://api.x.com/2/activity/stream \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-19T09:38:31.991040Z"}
 {"event": "stream_connected", "level": "info", "timestamp": "2026-06-19T09:38:31.991292Z"}
+{"path": "data/tap.db", "event": "database_initialized", "level": "info", "timestamp": "2026-06-19T10:16:42.699397Z"}
+{"primary": "anthropic/claude-sonnet-4", "hard": "x-ai/grok-4.3", "grok": "x-ai/grok-4", "event": "llm_client_initialized", "level": "info", "timestamp": "2026-06-19T10:16:42.892145Z"}
+{"path": "data/tap.db", "event": "database_initialized", "level": "info", "timestamp": "2026-06-19T10:20:22.698485Z"}
+{"primary": "anthropic/claude-sonnet-4", "hard": "x-ai/grok-4.3", "grok": "x-ai/grok-4", "event": "llm_client_initialized", "level": "info", "timestamp": "2026-06-19T10:20:22.857546Z"}
+{"error": "peer closed connection without sending complete message body (incomplete chunked read)", "reconnect_in": 1, "is_auth_failure": false, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-19T10:27:49.498391Z"}
+{"refresh_token_prefix": "MUJ0YWZwNmVDOXgyQ1Jk...", "client_id_prefix": "ZUpZbms4N2...", "event": "oauth2_refresh_attempting", "level": "info", "timestamp": "2026-06-19T10:27:50.507025Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-19T10:27:50.984446Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth2_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-19T10:27:50.985484Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-19T10:27:51.123084Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth2_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-19T10:27:51.123879Z"}
+{"hint": "The refresh token may be expired. Generate a new one via: https://twitter.com/i/oauth2/authorize?... Falling back to Bearer token for subscriptions.", "event": "oauth2_all_refresh_strategies_failed", "level": "warning", "timestamp": "2026-06-19T10:27:51.124530Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-19T10:27:51.125202Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-19T10:27:52.175355Z"}
+{"event_type": "post.create", "event": "stream_subscription_already_exists", "level": "info", "timestamp": "2026-06-19T10:27:52.176682Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "dm.received", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-19T10:27:52.178238Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-19T10:27:52.643641Z"}
+{"event_type": "dm.received", "status": 400, "body": "{\"errors\":[{\"message\":\"OauthAccessTokenRequired: OAuth user access token is required for this event type\"}],\"title\":\"Invalid Request\",\"detail\":\"One or more parameters to your request was invalid.\",\"type\":\"https://api.twitter.com/2/problems/invalid-request\"}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-19T10:27:52.644690Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-19T10:27:52.645778Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-19T10:27:53.714769Z"}
+{"event_type": "post.delete", "event": "stream_subscription_already_exists", "level": "info", "timestamp": "2026-06-19T10:27:53.716197Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "chat.received", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-19T10:27:53.717171Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-19T10:27:54.275424Z"}
+{"event_type": "chat.received", "status": 400, "body": "{\"errors\":[{\"message\":\"OauthAccessTokenRequired: OAuth user access token is required for this event type\"}],\"title\":\"Invalid Request\",\"detail\":\"One or more parameters to your request was invalid.\",\"type\":\"https://api.twitter.com/2/problems/invalid-request\"}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-19T10:27:54.276046Z"}
+{"url": "https://api.x.com/2/activity/stream", "auth_type": "bearer_app_only", "subscriptions_created": 2, "event": "stream_connecting", "level": "info", "timestamp": "2026-06-19T10:27:54.276814Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/activity/stream \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-19T10:28:14.891838Z"}
+{"event": "stream_connected", "level": "info", "timestamp": "2026-06-19T10:28:14.891971Z"}
+{"path": "data/tap.db", "event": "database_initialized", "level": "info", "timestamp": "2026-06-19T10:36:37.906009Z"}
+{"primary": "anthropic/claude-sonnet-4", "hard": "x-ai/grok-4.3", "grok": "x-ai/grok-4", "event": "llm_client_initialized", "level": "info", "timestamp": "2026-06-19T10:36:38.066513Z"}
