@@ -106,24 +106,36 @@ CREATE TABLE IF NOT EXISTS aliases (
     effectiveness_score REAL
 );
 
--- Intelligence from other users
-CREATE TABLE IF NOT EXISTS other_user_intel (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    tweet_id TEXT REFERENCES tweets(id),
-    username TEXT NOT NULL,
-    new_aliases TEXT DEFAULT '[]',
-    defensive_pattern TEXT,
-    property_confirmed TEXT,
-    extracted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+  -- Intelligence from other users
+  CREATE TABLE IF NOT EXISTS other_user_intel (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      tweet_id TEXT REFERENCES tweets(id),
+      username TEXT NOT NULL,
+      new_aliases TEXT DEFAULT '[]',
+      defensive_pattern TEXT,
+      property_confirmed TEXT,
+      extracted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
 
--- Performance indexes
-CREATE INDEX IF NOT EXISTS idx_tweets_created_at ON tweets(created_at);
-CREATE INDEX IF NOT EXISTS idx_tweets_source ON tweets(source);
-CREATE INDEX IF NOT EXISTS idx_nodes_tweet_id ON nodes(tweet_id);
-CREATE INDEX IF NOT EXISTS idx_properties_key ON properties(property_key);
-CREATE INDEX IF NOT EXISTS idx_aliases_status ON aliases(status);
-"""
+  -- v3.0: Event log for WebSocket event persistence (replay/debugging)
+  CREATE TABLE IF NOT EXISTS event_log (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      event_type TEXT NOT NULL,
+      event_data TEXT DEFAULT '{}',
+      cycle_id TEXT,
+      probe_id TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- Performance indexes
+  CREATE INDEX IF NOT EXISTS idx_tweets_created_at ON tweets(created_at);
+  CREATE INDEX IF NOT EXISTS idx_tweets_source ON tweets(source);
+  CREATE INDEX IF NOT EXISTS idx_nodes_tweet_id ON nodes(tweet_id);
+  CREATE INDEX IF NOT EXISTS idx_properties_key ON properties(property_key);
+  CREATE INDEX IF NOT EXISTS idx_aliases_status ON aliases(status);
+  CREATE INDEX IF NOT EXISTS idx_event_log_created_at ON event_log(created_at);
+  CREATE INDEX IF NOT EXISTS idx_event_log_event_type ON event_log(event_type);
+  """
 
 
 class Database:
@@ -654,6 +666,81 @@ class Database:
             ]
         except Exception as e:
             raise DatabaseError(f"Failed to get recent intel: {e}", original=e) from e
+
+    # =========================================================================
+    # Event Log Operations (v3.0)
+    # =========================================================================
+
+    async def insert_event_log(
+        self,
+        event_type: str,
+        event_data: dict,
+        cycle_id: str | None = None,
+        probe_id: str | None = None,
+    ) -> None:
+        """Persist a WebSocket event to the event_log table (v3.0).
+
+        Args:
+            event_type: Event type string (e.g., 'new_tweet', 'probe_result').
+            event_data: Event data dictionary (will be JSON-serialized).
+            cycle_id: Optional correlation cycle ID.
+            probe_id: Optional correlation probe ID.
+
+        Raises:
+            DatabaseError: If insertion fails.
+        """
+        conn = self._ensure_connected()
+        try:
+            await conn.execute(
+                """INSERT INTO event_log (event_type, event_data, cycle_id, probe_id)
+                   VALUES (?, ?, ?, ?)""",
+                (
+                    event_type,
+                    json.dumps(event_data, default=str),
+                    cycle_id,
+                    probe_id,
+                ),
+            )
+            await conn.commit()
+        except Exception as e:
+            # Event log failures should NOT crash the cycle — log only
+            log.warning("event_log_insert_failed", error=str(e), event_type=event_type)
+
+    async def get_recent_events(self, limit: int = 100) -> list[dict]:
+        """Retrieve recent events from the event_log table (v3.0).
+
+        Args:
+            limit: Maximum number of events to return.
+
+        Returns:
+            List of event dictionaries with event_type, event_data, cycle_id,
+            probe_id, and created_at fields.
+
+        Raises:
+            DatabaseError: If query fails.
+        """
+        conn = self._ensure_connected()
+        try:
+            cursor = await conn.execute(
+                """SELECT event_type, event_data, cycle_id, probe_id, created_at
+                   FROM event_log
+                   ORDER BY created_at DESC
+                   LIMIT ?""",
+                (limit,),
+            )
+            rows = await cursor.fetchall()
+            return [
+                {
+                    "event_type": row["event_type"],
+                    "event_data": json.loads(row["event_data"]),
+                    "cycle_id": row["cycle_id"],
+                    "probe_id": row["probe_id"],
+                    "created_at": row["created_at"],
+                }
+                for row in rows
+            ]
+        except Exception as e:
+            raise DatabaseError(f"Failed to get recent events: {e}", original=e) from e
 
     # =========================================================================
     # Stats

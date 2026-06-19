@@ -27,7 +27,7 @@ from typing import Optional
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
 from tap.config import get_settings
@@ -38,7 +38,10 @@ from tap.followup import FollowUpGenerator
 from tap.grok_monitor import GrokMonitor
 from tap.stream_listener import StreamListener
 from tap.judge import Judge
-from tap.logger import get_logger, setup_logging
+from tap.logger import get_logger, setup_logging, get_cycle_id, get_probe_id
+from tap.llm_client import LLMClient
+from tap.prompt_sanitiser import PromptSanitiser
+from tap.strategies import AestheticEvalProvider, BinarySearchProvider, MetaphorShiftProvider, Phase5ExtractionProvider, StrategySelector
 from tap.ssot import SSOTEngine
 from tap.x_client import TwitterClient
 from tap.classifier import ResponseClassifier
@@ -50,6 +53,9 @@ _db: Optional[Database] = None
 _engine: Optional[TAPEngine] = None
 _ssot: Optional[SSOTEngine] = None
 _dpa: Optional[DPAFrameManager] = None
+_llm_client: Optional[LLMClient] = None
+_sanitiser: Optional[PromptSanitiser] = None
+_strategy_selector: Optional[StrategySelector] = None
 
 # Last follow-up generated (for HITL selection)
 _last_followup = None
@@ -63,7 +69,7 @@ _ws_clients: list[WebSocket] = []
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan: initialize and teardown modules."""
-    global _db, _engine, _ssot, _dpa
+    global _db, _engine, _ssot, _dpa, _llm_client, _sanitiser, _strategy_selector
 
     settings = get_settings()
     setup_logging(log_file_path=settings.log_file_path if settings.log_file_path else None)
@@ -71,6 +77,22 @@ async def lifespan(app: FastAPI):
     # Initialize database
     _db = Database(settings.db_path)
     await _db.initialize()
+
+    # v3.0: Initialize unified LLM client
+    _llm_client = LLMClient(settings)
+    log.info(llm_client_ready)
+
+    # v3.0: Initialize prompt sanitiser
+    _sanitiser = PromptSanitiser(strict_mode=settings.use_prompt_sanitiser)
+    log.info(prompt_sanitiser_ready)
+
+    # v3.0: Initialize strategy providers and selector
+    binary_search = BinarySearchProvider(_llm_client, _sanitiser)
+    metaphor_shift = MetaphorShiftProvider(_llm_client, _sanitiser)
+    aesthetic_eval = AestheticEvalProvider(_llm_client, _sanitiser)
+    phase5 = Phase5ExtractionProvider(_llm_client, _sanitiser)
+    _strategy_selector = StrategySelector(binary_search, metaphor_shift, aesthetic_eval, phase5)
+    log.info(strategy_selector_ready)
 
     # Initialize modules
     twitter = TwitterClient(settings)
@@ -136,7 +158,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="TAP Framework API",
-    version="2.2.0",
+    version="3.0.0",
     description="Tree of Attacks with Pruning — LLM Security Research Framework",
     lifespan=lifespan,
 )
@@ -429,6 +451,93 @@ async def webhook_receiver(event: dict):
     return {"status": "ok"}
 
 
+
+
+# =============================================================================
+# v3.0: Health, Metrics & Events Endpoints
+# =============================================================================
+
+
+@app.get('/health')
+async def health_check():
+    health = {'status': 'healthy', 'version': '3.0.0', 'components': {}}
+    try:
+        if _db and _db._conn:
+            await _db.get_stats()
+            health['components']['database'] = {'status': 'healthy'}
+        else:
+            health['components']['database'] = {'status': 'unhealthy'}
+            health['status'] = 'degraded'
+    except Exception as e:
+        health['components']['database'] = {'status': 'unhealthy', 'error': str(e)}
+        health['status'] = 'unhealthy'
+    if _llm_client:
+        health['components']['llm_client'] = _llm_client.get_health_status()
+        if _llm_client.circuit_state.value == 'open':
+            health['status'] = 'degraded'
+    else:
+        health['components']['llm_client'] = {'status': 'not_initialized'}
+    stream_connected = False
+    if _engine and hasattr(_engine, 'grok') and _engine.grok.stream:
+        stream_connected = _engine.grok.stream.is_connected
+    health['components']['stream'] = {'connected': stream_connected}
+    if not stream_connected and health['status'] == 'healthy':
+        health['status'] = 'degraded'
+    if _sanitiser:
+        health['components']['prompt_sanitiser'] = _sanitiser.get_stats()
+    health['components']['engine'] = {
+        'is_running': _is_running,
+        'cycle_count': _engine._cycle_count if _engine else 0,
+    }
+    return health
+
+
+@app.get('/metrics', response_class=PlainTextResponse)
+async def metrics():
+    lines = ['# HELP tap_cycle_count Total TAP cycles executed', '# TYPE tap_cycle_count counter']
+    cycle_count = _engine._cycle_count if _engine else 0
+    lines.append(f'tap_cycle_count {cycle_count}')
+    if _llm_client:
+        usage = _llm_client.usage.snapshot()
+        lines.extend([
+            '# HELP tap_llm_total_calls Total LLM API calls',
+            '# TYPE tap_llm_total_calls counter',
+            f'tap_llm_total_calls {usage["total_calls"]}',
+            '# HELP tap_llm_cost_usd Estimated LLM cost in USD',
+            '# TYPE tap_llm_cost_usd gauge',
+            f'tap_llm_cost_usd {usage["total_cost_usd"]}',
+        ])
+    if _db and _db._conn:
+        try:
+            stats = await _db.get_stats()
+            lines.extend([
+                '# HELP tap_db_total_tweets Total tweets in database',
+                '# TYPE tap_db_total_tweets gauge',
+                f'tap_db_total_tweets {stats.get("total_tweets", 0)}',
+                '# HELP tap_db_confirmed_properties Total confirmed properties',
+                '# TYPE tap_db_confirmed_properties gauge',
+                f'tap_db_confirmed_properties {stats.get("confirmed_properties", 0)}',
+            ])
+        except Exception:
+            pass
+    lines.extend([
+        '# HELP tap_ws_clients Connected WebSocket clients',
+        '# TYPE tap_ws_clients gauge',
+        f'tap_ws_clients {len(_ws_clients)}',
+        '# HELP tap_is_running Whether a TAP cycle is currently running',
+        '# TYPE tap_is_running gauge',
+        f'tap_is_running {1 if _is_running else 0}',
+    ])
+    return chr(10).join(lines) + chr(10)
+
+
+@app.get('/api/events')
+async def get_recent_events(limit: int = 50):
+    if not _db:
+        return {'error': 'Database not initialized'}
+    return await _db.get_recent_events(limit=limit)
+
+
 @app.get("/", response_class=HTMLResponse)
 async def root():
     """Serve the dashboard HTML."""
@@ -469,6 +578,11 @@ async def broadcast_update(event_type: str, data: dict):
         data: Event data dictionary.
     """
     message = json.dumps({"event": event_type, "data": data}, default=str)
+    if _db and _db._conn:
+        try:
+            await _db.insert_event_log(event_type, data, get_cycle_id(), get_probe_id())
+        except Exception:
+            pass
     disconnected = []
     for client in _ws_clients:
         try:

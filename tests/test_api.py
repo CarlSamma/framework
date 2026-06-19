@@ -9,7 +9,6 @@ def test_force_fetch_replies_success():
     mock_db = MagicMock()
     mock_db.upsert_tweet = AsyncMock()
     mock_db.tweet_exists = AsyncMock(return_value=False)
-    
     # Mock Twitter client
     mock_tweet = MagicMock()
     mock_tweet.id = "12345"

@@ -112,6 +112,44 @@ class Settings(BaseSettings):
         description="Path to persistent server log file",
     )
 
+    # === v3.0 Infrastructure ===
+    use_unified_llm_client: bool = Field(
+        default=True,
+        description="Use the unified LLMClient gateway (v3.0). If False, falls back to per-module AsyncOpenAI.",
+    )
+    use_prompt_sanitiser: bool = Field(
+        default=True,
+        description="Enable prompt sanitisation before posting probes (v3.0).",
+    )
+    use_strategy_selector: bool = Field(
+        default=True,
+        description="Use the strategy selector for automated probe strategy selection (v3.0).",
+    )
+    circuit_breaker_failure_threshold: int = Field(
+        default=5,
+        description="Consecutive LLM failures before circuit breaker trips.",
+    )
+    circuit_breaker_recovery_timeout: float = Field(
+        default=60.0,
+        description="Seconds before circuit breaker enters half-open state.",
+    )
+    enable_correlation_ids: bool = Field(
+        default=True,
+        description="Propagate cycle_id and probe_id through logs via contextvars (v3.0).",
+    )
+    enable_event_log: bool = Field(
+        default=True,
+        description="Persist WebSocket events to event_log table for replay/debugging (v3.0).",
+    )
+    enable_parallel_pipeline: bool = Field(
+        default=True,
+        description="Use asyncio.TaskGroup for parallelizable operations in engine (v3.0).",
+    )
+    db_write_queue_threshold: float = Field(
+        default=5.0,
+        description="Seconds to wait for DB before buffering writes in memory (v3.0).",
+    )
+
     model_config = {
         "env_file": ".env",
         "env_file_encoding": "utf-8",

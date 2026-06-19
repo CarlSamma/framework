@@ -99,3 +99,44 @@ def get_logger(name: str) -> structlog.BoundLogger:
         A bound structlog logger instance.
     """
     return structlog.get_logger(name)
+
+# --- Correlation ID helpers (v3.0) ---
+
+import contextvars
+import uuid
+
+_cycle_id: contextvars.ContextVar[str] = contextvars.ContextVar("cycle_id", default="")
+_probe_id: contextvars.ContextVar[str] = contextvars.ContextVar("probe_id", default="")
+
+
+def set_cycle_id(cycle_id: str | None = None) -> str:
+    """Set the cycle ID for log correlation."""
+    cid = cycle_id or str(uuid.uuid4())[:8]
+    _cycle_id.set(cid)
+    structlog.contextvars.bind_contextvars(cycle_id=cid)
+    return cid
+
+
+def set_probe_id(probe_id: str | None = None) -> str:
+    """Set the probe ID for log correlation."""
+    pid = probe_id or str(uuid.uuid4())[:8]
+    _probe_id.set(pid)
+    structlog.contextvars.bind_contextvars(probe_id=pid)
+    return pid
+
+
+def get_cycle_id() -> str:
+    """Return the current cycle ID from context."""
+    return _cycle_id.get()
+
+
+def get_probe_id() -> str:
+    """Return the current probe ID from context."""
+    return _probe_id.get()
+
+
+def clear_correlation_ids() -> None:
+    """Clear all correlation IDs from context."""
+    _cycle_id.set("")
+    _probe_id.set("")
+    structlog.contextvars.clear_contextvars()

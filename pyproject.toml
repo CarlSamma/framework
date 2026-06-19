@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tap-framework"
-version = "2.2.0"
+version = "3.0.0"
 description = "Tree of Attacks with Pruning — LLM Security Research Framework"
 readme = "README.md"
 license = {text = "Apache-2.0"}

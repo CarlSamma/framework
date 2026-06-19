@@ -52,10 +52,6 @@ document.addEventListener('alpine:init', () => {
                 console.warn('[Status] Could not restore status:', e);
             }
         },
-
-        // WebSocket
-        connectWebSocket() {
-            const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
             this.ws = new WebSocket(`${protocol}//${location.host}/ws/live`);
 
             this.ws.onopen = () => {
