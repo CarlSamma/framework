@@ -106,9 +106,8 @@ async def lifespan(app: FastAPI):
     classifier = ResponseClassifier(settings.openrouter_api_key, settings.openrouter_model_primary)
     judge = Judge(settings.openrouter_api_key, settings.openrouter_model_primary)
 
-    # Initialize stream listener for real-time reply detection
-    stream = StreamListener(settings)
-    grok = GrokMonitor(settings, twitter, stream=stream)
+    # Initialize monitor for real-time reply detection
+    grok = GrokMonitor(settings, twitter, stream=None)
     followup_gen = FollowUpGenerator(
         _ssot, _dpa, settings.openrouter_api_key, settings.openrouter_model_primary
     )
@@ -131,17 +130,14 @@ async def lifespan(app: FastAPI):
         intel_extractor=intel_extractor,
     )
 
-    # Resolve target user ID and start stream listener
+    # Target resolution (we just need to ensure the client is ready)
     try:
         target_user = await twitter._resolve_target_user_id()
         if target_user:
-            stream.set_target_user_id(target_user)
-            await stream.start()
-            log.info("stream_listener_started", target_user_id=target_user)
-        else:
-            log.warning("stream_listener_not_started_no_target_user_id")
+            log.info("target_user_resolved", target_user_id=target_user)
     except Exception as e:
-        log.warning("stream_listener_start_failed", error=str(e))
+        log.warning("target_user_resolution_failed", error=str(e))
+
 
     # Seed tweet DB with recent history on startup (best-effort)
     try:

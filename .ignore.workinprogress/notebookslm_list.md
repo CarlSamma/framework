@@ -1,0 +1,13 @@
+## Sources Gathered
+- **Notebook f28143a2‑ff42‑4587‑bf6b‑a721914eff00**
+  - Prompt‑injection mitigation techniques (sandboxing, input sanitisation, tool‑use policies).
+  - Async pipeline best‑practice checklist.
+- **Notebook c5b0ad67‑2f9f‑475e‑a65c‑7a0ed74a7a4c**
+  - Advanced prompt‑guardrails using LLM‑based classifiers.
+  - Structured concurrency patterns for Python async.
+- **Notebook f2afcd97‑eae5‑45bf‑88f6‑c1a33169c164**
+  - Database sharding & connection pooling strategies for SQLite and Postgres.
+  - Logging schema with JSON‑line output and correlation IDs.
+- **Notebook 3725c9d1‑627c‑4fbb‑8ef8‑b585ad9a2952**
+  - Secure OAuth handling and token rotation.
+  - Micro‑service boundary extraction for the TAP engine.
