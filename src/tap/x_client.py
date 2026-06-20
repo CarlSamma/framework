@@ -145,6 +145,8 @@ class TwitterClient:
         """Post a DPA-framed probe as a tweet or reply.
 
         Uses OAuth 1.0a user context (required for posting).
+        If reply_to_id is not provided, it will automatically find the target's 
+        latest tweet and reply to that to avoid shadow-banning from self-replies.
 
         Args:
             text: Tweet text content.
@@ -158,13 +160,29 @@ class TwitterClient:
             TwitterError: If posting fails.
         """
         # Ensure that every posted message contains "@hackinga0"
-        if "@hackinga0" not in text.lower():
+        if f"@{self.settings.target_handle.lower()}" not in text.lower():
             if text and not text[-1].isspace():
-                text = f"{text} @hackinga0"
+                text = f"{text} @{self.settings.target_handle}"
             else:
-                text = f"{text}@hackinga0"
+                text = f"{text}@{self.settings.target_handle}"
 
-        if reply_to_id and not reply_to_id.isdigit():
+        # If no explicit reply_to_id is given (or if we want to force replying to the target's thread)
+        # fetch the target's latest tweet
+        if not reply_to_id:
+            try:
+                target_id = await self._resolve_target_user_id()
+                if target_id:
+                    response = await self._retry(
+                        lambda: self.client.get_users_tweets(id=target_id, max_results=5)
+                    )
+                    if response.data:
+                        # Use the most recent tweet from the target
+                        reply_to_id = str(response.data[0].id)
+                        log.info("found_target_latest_tweet", tweet_id=reply_to_id)
+            except Exception as e:
+                log.warning("failed_to_fetch_target_latest_tweet", error=str(e))
+
+        if reply_to_id and not str(reply_to_id).isdigit():
             log.warning(
                 "post_probe_reply_to_id_non_numeric_ignoring",
                 reply_to_id=reply_to_id,

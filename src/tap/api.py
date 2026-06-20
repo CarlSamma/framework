@@ -25,10 +25,12 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, BackgroundTasks
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, BackgroundTasks, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+import os
+import tweepy
 
 from tap.config import get_settings
 from tap.db import Database
@@ -45,6 +47,7 @@ from tap.strategies import AestheticEvalProvider, BinarySearchProvider, Metaphor
 from tap.ssot import SSOTEngine
 from tap.x_client import TwitterClient
 from tap.classifier import ResponseClassifier
+from tap.agents import AgentDPAFManager, AgentSTIREvaluator, AgentIntelExtractor
 
 log = get_logger("api")
 
@@ -52,7 +55,7 @@ log = get_logger("api")
 _db: Optional[Database] = None
 _engine: Optional[TAPEngine] = None
 _ssot: Optional[SSOTEngine] = None
-_dpa: Optional[DPAFrameManager] = None
+_dpa: Optional[AgentDPAFManager] = None
 _llm_client: Optional[LLMClient] = None
 _sanitiser: Optional[PromptSanitiser] = None
 _strategy_selector: Optional[StrategySelector] = None
@@ -97,7 +100,9 @@ async def lifespan(app: FastAPI):
     # Initialize modules
     twitter = TwitterClient(settings)
     _ssot = SSOTEngine(_db, settings.ssot_path, target_handle=settings.target_handle)
-    _dpa = DPAFrameManager(_db)
+    _dpa = AgentDPAFManager(_db)
+    stir_evaluator = AgentSTIREvaluator(llm_client=_llm_client)
+    intel_extractor = AgentIntelExtractor(_ssot, twitter)
     classifier = ResponseClassifier(settings.openrouter_api_key, settings.openrouter_model_primary)
     judge = Judge(settings.openrouter_api_key, settings.openrouter_model_primary)
 
@@ -122,6 +127,8 @@ async def lifespan(app: FastAPI):
         settings=settings,
         followup=followup_gen,
         event_callback=on_engine_event,
+        stir_evaluator=stir_evaluator,
+        intel_extractor=intel_extractor,
     )
 
     # Resolve target user ID and start stream listener
@@ -144,6 +151,25 @@ async def lifespan(app: FastAPI):
         log.info("seed_complete", count=len(seed_tweets))
     except Exception as e:
         log.warning("seed_failed_on_startup", error=str(e))
+        
+    # Start background monitor for all target interactions (for STIR Evaluator)
+    async def monitor_all_interactions():
+        """Polls recent search to find all interactions with @hackinga0 to feed STIR Evaluator."""
+        query = f"to:{settings.target_handle} OR from:{settings.target_handle}"
+        since_id = None
+        while True:
+            try:
+                results = await twitter._search_tweets(query, since_id=since_id)
+                if results:
+                    since_id = str(max(int(t.id) for t in results if t.id.isdigit()))
+                    for tweet in results:
+                        if stir_evaluator:
+                            await stir_evaluator.evaluate_response(tweet.text)
+            except Exception as e:
+                pass
+            await asyncio.sleep(60)
+            
+    asyncio.create_task(monitor_all_interactions())
 
     log.info("api_startup_complete")
     yield
@@ -157,8 +183,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="TAP Framework API",
-    version="3.0.0",
+    title="New TAP Framework v.3.1",
+    version="3.1.0",
     description="Tree of Attacks with Pruning — LLM Security Research Framework",
     lifespan=lifespan,
 )
@@ -205,6 +231,59 @@ async def get_tree(limit: int = 50):
     return [n.model_dump(mode="json") for n in nodes]
 
 
+_oauth_handler = None
+
+def _update_env_file(key: str, value: str):
+    env_path = ".env"
+    if not os.path.exists(env_path):
+        return
+    with open(env_path, "r") as f:
+        lines = f.readlines()
+    with open(env_path, "w") as f:
+        for line in lines:
+            if line.startswith(f"{key}="):
+                f.write(f"{key}={value}\n")
+            else:
+                f.write(line)
+
+@app.get("/api/auth/login")
+async def auth_login():
+    """Start Twitter OAuth 2.0 PKCE flow."""
+    global _oauth_handler
+    settings = get_settings()
+    _oauth_handler = tweepy.OAuth2UserHandler(
+        client_id=settings.twitter_client_id,
+        redirect_uri=settings.twitter_callback_url,
+        scope=["tweet.read", "tweet.write", "users.read", "offline.access"],
+        client_secret=settings.twitter_client_secret
+    )
+    auth_url = _oauth_handler.get_authorization_url()
+    return RedirectResponse(auth_url)
+
+@app.get("/api/auth/callback")
+async def auth_callback(request: Request):
+    """Callback for Twitter OAuth 2.0 PKCE flow."""
+    global _oauth_handler
+    if not _oauth_handler:
+        return {"error": "OAuth flow not initiated. Please go to /api/auth/login first."}
+    
+    try:
+        authorization_response_url = str(request.url)
+        token = _oauth_handler.fetch_token(authorization_response_url)
+        
+        access_token = token.get("access_token")
+        refresh_token = token.get("refresh_token")
+        
+        if access_token:
+            _update_env_file("TWITTER_OAUTH2_ACCESS_TOKEN", access_token)
+        if refresh_token:
+            _update_env_file("TWITTER_OAUTH2_REFRESH_TOKEN", refresh_token)
+            
+        return {"status": "success", "message": "Tokens successfully refreshed and saved to .env"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
 @app.get("/api/properties")
 async def get_properties():
     """All confirmed properties."""
@@ -223,6 +302,14 @@ async def get_dpa():
 
     frame = await _dpa.get_active_frame()
     return frame.model_dump(mode="json")
+
+
+@app.get("/api/stir")
+async def get_stir():
+    """Current STIR history for psychometric dashboard."""
+    if not _engine or not _engine.stir_evaluator:
+        return {"error": "STIR Evaluator not initialized."}
+    return _engine.stir_evaluator.history
 
 
 @app.get("/api/followup")
@@ -285,6 +372,42 @@ async def inject_mock_reply(text: str):
     GrokMonitor.mock_replies[tid] = text
     log.info("mock_reply_received_by_api_for_injection", tweet_id=tid, text=text)
     return {"status": "success", "tweet_id": tid, "text": text}
+
+
+@app.post("/api/confirm_property")
+async def confirm_property(key: str, value: str):
+    """Manually confirm a property (Phase 0 unlock) bypassing the bot."""
+    global _ssot
+    if not _ssot:
+        return {"error": "SSOT not initialized."}
+    
+    # We create a mock classification to force it
+    from tap.models import ClassificationResult, PatternClass
+    from tap.classifier import PropertyExtraction
+    
+    prop = PropertyExtraction(property_key=key, property_value=value, confidence=1.0)
+    classification = ClassificationResult(
+        pattern=PatternClass.VERIFY_HIT,
+        property_tested=key,
+        hit_value=value,
+        raw_text="Manual Phase 0 Unlock",
+        extraction=prop
+    )
+    
+    # We need a mock node
+    from tap.models import ProbeNode, ProbeState
+    mock_node = ProbeNode(
+        id=f"manual_{key}",
+        parent_id=None,
+        property_tested=key,
+        probe_text="manual unlock",
+        state=ProbeState.EVALUATED
+    )
+    
+    await _ssot.update_after_probe(mock_node, classification)
+    await broadcast_update("property_confirmed", prop.model_dump(mode="json"))
+    log.info("manual_property_confirmed", key=key, value=value)
+    return {"status": "success", "key": key, "value": value}
 
 
 @app.post("/api/select")

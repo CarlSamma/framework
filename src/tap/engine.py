@@ -85,21 +85,25 @@ class TAPEngine:
         grok: GrokMonitor,
         settings: Settings,
         followup: Optional[FollowUpGenerator] = None,
-        event_callback: Optional[Callable[[str, dict], Any]] = None,
+        event_callback: Optional[Callable] = None,
+        stir_evaluator=None,
+        intel_extractor=None,
     ) -> None:
-        """Initialize with all dependencies.
+        """Initialize engine with all required components.
 
         Args:
             db: Database instance.
-            twitter: Twitter client for posting probes.
-            ssot: SSOT engine for knowledge management.
-            dpa: DPA frame manager for probe composition.
-            classifier: Response pattern classifier.
-            judge: Response scorer.
-            grok: Grok monitor for reply detection.
+            twitter: Twitter API client.
+            ssot: Single Source of Truth engine.
+            dpa: DPA Frame manager (v3.1 AgentDPAFManager expected).
+            classifier: Pattern classifier.
+            judge: Off-topic and similarity judge.
+            grok: Target bot monitor.
             settings: Framework settings.
             followup: Follow-up generator (created if not provided).
             event_callback: Optional callback for real-time WebSocket events.
+            stir_evaluator: v3.1 AgentSTIREvaluator.
+            intel_extractor: v3.1 AgentIntelExtractor.
         """
         self.db = db
         self.twitter = twitter
@@ -110,6 +114,8 @@ class TAPEngine:
         self.grok = grok
         self.settings = settings
         self.event_callback = event_callback
+        self.stir_evaluator = stir_evaluator
+        self.intel_extractor = intel_extractor
 
         # Attacker LLM client
         self._attacker_client = AsyncOpenAI(
@@ -165,8 +171,16 @@ class TAPEngine:
             gate_status = await self._check_phase0_gate()
             if not gate_status["passed"]:
                 log.info("phase0_gate_blocked", missing=gate_status["missing"])
-                # Force-select the first missing foundational property
-                selected_probe = None  # Force normal selection flow
+                # Let AgentIntelExtractor attempt to unlock
+                if self.intel_extractor:
+                    unlocked = await self.intel_extractor.analyze_and_unlock()
+                    if unlocked:
+                        log.info("phase0_unlocked_by_intel_extractor")
+                        gate_status = await self._check_phase0_gate() # Re-check
+                
+                if not gate_status["passed"]:
+                    # Force-select the first missing foundational property
+                    selected_probe = None  # Force normal selection flow
 
             # ── Phase 5 Check ─────────────────────────────────────────
             entropy = await self.ssot.get_candidate_entropy()
@@ -252,9 +266,17 @@ class TAPEngine:
                 log.info("metaphor_shift_recorded", layer=shift.layer_name)
 
             # Check for frame rotation need
-            rotation = await self.dpa.suggest_frame_rotation()
-            if rotation:
-                log.warning("frame_rotation_needed", suggestion=rotation)
+            if self.stir_evaluator:
+                stir_result = await self.stir_evaluator.evaluate_response(classification.raw_text)
+                await self._emit_event("stir_evaluated", stir_result)
+                if stir_result["stir_percentage"] < 20.0:
+                    log.warning("stir_low_forcing_rotation", stir=stir_result["stir_percentage"])
+                    if hasattr(self.dpa, 'rotate_frame'):
+                        await self.dpa.rotate_frame(strategy="random")
+            else:
+                rotation_reason = await self.dpa.suggest_frame_rotation()
+                if rotation_reason:
+                    await self._emit_event("rotation_suggested", {"reason": rotation_reason})
 
             # 7. GENERATE DUAL FOLLOW-UP
             followup = await self.followup.generate(

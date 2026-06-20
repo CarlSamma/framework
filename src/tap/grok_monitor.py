@@ -108,10 +108,7 @@ class GrokMonitor:
         tweet_id: str,
         timeout: int = 3600,
     ) -> Optional[Tweet]:
-        """Wait for target to reply to our tweet.
-
-        Uses StreamListener (Activity API) for real-time detection when
-        available. Falls back to polling if stream is not connected.
+        """Wait for target to reply to our tweet using conversation_id polling.
 
         Args:
             tweet_id: The ID of our tweet to wait for a reply to.
@@ -120,131 +117,64 @@ class GrokMonitor:
         Returns:
             The reply Tweet model if found, None if timeout.
         """
-        if not self.twitter and not self.stream:
-            log.warning("no_twitter_client_or_stream_for_reply_wait")
+        if not self.twitter:
+            log.warning("no_twitter_client_for_reply_wait")
             return None
 
         # Register pending tweet ID
         GrokMonitor.pending_tweet_id = tweet_id
         log.info("waiting_for_reply", tweet_id=tweet_id, timeout=timeout)
 
+        poll_interval = self.settings.poll_interval_seconds
+        elapsed = 0
+        since_id = tweet_id
+
         try:
-            # Check for manually injected mock reply first
-            if tweet_id in GrokMonitor.mock_replies:
-                reply_text = GrokMonitor.mock_replies.pop(tweet_id)
-                log.info("mock_reply_injected_successfully", tweet_id=tweet_id, text=reply_text)
-                return Tweet(
-                    id=f"mock_{tweet_id}",
-                    user_id="target_user",
-                    username=self.settings.target_handle,
-                    text=reply_text,
-                    in_reply_to_tweet_id=tweet_id,
-                    created_at=datetime.now(timezone.utc),
-                    source=TweetSource.TARGET_BOT,
-                    conversation_thread_id=tweet_id,
-                )
+            while elapsed < timeout:
+                # Check for manually injected mock reply first
+                if tweet_id in GrokMonitor.mock_replies:
+                    reply_text = GrokMonitor.mock_replies.pop(tweet_id)
+                    log.info("mock_reply_injected_successfully", tweet_id=tweet_id, text=reply_text)
+                    return Tweet(
+                        id=f"mock_{tweet_id}",
+                        user_id="target_user",
+                        username=self.settings.target_handle,
+                        text=reply_text,
+                        in_reply_to_tweet_id=tweet_id,
+                        created_at=datetime.now(timezone.utc),
+                        source=TweetSource.TARGET_BOT,
+                        conversation_thread_id=tweet_id,
+                    )
 
-            # Try stream-based detection first (real-time)
-            if self.stream and self.stream.is_connected:
-                return await self._wait_via_stream(tweet_id, timeout)
+                # Poll for replies in the conversation thread
+                try:
+                    query = f"conversation_id:{tweet_id} is:reply from:{self.settings.target_handle}"
+                    results = await self.twitter._search_tweets(query, since_id=since_id)
+                    
+                    if results:
+                        # Return first reply from target
+                        reply = next((t for t in results if t.username.lower() == self.settings.target_handle.lower()), None)
+                        if reply:
+                            log.info(
+                                "reply_received_via_polling",
+                                reply_id=reply.id,
+                                reply_from=reply.username,
+                                elapsed=elapsed,
+                            )
+                            return reply
+                        since_id = max(t.id for t in results)
+                except TwitterError as e:
+                    log.warning("reply_poll_error", error=str(e))
 
-            # Fallback to polling
-            return await self._wait_via_polling(tweet_id, timeout)
+                await asyncio.sleep(poll_interval)
+                elapsed += poll_interval
+
+            log.warning("polling_reply_timeout", tweet_id=tweet_id, elapsed=elapsed)
+            return None
 
         finally:
             # Always clear pending tweet ID when waiting ends
             GrokMonitor.pending_tweet_id = None
-            # Clean up stream queue registration
-            if self.stream:
-                self.stream.unregister_reply_wait(tweet_id)
-
-    async def _wait_via_stream(
-        self, tweet_id: str, timeout: int
-    ) -> Optional[Tweet]:
-        """Wait for reply using the real-time Activity API stream.
-
-        Args:
-            tweet_id: The tweet ID we're waiting for a reply to.
-            timeout: Maximum wait time in seconds.
-
-        Returns:
-            The reply Tweet if received, None on timeout.
-        """
-        log.info("waiting_via_stream", tweet_id=tweet_id)
-        queue = self.stream.register_reply_wait(tweet_id)
-
-        try:
-            tweet = await asyncio.wait_for(queue.get(), timeout=timeout)
-            log.info(
-                "reply_received_via_stream",
-                reply_id=tweet.id,
-                reply_from=tweet.username,
-            )
-            return tweet
-        except asyncio.TimeoutError:
-            log.warning("stream_reply_timeout", tweet_id=tweet_id, timeout=timeout)
-            return None
-
-    async def _wait_via_polling(
-        self, tweet_id: str, timeout: int
-    ) -> Optional[Tweet]:
-        """Wait for reply using polling (fallback when stream unavailable).
-
-        Args:
-            tweet_id: The tweet ID we're waiting for a reply to.
-            timeout: Maximum wait time in seconds.
-
-        Returns:
-            The reply Tweet if found, None on timeout.
-        """
-        log.info("waiting_via_polling", tweet_id=tweet_id, timeout=timeout)
-        poll_interval = self.settings.poll_interval_seconds
-        elapsed = 0
-        consecutive_errors = 0
-
-        while elapsed < timeout:
-            # Check for manually injected mock reply
-            if tweet_id in GrokMonitor.mock_replies:
-                reply_text = GrokMonitor.mock_replies.pop(tweet_id)
-                log.info("mock_reply_injected_successfully", tweet_id=tweet_id, text=reply_text)
-                return Tweet(
-                    id=f"mock_{tweet_id}",
-                    user_id="target_user",
-                    username=self.settings.target_handle,
-                    text=reply_text,
-                    in_reply_to_tweet_id=tweet_id,
-                    created_at=datetime.now(timezone.utc),
-                    source=TweetSource.TARGET_BOT,
-                    conversation_thread_id=tweet_id,
-                )
-
-            try:
-                tweets = await self.twitter.poll_new_tweets()
-                consecutive_errors = 0
-                for tweet in tweets:
-                    if tweet.in_reply_to_tweet_id == tweet_id:
-                        log.info(
-                            "reply_received_via_polling",
-                            reply_id=tweet.id,
-                            reply_from=tweet.username,
-                            elapsed=elapsed,
-                        )
-                        return tweet
-            except TwitterError as e:
-                consecutive_errors += 1
-                log.warning("reply_poll_error", error=str(e), consecutive=consecutive_errors)
-                if consecutive_errors >= 3:
-                    log.error("reply_poll_failed_persistently", error=str(e))
-                    raise TwitterError(
-                        f"Persistent Twitter API errors during reply polling: {e}",
-                        original=e,
-                    ) from e
-
-            await asyncio.sleep(poll_interval)
-            elapsed += poll_interval
-
-        log.warning("polling_reply_timeout", tweet_id=tweet_id, elapsed=elapsed)
-        return None
 
     async def analyze_response(
         self,
