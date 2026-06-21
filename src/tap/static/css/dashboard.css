@@ -51,6 +51,15 @@ body {
 
 .stat-value {
     font-weight: 600;
+    border: none;
+    background: transparent;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+}
+
+.stat-value.clickable {
+    text-decoration: underline;
 }
 
 .stat-value.green {
@@ -63,6 +72,10 @@ body {
 
 .stat-value.blue {
     color: var(--accent-blue);
+}
+
+.stat-value.red {
+    color: var(--accent-red);
 }
 
 /* Dashboard Grid */

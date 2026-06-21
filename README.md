@@ -406,6 +406,27 @@ Phase 5 — Interface
 └── static/         CSS + JS assets
 ```
 
+### Estratto tecnico rapido (per sviluppatori)
+
+Breve raccolta dei dettagli tecnici più utili per sviluppo e debugging:
+
+- Stack: `FastAPI` + `uvicorn` backend asincrono; frontend minimal SPA (Alpine.js) che comunica via WebSocket; `SQLite` locale (`data/tap.db`) per persistenza.
+- Twitter/X: `tweepy.Client` per posting (OAuth1.0a) e read (Bearer); `httpx.AsyncClient` per Activity API (subscriptions & stream).
+- Auth X: separazione netta delle modalità di auth —
+    - OAuth2 Bearer (app-only) per stream/read;
+    - OAuth1.0a per scrittura (post/media upload);
+    - OAuth2 User Context per subscription creation (quando disponibile).
+- Posting policy: tutte le probe sono pubblicate come nuovi tweet che menzionano `@{TARGET_HANDLE}`; il client ignora `in_reply_to_tweet_id` e, se una reply è proibita (403), ricade su un post non-reply.
+- Stream & subscriptions: creazione subscription (`POST /2/activity/subscriptions`) + lettura persistente (`GET /2/activity/stream`); il listener gestisce `401/403`, `429 TooManyConnections` (onore `Retry-After`) e `DuplicateSubscription` come condizione non-fatale.
+- LLM gateway (`llm_client.py`): gateway centralizzato verso OpenRouter con circuit-breaker, retry esponenziale e fallback tra modelli (primary/hard/grok); parsing robusto delle risposte (rimozione code fences, regex fallback, estrazione lineare).
+- Sanitizzazione probe: `prompt_sanitiser.py` impedisce directive-injection, blocca termini letterali pericolosi, obbliga single-property probes e valida limiti Twitter.
+- Resilienza: backoff esponenziale con cap, rilevamento di errori fatali (`tweepy.errors.Forbidden` relativo a reply) per evitare retry ripetuti; backoff più lungo per problemi di autenticazione.
+- Observability: logging strutturato con `cycle_id`/`probe_id`, event-log persistente, endpoint `/api/health` e `/metrics` per monitoraggio operativo.
+- Test & CI: `pytest` con mocking per esternalità (LLM/Twitter); `scripts/setup_db.py` per inizializzare schema di test.
+
+Questo estratto è pensato per essere un riferimento rapido per sviluppatori che devono intervenire su autenticazione, posting, stream, gateway LLM o pipeline di probe.
+
+
 ---
 
 ## API Endpoints

@@ -1,5 +1,10 @@
 
 import asyncio
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
 from tap.config import get_settings
 from tap.x_client import TwitterClient
 from tap.stream_listener import StreamListener

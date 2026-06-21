@@ -1,0 +1,83 @@
+(patv31) PS D:\PROGETTI\Framework> tap-server
+INFO:     Started server process [3576]
+INFO:     Waiting for application startup.
+2026-06-20T22:34:01.575814Z [info     ] database_initialized           path=data/tap.db
+2026-06-20T22:34:02.067463Z [info     ] llm_client_initialized         grok=x-ai/grok-4 hard=x-ai/grok-4.3 primary=anthropic/claude-sonnet-4
+2026-06-20T22:34:02.068182Z [info     ] llm_client_ready              
+2026-06-20T22:34:02.068682Z [info     ] prompt_sanitiser_initialized   strict_mode=True
+2026-06-20T22:34:02.069055Z [info     ] prompt_sanitiser_ready        
+2026-06-20T22:34:02.069377Z [info     ] strategy_selector_initialized  strategies=4
+2026-06-20T22:34:02.069715Z [info     ] strategy_selector_ready       
+2026-06-20T22:34:02.070096Z [info     ] twitter_client_initialized     has_oauth2=True pricing_model=hybrid_2026 target=HackingA0
+2026-06-20T22:34:02.070421Z [info     ] ssot_initialized               path=data/hackinga0_analysis.md
+2026-06-20T22:34:02.070770Z [info     ] dpa_manager_initialized       
+2026-06-20T22:34:02.442785Z [info     ] classifier_initialized         model=anthropic/claude-sonnet-4
+2026-06-20T22:34:02.832391Z [info     ] judge_initialized              model=anthropic/claude-sonnet-4
+2026-06-20T22:34:02.832913Z [info     ] stream_listener_initialized    has_filter=False has_oauth2=True target=HackingA0
+2026-06-20T22:34:03.235812Z [info     ] grok_monitor_initialized       model=x-ai/grok-4
+2026-06-20T22:34:03.614193Z [info     ] followup_generator_initialized model=anthropic/claude-sonnet-4
+2026-06-20T22:34:04.346571Z [info     ] tap_engine_initialized        
+2026-06-20T22:34:06.025390Z [info     ] target_user_id_resolved        user_id=2051911746969812998
+2026-06-20T22:34:06.025907Z [info     ] target_user_resolved           target_user_id=2051911746969812998
+2026-06-20T22:34:06.026935Z [info     ] stream_target_set              user_id=2051911746969812998
+2026-06-20T22:34:06.027253Z [info     ] stream_started                
+2026-06-20T22:34:06.027537Z [info     ] stream_listener_started       
+2026-06-20T22:34:07.856824Z [info     ] seed_ingested                  count=50 query='to:HackingA0 OR from:HackingA0'
+2026-06-20T22:34:08.077057Z [info     ] HTTP Request: POST https://api.x.com/2/oauth2/token "HTTP/1.1 401 Unauthorized"
+2026-06-20T22:34:08.079396Z [info     ] oauth_pkce_refresh_failed      body='{"error":"unauthorized_client","error_description":"Missing valid authorization header"}' status=401
+2026-06-20T22:34:08.235912Z [info     ] HTTP Request: POST https://api.x.com/2/oauth2/token "HTTP/1.1 200 OK"
+2026-06-20T22:34:08.258420Z [info     ] oauth_refreshed_basic_auth    
+2026-06-20T22:34:08.274364Z [info     ] oauth2_token_refreshed_shared_helper
+2026-06-20T22:34:09.006435Z [info     ] HTTP Request: GET https://api.x.com/2/users/me "HTTP/1.1 200 OK"
+2026-06-20T22:34:09.007963Z [info     ] stream_authenticated_user_resolved allow_user_subs=False auth_user_id=880902458
+2026-06-20T22:34:09.008839Z [info     ] stream_creating_subscription   event_type=post.create target_user_id=2051911746969812998 url=https://api.x.com/2/activity/subscriptions
+2026-06-20T22:34:10.732309Z [info     ] HTTP Request: POST https://api.x.com/2/activity/subscriptions "HTTP/1.1 400 Bad Request"
+2026-06-20T22:34:10.733973Z [info     ] stream_subscription_already_exists event_type=post.create
+2026-06-20T22:34:10.734854Z [info     ] stream_skipping_user_only_subscription_not_matching_auth auth_user_id=880902458 event_type=chat.received
+2026-06-20T22:34:10.735287Z [info     ] stream_creating_subscription   event_type=post.delete target_user_id=2051911746969812998 url=https://api.x.com/2/activity/subscriptions
+2026-06-20T22:34:12.096517Z [info     ] HTTP Request: POST https://api.x.com/2/activity/subscriptions "HTTP/1.1 400 Bad Request"
+2026-06-20T22:34:12.103387Z [info     ] stream_subscription_already_exists event_type=post.delete
+2026-06-20T22:34:12.104314Z [info     ] stream_skipping_user_only_subscription_not_matching_auth auth_user_id=880902458 event_type=dm.received
+2026-06-20T22:34:12.104850Z [info     ] stream_connecting              auth_type=bearer_app_only subscriptions_created=2 url=https://api.x.com/2/activity/stream
+2026-06-20T22:34:12.772229Z [info     ] HTTP Request: GET https://api.x.com/2/activity/stream "HTTP/1.1 429 Too Many Requests"
+2026-06-20T22:34:12.773458Z [error    ] stream_connection_failed       body='{"title":"ConnectionException","detail":"This stream is currently at the maximum allowed connection limit.","connection_issue":"TooManyConnections","type":"https://api.twitter.com/2/problems/streaming-connection"}' status=429
+2026-06-20T22:34:12.774022Z [warning  ] stream_too_many_connections    hint='TooManyConnections: backing off before reconnecting' retry_after=60
+2026-06-20T22:34:13.439161Z [info     ] seed_complete                  count=50
+2026-06-20T22:34:13.439724Z [info     ] api_startup_complete          
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:54601 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62009 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62009 - "GET /static/css/dashboard.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:61435 - "GET /static/js/dashboard.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:61699 - "GET /static/js/alpine.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:61699 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61699 - "GET / HTTP/1.1" 200 OK
+2026-06-20T22:35:13.398231Z [info     ] HTTP Request: POST https://api.x.com/2/oauth2/token "HTTP/1.1 401 Unauthorized"
+2026-06-20T22:35:13.400833Z [info     ] oauth_pkce_refresh_failed      body='{"error":"unauthorized_client","error_description":"Missing valid authorization header"}' status=401
+2026-06-20T22:35:13.550558Z [info     ] HTTP Request: POST https://api.x.com/2/oauth2/token "HTTP/1.1 400 Bad Request"
+2026-06-20T22:35:13.551331Z [warning  ] oauth_basic_auth_refresh_failed body='{"error":"invalid_request","error_description":"Value passed for the token was invalid."}' status=400
+2026-06-20T22:35:13.552054Z [warning  ] oauth_refresh_all_failed       hint='Refresh token may be expired'
+2026-06-20T22:35:14.146110Z [info     ] HTTP Request: GET https://api.x.com/2/users/me "HTTP/1.1 200 OK"
+2026-06-20T22:35:14.147085Z [info     ] stream_authenticated_user_resolved allow_user_subs=False auth_user_id=880902458
+2026-06-20T22:35:14.147441Z [info     ] stream_creating_subscription   event_type=post.create target_user_id=2051911746969812998 url=https://api.x.com/2/activity/subscriptions
+2026-06-20T22:35:15.272117Z [info     ] HTTP Request: POST https://api.x.com/2/activity/subscriptions "HTTP/1.1 400 Bad Request"
+2026-06-20T22:35:15.273422Z [info     ] stream_subscription_already_exists event_type=post.create
+2026-06-20T22:35:15.274227Z [info     ] stream_skipping_user_only_subscription_not_matching_auth auth_user_id=880902458 event_type=chat.received
+2026-06-20T22:35:15.274666Z [info     ] stream_creating_subscription   event_type=post.delete target_user_id=2051911746969812998 url=https://api.x.com/2/activity/subscriptions
+2026-06-20T22:35:16.257267Z [info     ] HTTP Request: POST https://api.x.com/2/activity/subscriptions "HTTP/1.1 400 Bad Request"
+2026-06-20T22:35:16.258469Z [info     ] stream_subscription_already_exists event_type=post.delete
+2026-06-20T22:35:16.259310Z [info     ] stream_skipping_user_only_subscription_not_matching_auth auth_user_id=880902458 event_type=dm.received
+2026-06-20T22:35:16.259657Z [info     ] stream_connecting              auth_type=bearer_app_only subscriptions_created=2 url=https://api.x.com/2/activity/stream
+2026-06-20T22:35:16.857049Z [info     ] HTTP Request: GET https://api.x.com/2/activity/stream "HTTP/1.1 429 Too Many Requests"
+2026-06-20T22:35:16.858929Z [error    ] stream_connection_failed       body='{"title":"ConnectionException","detail":"This stream is currently at the maximum allowed connection limit.","connection_issue":"TooManyConnections","type":"https://api.twitter.com/2/problems/streaming-connection"}' status=429
+2026-06-20T22:35:16.859889Z [warning  ] stream_too_many_connections    hint='TooManyConnections: backing off before reconnecting' retry_after=60
+INFO:     127.0.0.1:62921 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-06-20T22:36:11.230050Z [info     ] stream_loop_cancelled         
+2026-06-20T22:36:11.230464Z [info     ] stream_stopped                
+2026-06-20T22:36:12.284745Z [info     ] database_closed               
+2026-06-20T22:36:12.285148Z [info     ] api_shutdown_complete         
+INFO:     Application shutdown complete.
+INFO:     Finished server process [3576]

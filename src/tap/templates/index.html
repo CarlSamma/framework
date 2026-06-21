@@ -9,8 +9,9 @@
     <style>
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
-    <!-- Load local dashboard scripts before local Alpine.js to guarantee registration before init event fires -->
-    <script defer src="/static/js/dashboard.js"></script>
+    <!-- Load dashboard.js synchronously (no defer) to register Alpine component before Alpine initializes -->
+    <script src="/static/js/dashboard.js"></script>
+    <!-- Load Alpine.js with defer so it initializes after DOM is ready -->
     <script defer src="/static/js/alpine.js"></script>
 </head>
 
@@ -48,10 +49,19 @@
                 <span class="stat-value" :class="connected ? 'green' : 'red'" x-text="connected ? '●' : '○'"></span>
             </div>
             <div class="stat-item">
-                <span class="stat-label">Stream:</span>
-                <span class="stat-value" :class="streamConnected ? 'green' : 'yellow'"
-                    x-text="streamConnected ? '⚡ Real-time' : '📡 Polling'"
-                    :title="streamConnected ? 'Activity API stream connected — instant reply detection' : 'Using polling fallback — 30s delay'"></span>
+                <span class="stat-label">Auth:</span>
+                <button type="button"
+                    class="stat-value stat-action"
+                    :class="[authStatus.last_subscription_auth_failure ? 'red' : (authStatus.last_oauth2_refresh_status === 'success' ? 'green' : 'yellow'), canStartXLogin() ? 'clickable' : '']"
+                    :title="authStateHint()"
+                    @click="authLabelClicked()"
+                    x-text="authStateLabel()"></button>
+            </div>
+            <div class="stat-item" x-show="authStatus.last_oauth2_refresh_status === 'failed' || !authStatus.oauth2_access_token_present">
+                <button class="btn btn-secondary" @click="startXLogin()"
+                    style="font-size: 0.75rem; padding: 0.25rem 0.6rem; text-transform: none; letter-spacing: normal;">
+                    Accedi con X
+                </button>
             </div>
             <div class="stat-item" style="margin-left: auto;">
                 <button class="btn btn-ghost" @click="showHelp = !showHelp"
@@ -317,8 +327,11 @@
                 <div x-show="!followup" class="empty-state">
                     <div class="empty-icon">🎯</div>
                     <div class="empty-title">Ready to probe @HackingA0</div>
-                    <div class="empty-desc">The engine will generate DPA-framed probe tweets, post them to @HackingA0,
-                        analyze the response, and present two follow-up options for you to choose from.</div>
+                    <div class="empty-desc">Generate two different probe options, select one, and send it to @HackingA0 as a mention.</div>
+                    <button class="btn btn-primary" @click="generateProbeOptions()" :disabled="loading"
+                        style="margin-top: 1rem; width: 100%;">
+                        Generate 2 Probe Options
+                    </button>
                 </div>
 
                 <!-- Run Cycle Button -->
@@ -326,7 +339,7 @@
                     <button class="btn btn-run" @click="runCycle()" :disabled="loading" style="width: 100%;">
                         <span x-show="loading">⏳ Posting probe to @HackingA0...</span>
                         <span x-show="!loading"
-                            x-text="selectedChoice ? '🚀 Run TAP Cycle — Post Option ' + selectedChoice : '🚀 Run TAP Cycle — Auto-generate & Post'"></span>
+                            x-text="selectedChoice ? '🚀 Post selected option' : '🚀 Run TAP Cycle — Auto-generate & Post'"></span>
                     </button>
                 </div>
 

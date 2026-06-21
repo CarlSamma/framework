@@ -1,12 +1,13 @@
 """Module for new agentic architecture: IntelExtractor, DPAFManager, STIREvaluator."""
 
-import random
 import logging
+import random
 from typing import Optional, Dict, Any
 from tap.dpa import DPAFrameManager
+from tap.logger import get_logger
 from tap.models import DPAFrame
 
-log = logging.getLogger("agents")
+log = get_logger("agents")
 
 # 10 Tactical Personas
 TACTICAL_PERSONAS = [

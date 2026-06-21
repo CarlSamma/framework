@@ -28,7 +28,7 @@ from typing import Optional
 
 import httpx
 
-from tap.config import Settings
+from tap.config import Settings, save_env_vars
 from tap.logger import get_logger
 from tap.models import ActivitySubscriptionFilter, Tweet, TweetSource
 
@@ -83,6 +83,11 @@ class StreamListener:
 
         # OAuth 2.0 User Context token (preferred for Activity API)
         self._oauth2_token: Optional[str] = settings.twitter_oauth2_access_token
+        self._last_oauth2_refresh_status: str = "unknown"
+        self._last_oauth2_refresh_error: Optional[str] = None
+        self._last_subscription_auth_failure: bool = False
+        self._last_subscription_errors: list[dict[str, str]] = []
+        self._last_stream_auth_error: Optional[str] = None
 
         # Per-tweet_id queues: when a reply arrives for tweet_id,
         # the Tweet is pushed to _reply_queues[tweet_id]
@@ -196,22 +201,32 @@ class StreamListener:
                 raise
             except httpx.HTTPError as e:
                 error_str = str(e)
-                # Detect authentication/authorization failures
+                lower_err = error_str.lower()
                 is_auth_failure = any(
-                    keyword in error_str.lower()
+                    keyword in lower_err
                     for keyword in ("401", "403", "unauthorized", "subscription")
                 )
-                wait_time = auth_failure_backoff if is_auth_failure else backoff
-                log.warning(
-                    "stream_connection_lost",
-                    error=error_str[:200],
-                    reconnect_in=wait_time,
-                    is_auth_failure=is_auth_failure,
-                )
+                if "429" in lower_err or "toomanyconnections" in lower_err:
+                    self._last_stream_auth_error = error_str[:300]
+                    wait_time = auth_failure_backoff
+                    log.warning(
+                        "stream_too_many_connections_error",
+                        error=error_str[:300],
+                        reconnect_in=wait_time,
+                    )
+                else:
+                    self._last_stream_auth_error = error_str[:300]
+                    wait_time = auth_failure_backoff if is_auth_failure else backoff
+                    log.warning(
+                        "stream_connection_lost",
+                        error=error_str[:300],
+                        reconnect_in=wait_time,
+                        is_auth_failure=is_auth_failure,
+                    )
                 await asyncio.sleep(wait_time)
-                if not is_auth_failure:
+                if not is_auth_failure and "429" not in lower_err and "toomanyconnections" not in lower_err:
                     backoff = min(backoff * 2, max_backoff)
-                # For auth failures, always wait 60s (don't escalate)
+                # For auth failures and rate limit errors, always wait 60s (don't escalate)
             except Exception as e:
                 log.warning(
                     "stream_connection_lost",
@@ -222,130 +237,55 @@ class StreamListener:
                 backoff = min(backoff * 2, max_backoff)
 
     async def _refresh_oauth2_token(self) -> Optional[str]:
-        """Attempt to refresh the OAuth 2.0 User Access Token.
-
-        Uses the refresh_token from settings to obtain a new access_token
-        via the Twitter OAuth 2.0 token endpoint.
-
-        Twitter OAuth 2.0 PKCE flow uses client_id only (no client_secret)
-        for public clients. For confidential clients, Basic auth with
-        client_id:client_secret is used. This method tries both approaches.
-
-        Returns:
-            New access token string, or None if refresh fails.
-        """
-        refresh_token = self.settings.twitter_oauth2_refresh_token
-        client_id = self.settings.twitter_oauth2_client_id
-        client_secret = self.settings.twitter_oauth2_client_secret
-
-        if not refresh_token or not client_id:
-            log.warning(
-                "oauth2_refresh_missing_credentials",
-                has_refresh=bool(refresh_token),
-                has_client_id=bool(client_id),
-            )
-            return None
-
-        log.info(
-            "oauth2_refresh_attempting",
-            refresh_token_prefix=refresh_token[:20] + "...",
-            client_id_prefix=client_id[:10] + "...",
-        )
-
+        """Refresh OAuth2 token using shared helper and persist updates."""
         try:
-            async with httpx.AsyncClient(timeout=httpx.Timeout(30)) as client:
-                # Strategy 1: PKCE / public client (client_id in body, no Basic auth)
-                # This is the standard Twitter OAuth 2.0 PKCE flow
-                form_data = {
-                    "grant_type": "refresh_token",
-                    "refresh_token": refresh_token,
-                    "client_id": client_id,
-                }
+            from tap.oauth import refresh_oauth2_token
 
-                response = await client.post(
-                    "https://api.x.com/2/oauth2/token",
-                    headers={
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    data=form_data,
-                )
+            new_token = await refresh_oauth2_token(self.settings)
+            if new_token:
+                self._oauth2_token = new_token
+                # settings are persisted by helper; keep in-memory in sync
+                self.settings.twitter_oauth2_access_token = new_token
+                # Persist to .env as best-effort (helper may already have), keep file in sync
+                try:
+                    save_env_vars({"twitter_oauth2_access_token": new_token})
+                except Exception:
+                    pass
 
-                if response.status_code == 200:
-                    data = response.json()
-                    new_token = data.get("access_token")
-                    new_refresh = data.get("refresh_token")
-
-                    if new_token:
-                        self._oauth2_token = new_token
-                        log.info(
-                            "oauth2_token_refreshed",
-                            new_token_prefix=new_token[:20] + "...",
-                        )
-                        if new_refresh:
-                            self.settings.twitter_oauth2_refresh_token = new_refresh
-                        return new_token
-
-                # Strategy 1 failed — log and try Strategy 2
-                log.info(
-                    "oauth2_pkce_refresh_failed",
-                    status=response.status_code,
-                    body=response.text[:300],
-                )
-
-                # Strategy 2: Confidential client (Basic auth with client_secret)
-                if client_secret:
-                    import base64
-                    credentials = base64.b64encode(
-                        f"{client_id}:{client_secret}".encode()
-                    ).decode()
-
-                    response2 = await client.post(
-                        "https://api.x.com/2/oauth2/token",
-                        headers={
-                            "Content-Type": "application/x-www-form-urlencoded",
-                            "Authorization": f"Basic {credentials}",
-                        },
-                        data={
-                            "grant_type": "refresh_token",
-                            "refresh_token": refresh_token,
-                        },
-                    )
-
-                    if response2.status_code == 200:
-                        data = response2.json()
-                        new_token = data.get("access_token")
-                        new_refresh = data.get("refresh_token")
-
-                        if new_token:
-                            self._oauth2_token = new_token
-                            log.info(
-                                "oauth2_token_refreshed_via_basic_auth",
-                                new_token_prefix=new_token[:20] + "...",
-                            )
-                            if new_refresh:
-                                self.settings.twitter_oauth2_refresh_token = new_refresh
-                            return new_token
-
-                    log.warning(
-                        "oauth2_basic_auth_refresh_failed",
-                        status=response2.status_code,
-                        body=response2.text[:300],
-                    )
-
-                # Clear the expired token so _get_subscription_headers()
-                # falls back to Bearer token (Application-Only)
-                self._oauth2_token = None
-                log.warning(
-                    "oauth2_all_refresh_strategies_failed",
-                    hint="The refresh token may be expired. Generate a new one via: "
-                         "https://twitter.com/i/oauth2/authorize?... "
-                         "Falling back to Bearer token for subscriptions.",
-                )
-                return None
-
-        except Exception as e:
-            log.warning("oauth2_refresh_error", error=str(e))
+                log.info("oauth2_token_refreshed_shared_helper")
+                try:
+                    save_env_vars({"TWITTER_OAUTH2_ACCESS_TOKEN": new_token})
+                except Exception:
+                    pass
+                return new_token
             return None
+        except Exception as e:
+            log.warning("oauth2_refresh_shared_helper_error", error=str(e))
+            return None
+
+    async def _resolve_authenticated_user_id(self) -> Optional[str]:
+        """Resolve user ID for the currently authenticated OAuth2 user token.
+
+        Uses `/2/users/me` endpoint with OAuth2 User Context token. Returns
+        the user ID as a string, or None on failure.
+        """
+        token = self._oauth2_token or self.settings.twitter_oauth2_access_token
+        if not token:
+            return None
+
+        url = "https://api.x.com/2/users/me"
+        headers = {"Authorization": f"Bearer {token}"}
+        try:
+            async with httpx.AsyncClient(timeout=httpx.Timeout(10)) as client:
+                resp = await client.get(url, headers=headers)
+                if resp.status_code == 200:
+                    j = resp.json()
+                    uid = j.get("data", {}).get("id")
+                    if uid:
+                        return str(uid)
+        except Exception:
+            pass
+        return None
 
     def _get_subscription_headers(self) -> dict[str, str]:
         """Get auth headers for subscription creation.
@@ -397,9 +337,26 @@ class StreamListener:
             await asyncio.sleep(60)
             return
 
-        # Step 0: Refresh OAuth 2.0 token if we have a refresh token
+        # Step 0: Refresh OAuth 2.0 token if we have a refresh token.
+        # If refresh fails, continue using the current access token and
+        # fallback to bearer token subscriptions as needed.
         if self.settings.twitter_oauth2_refresh_token:
-            await self._refresh_oauth2_token()
+            refreshed = await self._refresh_oauth2_token()
+            if not refreshed:
+                log.warning(
+                    "oauth2_refresh_failed_continuing_with_existing_token",
+                    has_current_token=bool(self._oauth2_token or self.settings.twitter_oauth2_access_token),
+                )
+
+        # Resolve authenticated user id to determine whether user-scoped
+        # subscriptions (chat.received, dm.received) are allowed.
+        auth_user_id = await self._resolve_authenticated_user_id()
+        allow_user_subs = auth_user_id == self._target_user_id if auth_user_id else False
+        log.info(
+            "stream_authenticated_user_resolved",
+            auth_user_id=auth_user_id,
+            allow_user_subs=allow_user_subs,
+        )
 
         sub_headers = self._get_subscription_headers()
         stream_headers = self._get_stream_headers()
@@ -420,6 +377,18 @@ class StreamListener:
                     self._subscription_filter.keywords[0]
                 )
 
+            # Skip subscriptions that require user-context when we don't
+            # have an OAuth2 User token. `chat.received` and `dm.received`
+            # require the authenticated user to match the user_id filter.
+            if event_type in ("chat.received", "dm.received") and not allow_user_subs:
+                log.info(
+                    "stream_skipping_user_only_subscription_not_matching_auth",
+                    event_type=event_type,
+                    auth_user_id=auth_user_id,
+                )
+                # Continue to next event_type without attempting subscription
+                continue
+
             log.info(
                 "stream_creating_subscription",
                 url=_SUBSCRIPTIONS_URL,
@@ -437,6 +406,13 @@ class StreamListener:
 
                 if sub_response.status_code not in (200, 201):
                     body = sub_response.text
+                    if sub_response.status_code in (401, 403):
+                        self._last_subscription_auth_failure = True
+                        self._last_subscription_errors.append({
+                            "event_type": event_type,
+                            "status": str(sub_response.status_code),
+                            "body": body[:300],
+                        })
                     
                     # Handle DuplicateSubscription (400) as success
                     if sub_response.status_code == 400 and "DuplicateSubscription" in body:
@@ -496,8 +472,32 @@ class StreamListener:
                 _STREAM_URL,
                 headers=stream_headers,
             ) as response:
+                # Handle TooManyConnections specially by honoring Retry-After
+                if response.status_code == 429:
+                    retry_after = response.headers.get("Retry-After")
+                    try:
+                        wait = int(retry_after) if retry_after else 60
+                    except Exception:
+                        wait = 60
+                    body = await response.aread()
+                    self._last_stream_auth_error = f"429 TooManyConnections: {body.decode('utf-8', errors='replace')[:200]}"
+                    log.error(
+                        "stream_connection_failed",
+                        status=response.status_code,
+                        body=body.decode("utf-8", errors="replace")[:500],
+                    )
+                    log.warning(
+                        "stream_too_many_connections",
+                        retry_after=wait,
+                        hint="TooManyConnections: backing off before reconnecting",
+                    )
+                    # Sleep here to avoid immediate reconnect attempts
+                    await asyncio.sleep(wait)
+                    return
+
                 if response.status_code != 200:
                     body = await response.aread()
+                    self._last_stream_auth_error = f"{response.status_code}: {body.decode('utf-8', errors='replace')[:200]}"
                     log.error(
                         "stream_connection_failed",
                         status=response.status_code,
@@ -532,6 +532,18 @@ class StreamListener:
                     except json.JSONDecodeError:
                         # Might be a keep-alive or malformed line
                         log.debug("stream_non_json_line", line=line[:100])
+
+    def get_auth_status(self) -> dict[str, object]:
+        """Return the last known OAuth2 and stream auth status."""
+        return {
+            "oauth2_refresh_token_present": bool(self.settings.twitter_oauth2_refresh_token),
+            "oauth2_access_token_present": bool(self._oauth2_token or self.settings.twitter_oauth2_access_token),
+            "last_oauth2_refresh_status": self._last_oauth2_refresh_status,
+            "last_oauth2_refresh_error": self._last_oauth2_refresh_error,
+            "last_subscription_auth_failure": self._last_subscription_auth_failure,
+            "last_subscription_errors": self._last_subscription_errors[-5:],
+            "last_stream_auth_error": self._last_stream_auth_error,
+        }
 
     async def _process_event(self, event: dict) -> None:
         """Process a single event from the Activity API stream.

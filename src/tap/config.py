@@ -8,6 +8,8 @@ from functools import lru_cache
 
 from pydantic import Field
 from pydantic_settings import BaseSettings
+import os
+from pathlib import Path
 
 
 class Settings(BaseSettings):
@@ -42,6 +44,10 @@ class Settings(BaseSettings):
     twitter_oauth2_client_secret: str = Field(default="")
     twitter_oauth2_access_token: str = Field(default="")
     twitter_oauth2_refresh_token: str = Field(default="")
+    twitter_callback_url: str = Field(
+        default="http://localhost:8000/api/auth/callback",
+        description="OAuth 2.0 callback URL for Twitter PKCE flow",
+    )
 
     # === OpenRouter (single API key for ALL LLMs including Grok) ===
     openrouter_api_key: str = Field(default="")
@@ -165,3 +171,71 @@ def get_settings() -> Settings:
     Call with no arguments — all configuration comes from environment.
     """
     return Settings()
+
+
+def save_env_vars(overrides: dict[str, str], env_file: str | None = None) -> None:
+    """Persist given key/value pairs into the configured env file.
+
+    This updates existing keys in-place and appends missing keys.
+
+    Args:
+        overrides: Mapping of ENV_KEY -> value to persist.
+        env_file: Optional path to env file. If None uses Settings.model_config['env_file']
+    """
+    try:
+        # Determine env file path
+        env_path = env_file or Settings.model_config.get("env_file") or ".env"
+        p = Path(env_path)
+
+        # Normalize override keys to upper-case env style
+        normalized_overrides = {k.upper(): v for k, v in overrides.items()}
+
+        # Read existing lines if file exists
+        lines: list[str] = []
+        if p.exists():
+            lines = p.read_text(encoding="utf-8").splitlines()
+
+        # Build dict from existing file preserving order, dedupe by key
+        kv: dict[str, str] = {}
+        for line in lines:
+            if not line or line.strip().startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            kv[k.strip().upper()] = v.strip()
+
+        # Apply overrides
+        for k, v in normalized_overrides.items():
+            kv[k] = v
+
+        # Rebuild file content: preserve comments, dedupe duplicate keys,
+        # and write normalized upper-case keys.
+        out_lines: list[str] = []
+        written: set[str] = set()
+        for line in lines:
+            if not line or line.strip().startswith("#") or "=" not in line:
+                out_lines.append(line)
+                continue
+            k, _ = line.split("=", 1)
+            norm_key = k.strip().upper()
+            if norm_key in written:
+                continue
+            if norm_key in kv:
+                out_lines.append(f"{norm_key}={kv[norm_key]}")
+                written.add(norm_key)
+            else:
+                out_lines.append(line)
+
+        # Append any remaining keys
+        for k, v in kv.items():
+            if k in written:
+                continue
+            out_lines.append(f"{k}={v}")
+
+        # Ensure parent dir exists
+        if not p.parent.exists():
+            p.parent.mkdir(parents=True, exist_ok=True)
+
+        p.write_text("\n".join(out_lines) + "\n", encoding="utf-8")
+    except Exception:
+        # Best-effort persistence: do not raise from config helper
+        return

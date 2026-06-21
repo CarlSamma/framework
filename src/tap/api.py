@@ -32,7 +32,7 @@ from fastapi.staticfiles import StaticFiles
 import os
 import tweepy
 
-from tap.config import get_settings
+from tap.config import get_settings, save_env_vars
 from tap.db import Database
 from tap.dpa import DPAFrameManager
 from tap.engine import TAPEngine
@@ -106,8 +106,9 @@ async def lifespan(app: FastAPI):
     classifier = ResponseClassifier(settings.openrouter_api_key, settings.openrouter_model_primary)
     judge = Judge(settings.openrouter_api_key, settings.openrouter_model_primary)
 
-    # Initialize monitor for real-time reply detection
-    grok = GrokMonitor(settings, twitter, stream=None)
+    # Initialize stream listener and monitor for real-time reply detection
+    stream = StreamListener(settings)
+    grok = GrokMonitor(settings, twitter, stream=stream)
     followup_gen = FollowUpGenerator(
         _ssot, _dpa, settings.openrouter_api_key, settings.openrouter_model_primary
     )
@@ -128,15 +129,28 @@ async def lifespan(app: FastAPI):
         event_callback=on_engine_event,
         stir_evaluator=stir_evaluator,
         intel_extractor=intel_extractor,
+        llm_client=_llm_client,
     )
 
     # Target resolution (we just need to ensure the client is ready)
+    target_user = None
     try:
         target_user = await twitter._resolve_target_user_id()
         if target_user:
             log.info("target_user_resolved", target_user_id=target_user)
+            stream.set_target_user_id(target_user)
     except Exception as e:
         log.warning("target_user_resolution_failed", error=str(e))
+
+    # Start the Activity API stream listener if possible
+    try:
+        if target_user:
+            await stream.start()
+            log.info("stream_listener_started")
+        else:
+            log.warning("stream_listener_not_started_no_target")
+    except Exception as e:
+        log.warning("stream_listener_failed_to_start", error=str(e))
 
 
     # Seed tweet DB with recent history on startup (best-effort)
@@ -248,10 +262,11 @@ async def auth_login():
     global _oauth_handler
     settings = get_settings()
     _oauth_handler = tweepy.OAuth2UserHandler(
-        client_id=settings.twitter_client_id,
+        client_id=settings.twitter_oauth2_client_id,
         redirect_uri=settings.twitter_callback_url,
         scope=["tweet.read", "tweet.write", "users.read", "offline.access"],
-        client_secret=settings.twitter_client_secret
+        client_secret=settings.twitter_oauth2_client_secret,
+        force_login=True,
     )
     auth_url = _oauth_handler.get_authorization_url()
     return RedirectResponse(auth_url)
@@ -270,11 +285,14 @@ async def auth_callback(request: Request):
         access_token = token.get("access_token")
         refresh_token = token.get("refresh_token")
         
-        if access_token:
-            _update_env_file("TWITTER_OAUTH2_ACCESS_TOKEN", access_token)
-        if refresh_token:
-            _update_env_file("TWITTER_OAUTH2_REFRESH_TOKEN", refresh_token)
-            
+        if access_token or refresh_token:
+            updates = {}
+            if access_token:
+                updates["TWITTER_OAUTH2_ACCESS_TOKEN"] = access_token
+            if refresh_token:
+                updates["TWITTER_OAUTH2_REFRESH_TOKEN"] = refresh_token
+            save_env_vars(updates)
+        
         return {"status": "success", "message": "Tokens successfully refreshed and saved to .env"}
     except Exception as e:
         return {"error": str(e)}
@@ -317,6 +335,27 @@ async def get_followup():
         "selected_probe": _selected_probe,
         "is_running": _is_running,
     }
+
+
+@app.post("/api/generate-options")
+async def generate_probe_options():
+    """Generate two probe options for user selection without executing a full cycle."""
+    global _engine, _last_followup, _selected_probe
+
+    if not _engine:
+        return {"error": "Engine not initialized"}
+
+    if _is_running:
+        return {"error": "An attack cycle is already running."}
+
+    try:
+        followup = await _engine.generate_probe_options(count=2)
+        _last_followup = followup
+        _selected_probe = None
+        return {"followup": followup.model_dump(mode="json"), "message": "Generated two probe options."}
+    except Exception as e:
+        log.error("generate_probe_options_failed", error=str(e))
+        return {"error": str(e)}
 
 
 @app.get("/api/status")
@@ -599,7 +638,12 @@ async def health_check():
     stream_connected = False
     if _engine and hasattr(_engine, 'grok') and _engine.grok.stream:
         stream_connected = _engine.grok.stream.is_connected
-    health['components']['stream'] = {'connected': stream_connected}
+        health['components']['stream'] = {
+            'connected': stream_connected,
+            'auth': _engine.grok.stream.get_auth_status(),
+        }
+    else:
+        health['components']['stream'] = {'connected': stream_connected}
     if not stream_connected and health['status'] == 'healthy':
         health['status'] = 'degraded'
     if _sanitiser:
@@ -609,6 +653,14 @@ async def health_check():
         'cycle_count': _engine._cycle_count if _engine else 0,
     }
     return health
+
+
+@app.get('/api/auth-status')
+async def auth_status():
+    """Return current Twitter auth status for OAuth2 and bearer tokens."""
+    if _engine and hasattr(_engine, 'grok') and _engine.grok.stream:
+        return _engine.grok.stream.get_auth_status()
+    return {'error': 'Stream listener unavailable', 'status': 'unhealthy'}
 
 
 @app.get('/metrics', response_class=PlainTextResponse)

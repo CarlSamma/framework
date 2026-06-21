@@ -3,6 +3,14 @@
  * Real-time WebSocket updates, API calls, state management.
  */
 
+window.tapDashboardInstance = null;
+window.runCycle = async (...args) => {
+    if (window.tapDashboardInstance && typeof window.tapDashboardInstance.runCycle === 'function') {
+        return window.tapDashboardInstance.runCycle(...args);
+    }
+    console.warn('runCycle called before Alpine component initialization.');
+};
+
 document.addEventListener('alpine:init', () => {
     Alpine.data('tapDashboard', () => ({
         // State
@@ -19,6 +27,13 @@ document.addEventListener('alpine:init', () => {
         awaitingReply: false, // true while waiting for @HackingA0 to reply (up to 1h)
         pendingTweetId: null, // tweet ID of the live probe
         streamConnected: false, // true when Activity API stream is connected
+        authStatus: {
+            last_oauth2_refresh_status: 'unknown',
+            last_subscription_auth_failure: false,
+            last_stream_auth_error: null,
+            oauth2_access_token_present: false,
+            oauth2_refresh_token_present: false,
+        },
         seeding: false,
         fetching: false,
         showHelp: false,
@@ -28,7 +43,10 @@ document.addEventListener('alpine:init', () => {
 
         // Init
         async init() {
+            window.tapDashboardInstance = this;
+            window.runCycle = this.runCycle.bind(this);
             await this.refreshAll();
+            await this.fetchAuthStatus();
             await this.fetchFollowup();
             await this.restoreStatus();   // restore awaitingReply if server already mid-cycle
             this.connectWebSocket();
@@ -52,6 +70,36 @@ document.addEventListener('alpine:init', () => {
                 console.warn('[Status] Could not restore status:', e);
             }
         },
+
+        async fetchAuthStatus() {
+            try {
+                const status = await this.api('/api/auth-status');
+                this.authStatus = status;
+            } catch (e) {
+                console.warn('[Auth] Could not fetch auth status:', e);
+            }
+        },
+
+        canStartXLogin() {
+            return this.authStateLabel() === 'Accedi con X' ||
+                this.authStatus.last_subscription_auth_failure ||
+                this.authStatus.last_oauth2_refresh_status === 'failed' ||
+                !this.authStatus.oauth2_access_token_present ||
+                !this.authStatus.oauth2_refresh_token_present;
+        },
+
+        authLabelClicked() {
+            if (this.canStartXLogin()) {
+                this.startXLogin();
+            }
+        },
+
+        startXLogin() {
+            window.location.href = '/api/auth/login';
+        },
+
+        connectWebSocket() {
+            const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
             this.ws = new WebSocket(`${protocol}//${location.host}/ws/live`);
 
             this.ws.onopen = () => {
@@ -165,15 +213,35 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
+        async generateProbeOptions() {
+            if (this.loading) return;
+            this.loading = true;
+            this.error = null;
+            try {
+                const result = await this.api('/api/generate-options', { method: 'POST' });
+                if (result.error) {
+                    this.error = result.error;
+                } else {
+                    this.followup = result.followup;
+                    this.selectedChoice = null;
+                }
+            } catch (e) {
+                this.error = e.message;
+            } finally {
+                this.loading = false;
+            }
+        },
+
         async refreshAll() {
             try {
-                const [feed, tree, props, dpa, stats, entropy] = await Promise.all([
+                const [feed, tree, props, dpa, stats, entropy, authStatus] = await Promise.all([
                     this.api('/api/feed?limit=30'),
                     this.api('/api/tree?limit=20'),
                     this.api('/api/properties'),
                     this.api('/api/dpa'),
                     this.api('/api/stats'),
                     this.api('/api/entropy'),
+                    this.api('/api/auth-status'),
                 ]);
                 this.feed = feed;
                 this.tree = tree;
@@ -181,6 +249,7 @@ document.addEventListener('alpine:init', () => {
                 this.dpa = dpa;
                 this.stats = stats;
                 this.entropy = entropy;
+                this.authStatus = authStatus;
             } catch (e) {
                 this.error = e.message;
             }
@@ -301,6 +370,47 @@ document.addEventListener('alpine:init', () => {
             if (!ts) return '';
             const d = new Date(ts);
             return d.toLocaleTimeString();
+        },
+
+        authStateLabel() {
+            if (this.authStatus.last_stream_auth_error) {
+                if (this.authStatus.last_stream_auth_error.toLowerCase().includes('toomanyconnections') || this.authStatus.last_stream_auth_error.includes('429')) {
+                    return '⚠️ Stream Limit';
+                }
+                return '⚠️ Stream Error';
+            }
+            if (this.authStatus.last_subscription_auth_failure) {
+                return '⚠️ Auth Failed';
+            }
+            if (this.authStatus.last_oauth2_refresh_status === 'failed') {
+                if (!this.authStatus.oauth2_access_token_present && !this.authStatus.oauth2_refresh_token_present) {
+                    return 'Accedi con X';
+                }
+                return '🔄 Refresh Failed';
+            }
+            if (this.authStatus.last_oauth2_refresh_status === 'success') {
+                return '✅ OAuth2 OK';
+            }
+            return 'Accedi con X';
+        },
+
+        authStateHint() {
+            if (this.authStatus.last_stream_auth_error) {
+                if (this.authStatus.last_stream_auth_error.toLowerCase().includes('toomanyconnections') || this.authStatus.last_stream_auth_error.includes('429')) {
+                    return 'Stream is at max allowed connection limit. Waiting and retrying automatically.';
+                }
+                return this.authStatus.last_stream_auth_error;
+            }
+            if (this.authStatus.last_subscription_auth_failure) {
+                return 'Subscription authorization failed for one or more event types.';
+            }
+            if (this.authStatus.last_oauth2_refresh_status === 'failed') {
+                return 'OAuth2 refresh token is invalid or expired. Reauthorize via /api/auth/login.';
+            }
+            if (this.authStatus.last_oauth2_refresh_status === 'success') {
+                return 'OAuth2 refresh token is healthy.';
+            }
+            return 'Auth status not yet determined.';
         },
     }));
 });

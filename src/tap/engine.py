@@ -36,6 +36,7 @@ from tap.exceptions import EngineError
 from tap.followup import FollowUpGenerator
 from tap.grok_monitor import GrokMonitor
 from tap.judge import Judge
+from tap.llm_client import LLMClient, ModelTier
 from tap.logger import get_logger
 from tap.models import (
     BranchStrategy,
@@ -88,6 +89,7 @@ class TAPEngine:
         event_callback: Optional[Callable] = None,
         stir_evaluator=None,
         intel_extractor=None,
+        llm_client: Optional[LLMClient] = None,
     ) -> None:
         """Initialize engine with all required components.
 
@@ -104,6 +106,7 @@ class TAPEngine:
             event_callback: Optional callback for real-time WebSocket events.
             stir_evaluator: v3.1 AgentSTIREvaluator.
             intel_extractor: v3.1 AgentIntelExtractor.
+            llm_client: Unified LLM gateway for attacker probe generation.
         """
         self.db = db
         self.twitter = twitter
@@ -116,8 +119,9 @@ class TAPEngine:
         self.event_callback = event_callback
         self.stir_evaluator = stir_evaluator
         self.intel_extractor = intel_extractor
+        self.llm_client = llm_client
 
-        # Attacker LLM client
+        # Fallback OpenRouter client for raw attacker probe generation
         self._attacker_client = AsyncOpenAI(
             base_url="https://openrouter.ai/api/v1",
             api_key=settings.openrouter_api_key,
@@ -360,57 +364,109 @@ class TAPEngine:
                 count=count,
             )
 
-            response = await self._attacker_client.chat.completions.create(
-                model=self.settings.openrouter_model_hard,
-                messages=[
-                    {"role": "system", "content": ATTACKER_SYSTEM},
-                    {"role": "user", "content": user_prompt},
-                ],
-                response_format={"type": "json_object"},
-                temperature=0.8,
-                max_tokens=2000,
-            )
-
-            content = (response.choices[0].message.content or "").strip()
-            if not content:
-                log.warning("attacker_empty_response")
-                return []
-
-            cleaned_content = self._strip_code_fence(content)
+            # Debug: preview attacker prompt (trimmed)
+            try:
+                log.debug("attacker_prompt_prepared", prompt_preview=user_prompt[:500])
+            except Exception:
+                log.debug("attacker_prompt_prepared", prompt_preview="(unprintable)")
 
             probes: list[str] = []
-            try:
-                data = json.loads(cleaned_content)
+            if self.llm_client:
+                try:
+                    raw_probes = await self.llm_client.generate_json_list(
+                        system=ATTACKER_SYSTEM,
+                        user=user_prompt,
+                        temperature=0.8,
+                        max_tokens=2000,
+                        model=self.settings.openrouter_model_hard,
+                    )
+                    # Debug: log raw LLM output summary
+                    try:
+                        log.debug(
+                            "attacker_llm_client_raw",
+                            items_returned=len(raw_probes),
+                            first_item_preview=(str(raw_probes[0])[:500] if raw_probes else "(none)"),
+                        )
+                    except Exception:
+                        log.debug("attacker_llm_client_raw", items_returned=len(raw_probes))
 
-                if isinstance(data, list):
-                    probes = data
-                elif isinstance(data, dict):
-                    for key in ("probes", "variants", "options", "items", "choices"):
-                        value = data.get(key)
-                        if isinstance(value, list):
-                            probes = value
-                            break
-                    if not probes:
-                        # Accept dictionary values if all strings
-                        values = list(data.values())
-                        if values and all(isinstance(v, str) for v in values):
-                            probes = values
-            except json.JSONDecodeError as e:
-                log.error(
-                    "attacker_json_error",
-                    error=str(e),
-                    raw=cleaned_content[:500],
-                )
-                probes = self._extract_lines_as_probes(cleaned_content)
+                    probes = [str(p).strip() for p in raw_probes if isinstance(p, str) and len(str(p).strip()) > 10]
+                except Exception as e:
+                    log.warning("attacker_llm_client_failed", error=str(e))
 
             if not probes:
-                # Fallback extraction from raw content
-                probes = self._extract_lines_as_probes(content)
-                if probes:
-                    log.warning("attacker_fallback_lines_used", count=len(probes))
+                response = await self._attacker_client.chat.completions.create(
+                    model=self.settings.openrouter_model_hard,
+                    messages=[
+                        {"role": "system", "content": ATTACKER_SYSTEM},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    response_format={"type": "json_object"},
+                    temperature=0.8,
+                    max_tokens=2000,
+                )
+
+                content = (response.choices[0].message.content or "").strip()
+                # Debug: log a preview of the raw OpenAI/OpenRouter response content
+                try:
+                    log.debug("attacker_raw_content", content_preview=content[:2000])
+                except Exception:
+                    log.debug("attacker_raw_content", content_preview="(unprintable)")
+                if not content:
+                    log.warning("attacker_empty_response")
+                    return []
+
+                cleaned_content = self._strip_code_fence(content)
+
+                try:
+                    data = json.loads(cleaned_content)
+
+                    if isinstance(data, list):
+                        probes = data
+                    elif isinstance(data, dict):
+                        for key in ("probes", "variants", "options", "items", "choices"):
+                            value = data.get(key)
+                            if isinstance(value, list):
+                                probes = value
+                                break
+                        if not probes:
+                            values = list(data.values())
+                            if values and all(isinstance(v, str) for v in values):
+                                probes = values
+                except json.JSONDecodeError as e:
+                    log.error(
+                        "attacker_json_error",
+                        error=str(e),
+                        raw=cleaned_content[:500],
+                    )
+                    probes = self._extract_lines_as_probes(cleaned_content)
+
+                if not probes:
+                    probes = self._extract_lines_as_probes(content)
+                    if probes:
+                        log.warning("attacker_fallback_lines_used", count=len(probes))
 
             # Validate each probe is a string
-            valid_probes = [str(p) for p in probes if isinstance(p, str) and len(p) > 10]
+            valid_probes = [str(p).strip() for p in probes if isinstance(p, str) and len(str(p).strip()) > 10]
+
+            # If still empty, use fallback templates
+            if not valid_probes:
+                valid_probes = self._fallback_template_probes(target_property, frame)
+                log.warning(
+                    "attacker_probe_fallback_templates_used",
+                    property=target_property,
+                    count=len(valid_probes),
+                )
+
+            # Debug: preview returned probes
+            try:
+                log.debug(
+                    "probes_generated_preview",
+                    count=len(valid_probes),
+                    first_preview=(valid_probes[0][:500] if valid_probes else "(none)"),
+                )
+            except Exception:
+                log.debug("probes_generated_preview", count=len(valid_probes))
 
             log.info("probes_generated", count=len(valid_probes), strategy=strategy.value)
             return valid_probes[:count]
@@ -465,15 +521,8 @@ class TAPEngine:
 
         # Post probe
         try:
-            # Prefer replying to our own latest tweet — Twitter always allows this.
-            # Replying to the target's tweet returns 403 unless they first mentioned us.
-            reply_to = None
-            our_tweet_prev = await self.db.get_latest_our_bot_tweet()
-            if our_tweet_prev and our_tweet_prev.id.isdigit():
-                reply_to = our_tweet_prev.id
-                log.info("reply_to_our_own_tweet", reply_to=reply_to)
-
-            tweet_id = await self.twitter.post_probe(probe_text, reply_to_id=reply_to)
+            # Publish probes as new tweets mentioning the target handle.
+            tweet_id = await self.twitter.post_probe(probe_text)
             node.tweet_id = tweet_id
 
             # Save our posted probe into the database and broadcast it
@@ -651,6 +700,53 @@ class TAPEngine:
 
         # All known properties confirmed — return generic
         return "additional_metadata"
+
+    async def generate_probe_options(self, count: int = 2) -> DualFollowUp:
+        """Generate two distinct probe options for user selection.
+
+        This method chooses the next target property, generates multiple probe
+        variants, and returns exactly two different options.
+        """
+        target_property = await self.select_next_property()
+        probes = await self.generate_probes(
+            strategy=BranchStrategy.BINARY_SEARCH,
+            target_property=target_property,
+            count=max(count, 4),
+        )
+
+        unique_probes: list[str] = []
+        for probe in probes:
+            cleaned = probe.strip()
+            if cleaned and cleaned not in unique_probes:
+                unique_probes.append(cleaned)
+            if len(unique_probes) == count:
+                break
+
+        if len(unique_probes) < count:
+            frame = await self.dpa.get_active_frame()
+            fallback_probes = self._fallback_template_probes(target_property, frame)
+            for probe in fallback_probes:
+                cleaned = probe.strip()
+                if cleaned and cleaned not in unique_probes:
+                    unique_probes.append(cleaned)
+                if len(unique_probes) == count:
+                    break
+
+        if not unique_probes:
+            raise EngineError("Probe generation failed: no valid probe variants generated")
+
+        if len(unique_probes) == 1:
+            unique_probes.append(unique_probes[0])
+
+        return DualFollowUp(
+            option_a=unique_probes[0],
+            option_a_explanation=f"Probe option for {target_property} — conservative phrasing.",
+            option_a_strategy=BranchStrategy.BINARY_SEARCH,
+            option_b=unique_probes[1],
+            option_b_explanation=f"Alternative phrasing for {target_property} to cite the target and test variation.",
+            option_b_strategy=BranchStrategy.BINARY_SEARCH,
+            recommended="A",
+        )
 
     async def get_engine_status(self) -> dict:
         """Return current engine state for dashboard.

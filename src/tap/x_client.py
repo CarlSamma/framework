@@ -25,7 +25,7 @@ from typing import Any, Optional
 import httpx
 import tweepy
 
-from tap.config import Settings
+from tap.config import Settings, save_env_vars
 from tap.exceptions import TwitterError
 from tap.logger import get_logger
 from tap.models import ActivitySubscriptionFilter, Tweet, TweetSource
@@ -166,27 +166,15 @@ class TwitterClient:
             else:
                 text = f"{text}@{self.settings.target_handle}"
 
-        # If no explicit reply_to_id is given (or if we want to force replying to the target's thread)
-        # fetch the target's latest tweet
-        if not reply_to_id:
-            try:
-                target_id = await self._resolve_target_user_id()
-                if target_id:
-                    response = await self._retry(
-                        lambda: self.client.get_users_tweets(id=target_id, max_results=5)
-                    )
-                    if response.data:
-                        # Use the most recent tweet from the target
-                        reply_to_id = str(response.data[0].id)
-                        log.info("found_target_latest_tweet", tweet_id=reply_to_id)
-            except Exception as e:
-                log.warning("failed_to_fetch_target_latest_tweet", error=str(e))
-
-        if reply_to_id and not str(reply_to_id).isdigit():
-            log.warning(
-                "post_probe_reply_to_id_non_numeric_ignoring",
-                reply_to_id=reply_to_id,
-            )
+        # Force probe posts to be published as new tweets.
+        # Generated content should mention the target, but not be a reply thread.
+        if reply_to_id:
+            if not str(reply_to_id).isdigit():
+                log.warning(
+                    "post_probe_reply_to_id_non_numeric_ignoring",
+                    reply_to_id=reply_to_id,
+                )
+            log.info("post_probe_ignoring_reply_to_id_for_new_tweet", reply_to_id=reply_to_id)
             reply_to_id = None
 
         try:
@@ -197,19 +185,35 @@ class TwitterClient:
                     media_ids=media_ids,
                 )
             )
-
-            tweet_id = str(response.data["id"])
-            self._update_quota(writes=1)
-            log.info(
-                "probe_posted",
-                tweet_id=tweet_id,
-                reply_to=reply_to_id,
-                text_length=len(text),
-                has_media=bool(media_ids),
-            )
-            return tweet_id
+        except tweepy.errors.Forbidden as e:
+            if reply_to_id and self._is_fatal_reply_error(e):
+                log.warning(
+                    "probe_reply_forbidden_fallback_to_non_reply",
+                    reply_to=reply_to_id,
+                    error=str(e),
+                )
+                # Retry as a non-reply tweet to avoid conversation restrictions.
+                response = await self._retry(
+                    lambda: self.client.create_tweet(
+                        text=text,
+                        media_ids=media_ids,
+                    )
+                )
+            else:
+                raise
         except Exception as e:
             raise TwitterError(f"Failed to post probe: {e}", original=e) from e
+
+        tweet_id = str(response.data["id"])
+        self._update_quota(writes=1)
+        log.info(
+            "probe_posted",
+            tweet_id=tweet_id,
+            reply_to=reply_to_id,
+            text_length=len(text),
+            has_media=bool(media_ids),
+        )
+        return tweet_id
 
     # =========================================================================
     # Media Management (3-Step Chunked Upload)
@@ -406,6 +410,20 @@ class TwitterClient:
                 if ref.type == "replied_to":
                     return str(ref.id)
         return None
+
+    def _is_fatal_reply_error(self, error: Exception) -> bool:
+        """Detect Twitter errors that should not be retried and require a non-reply fallback."""
+        message = str(error).lower()
+        if isinstance(error, tweepy.errors.Forbidden):
+            fatal_reasons = [
+                "reply to this conversation is not allowed",
+                "conversation is not allowed",
+                "reply restrictions",
+                "not allowed to reply",
+                "unsupported authentication",
+            ]
+            return any(reason in message for reason in fatal_reasons)
+        return False
 
     async def get_mentions(self, since_id: Optional[str] = None) -> list[Tweet]:
         """Get mentions of our bot handle.
@@ -675,6 +693,29 @@ class TwitterClient:
                     json=body,
                 )
 
+                # If unauthorized, try refreshing OAuth2 user token once and retry
+                if response.status_code in (401, 403):
+                    log.info("activity_subscription_unauthorized_attempting_refresh", status=response.status_code)
+                    try:
+                        from tap.oauth import refresh_oauth2_token
+
+                        new_token = await refresh_oauth2_token(self.settings)
+                        if new_token:
+                            self._oauth2_token = new_token
+                            self.settings.twitter_oauth2_access_token = new_token
+                            try:
+                                save_env_vars({"TWITTER_OAUTH2_ACCESS_TOKEN": new_token})
+                            except Exception:
+                                pass
+                            headers = self._get_oauth2_headers()
+                            response = await client.post(
+                                _ACTIVITY_SUBSCRIPTIONS_URL,
+                                headers=headers,
+                                json=body,
+                            )
+                    except Exception as e:
+                        log.warning("activity_subscription_refresh_retry_failed", error=str(e))
+
                 if response.status_code not in (200, 201):
                     raise TwitterError(
                         f"Subscription creation failed: {response.status_code} — {response.text[:200]}",
@@ -812,6 +853,13 @@ class TwitterClient:
                 # but if it slips through, we re-raise
                 raise
             except (tweepy.TweepyException, ConnectionError, TimeoutError) as e:
+                if isinstance(e, tweepy.errors.Forbidden) and self._is_fatal_reply_error(e):
+                    log.error(
+                        "twitter_fatal_forbidden_error",
+                        attempt=attempt + 1,
+                        error=str(e),
+                    )
+                    raise
                 last_error = e
                 wait_time = RETRY_BACKOFF_BASE ** (attempt + 1)
                 log.warning(

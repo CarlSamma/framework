@@ -130,6 +130,18 @@ class GrokMonitor:
         since_id = tweet_id
 
         try:
+            if self.stream and self.stream.is_connected:
+                queue = self.stream.register_reply_wait(tweet_id)
+                try:
+                    log.info("reply_wait_registered_via_stream", tweet_id=tweet_id)
+                    reply = await asyncio.wait_for(queue.get(), timeout=timeout)
+                    log.info("reply_received_via_stream", reply_id=reply.id, reply_from=reply.username)
+                    return reply
+                except asyncio.TimeoutError:
+                    log.warning("stream_wait_timeout", tweet_id=tweet_id, timeout=timeout)
+                finally:
+                    self.stream.unregister_reply_wait(tweet_id)
+
             while elapsed < timeout:
                 # Check for manually injected mock reply first
                 if tweet_id in GrokMonitor.mock_replies:
