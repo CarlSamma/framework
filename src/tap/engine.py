@@ -519,9 +519,8 @@ class TAPEngine:
             aliases_used=list(frame.active_aliases),
         )
 
-        # Post probe
+        # Post probe — published as a new tweet with mention (not a reply)
         try:
-            # Publish probes as new tweets mentioning the target handle.
             tweet_id = await self.twitter.post_probe(probe_text)
             node.tweet_id = tweet_id
 
@@ -533,10 +532,10 @@ class TAPEngine:
                 user_id="our_user",
                 username=self.settings.our_bot_handle or "our_bot",
                 text=probe_text,
-                in_reply_to_tweet_id=reply_to,
+                in_reply_to_tweet_id=None,
                 created_at=datetime.now(timezone.utc),
                 source=TweetSource.OUR_BOT,
-                conversation_thread_id=reply_to or tweet_id,
+                conversation_thread_id=tweet_id,
             )
             await self.db.upsert_tweet(our_tweet)
             await self._emit_event("new_tweet", our_tweet.model_dump(mode="json"))
@@ -544,7 +543,7 @@ class TAPEngine:
             await self._emit_event("probe_posted", {
                 "tweet_id": tweet_id,
                 "text": probe_text,
-                "reply_to": reply_to,
+                "reply_to": None,
             })
 
         except Exception as e:
@@ -844,18 +843,27 @@ class TAPEngine:
         )
 
         try:
-            response = await self._attacker_client.chat.completions.create(
-                model=self.settings.openrouter_model_hard,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
-                ],
-                temperature=0.7,
-                max_tokens=500,
-            )
-
-            probe_text = (response.choices[0].message.content or "").strip()
-            probe_text = self._strip_code_fence(probe_text)
+            if self.llm_client:
+                probe_text = await self.llm_client.generate(
+                    system=system_prompt,
+                    user=user_prompt,
+                    temperature=0.7,
+                    max_tokens=500,
+                    model=self.settings.openrouter_model_hard,
+                )
+                probe_text = self._strip_code_fence(probe_text)
+            else:
+                response = await self._attacker_client.chat.completions.create(
+                    model=self.settings.openrouter_model_hard,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    temperature=0.7,
+                    max_tokens=500,
+                )
+                probe_text = (response.choices[0].message.content or "").strip()
+                probe_text = self._strip_code_fence(probe_text)
 
             if not probe_text or len(probe_text) < 10:
                 log.warning("phase5_probe_too_short")

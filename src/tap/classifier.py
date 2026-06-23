@@ -19,14 +19,15 @@ from __future__ import annotations
 
 import json
 import re
-from typing import Optional
-
-from openai import AsyncOpenAI
+from typing import Optional, TYPE_CHECKING
 
 from tap.exceptions import LLMError
 from tap.logger import get_logger
 from tap.models import PatternClass, ResponseClassification
 from tap.prompts import CLASSIFIER_SYSTEM, CLASSIFIER_USER
+
+if TYPE_CHECKING:
+    from tap.llm_client import LLMClient
 
 log = get_logger("classifier")
 
@@ -72,19 +73,31 @@ class ResponseClassifier:
     If both tiers fail, returns PatternClass.NO_RESPONSE with low confidence.
     """
 
-    def __init__(self, openrouter_api_key: str, model: str) -> None:
-        """Initialize with OpenRouter credentials for LLM-based classification.
+    def __init__(
+        self,
+        openrouter_api_key: str = "",
+        model: str = "",
+        llm_client: Optional["LLMClient"] = None,
+    ) -> None:
+        """Initialize with OpenRouter credentials or a unified LLMClient.
 
         Args:
-            openrouter_api_key: OpenRouter API key.
+            openrouter_api_key: OpenRouter API key (ignored if llm_client provided).
             model: Model identifier (e.g., 'anthropic/claude-sonnet-4').
+            llm_client: Unified LLM gateway. When provided, all LLM calls
+                go through it instead of a direct AsyncOpenAI client.
         """
-        self.client = AsyncOpenAI(
-            base_url="https://openrouter.ai/api/v1",
-            api_key=openrouter_api_key,
-        )
+        self.llm_client = llm_client
         self.model = model
-        log.info("classifier_initialized", model=model)
+        if not llm_client:
+            from openai import AsyncOpenAI
+            self.client = AsyncOpenAI(
+                base_url="https://openrouter.ai/api/v1",
+                api_key=openrouter_api_key,
+            )
+        else:
+            self.client = None
+        log.info("classifier_initialized", model=model, unified=bool(llm_client))
 
     async def classify(
         self,
@@ -215,22 +228,29 @@ class ResponseClassifier:
                 metaphor_terms=", ".join(metaphor_terms[:20]) if metaphor_terms else "none available",
             )
 
-            response = await self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": CLASSIFIER_SYSTEM},
-                    {"role": "user", "content": user_prompt},
-                ],
-                response_format={"type": "json_object"},
-                temperature=0.1,
-                max_tokens=500,
-            )
-
-            content = response.choices[0].message.content
-            if not content:
-                raise LLMError("Empty response from classifier LLM")
-
-            data = json.loads(content)
+            if self.llm_client:
+                data = await self.llm_client.generate_json(
+                    system=CLASSIFIER_SYSTEM,
+                    user=user_prompt,
+                    temperature=0.1,
+                    max_tokens=500,
+                    model=self.model or None,
+                )
+            else:
+                response = await self.client.chat.completions.create(
+                    model=self.model,
+                    messages=[
+                        {"role": "system", "content": CLASSIFIER_SYSTEM},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    response_format={"type": "json_object"},
+                    temperature=0.1,
+                    max_tokens=500,
+                )
+                content = response.choices[0].message.content
+                if not content:
+                    raise LLMError("Empty response from classifier LLM")
+                data = json.loads(content)
 
             # Parse the response
             pattern_str = data.get("pattern", "no_response")

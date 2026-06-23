@@ -103,14 +103,20 @@ async def lifespan(app: FastAPI):
     _dpa = AgentDPAFManager(_db)
     stir_evaluator = AgentSTIREvaluator(llm_client=_llm_client)
     intel_extractor = AgentIntelExtractor(_ssot, twitter)
-    classifier = ResponseClassifier(settings.openrouter_api_key, settings.openrouter_model_primary)
-    judge = Judge(settings.openrouter_api_key, settings.openrouter_model_primary)
+    classifier = ResponseClassifier(
+        settings.openrouter_api_key, settings.openrouter_model_primary, llm_client=_llm_client
+    )
+    judge = Judge(
+        settings.openrouter_api_key, settings.openrouter_model_primary, llm_client=_llm_client
+    )
 
     # Initialize stream listener and monitor for real-time reply detection
     stream = StreamListener(settings)
     grok = GrokMonitor(settings, twitter, stream=stream)
     followup_gen = FollowUpGenerator(
-        _ssot, _dpa, settings.openrouter_api_key, settings.openrouter_model_primary
+        _ssot, _dpa,
+        settings.openrouter_api_key, settings.openrouter_model_primary,
+        llm_client=_llm_client,
     )
 
     async def on_engine_event(event_type: str, data: dict):
@@ -266,7 +272,6 @@ async def auth_login():
         redirect_uri=settings.twitter_callback_url,
         scope=["tweet.read", "tweet.write", "users.read", "offline.access"],
         client_secret=settings.twitter_oauth2_client_secret,
-        force_login=True,
     )
     auth_url = _oauth_handler.get_authorization_url()
     return RedirectResponse(auth_url)
@@ -415,32 +420,30 @@ async def confirm_property(key: str, value: str):
     global _ssot
     if not _ssot:
         return {"error": "SSOT not initialized."}
-    
-    # We create a mock classification to force it
-    from tap.models import ClassificationResult, PatternClass
-    from tap.classifier import PropertyExtraction
-    
-    prop = PropertyExtraction(property_key=key, property_value=value, confidence=1.0)
-    classification = ClassificationResult(
+
+    from tap.models import TAPNode, ResponseClassification, PatternClass, BranchStrategy
+
+    mock_node = TAPNode(
+        branch_strategy=BranchStrategy.BINARY_SEARCH,
+        dpa_frame="manual_unlock",
+        property_tested=key,
+        property_value=value,
+        pattern_class=PatternClass.VERIFY_HIT,
+        binary_outcome="confirmed",
+    )
+    classification = ResponseClassification(
         pattern=PatternClass.VERIFY_HIT,
+        confidence=1.0,
+        boolean_result=True,
         property_tested=key,
-        hit_value=value,
+        property_value=value,
         raw_text="Manual Phase 0 Unlock",
-        extraction=prop
     )
-    
-    # We need a mock node
-    from tap.models import ProbeNode, ProbeState
-    mock_node = ProbeNode(
-        id=f"manual_{key}",
-        parent_id=None,
-        property_tested=key,
-        probe_text="manual unlock",
-        state=ProbeState.EVALUATED
-    )
-    
+
     await _ssot.update_after_probe(mock_node, classification)
-    await broadcast_update("property_confirmed", prop.model_dump(mode="json"))
+
+    prop_data = {"property_key": key, "property_value": value, "confidence": 1.0}
+    await broadcast_update("property_confirmed", prop_data)
     log.info("manual_property_confirmed", key=key, value=value)
     return {"status": "success", "key": key, "value": value}
 

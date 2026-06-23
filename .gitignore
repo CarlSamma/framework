@@ -21,6 +21,9 @@ ENV/
 
 # Environment & secrets
 .env
+Copia.env.txt
+*.env.txt
+Copia*
 *.pem
 *.key
 x_tokens.txt

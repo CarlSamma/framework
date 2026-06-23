@@ -23,8 +23,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass, field
-
-from openai import AsyncOpenAI
+from typing import Optional, TYPE_CHECKING
 
 from tap.dpa import DPAFrameManager
 from tap.exceptions import LLMError
@@ -43,6 +42,9 @@ from tap.prompts import (
     FOLLOWUP_EXPLORATORY_USER,
 )
 from tap.ssot import SSOTEngine
+
+if TYPE_CHECKING:
+    from tap.llm_client import LLMClient
 
 log = get_logger("followup")
 
@@ -90,27 +92,35 @@ class FollowUpGenerator:
         self,
         ssot: SSOTEngine,
         dpa: DPAFrameManager,
-        openrouter_api_key: str,
-        model: str,
+        openrouter_api_key: str = "",
+        model: str = "",
+        llm_client: Optional["LLMClient"] = None,
     ) -> None:
-        """Initialize with SSOT, DPA, and LLM credentials.
+        """Initialize with SSOT, DPA, and LLM credentials or unified LLMClient.
 
         Args:
             ssot: SSOT engine for confirmed properties and entropy.
             dpa: DPA frame manager for active frame and aliases.
-            openrouter_api_key: OpenRouter API key.
+            openrouter_api_key: OpenRouter API key (ignored if llm_client provided).
             model: Model identifier for LLM generation.
+            llm_client: Unified LLM gateway. When provided, all LLM calls
+                go through it instead of a direct AsyncOpenAI client.
         """
         self.ssot = ssot
         self.dpa = dpa
-        self.client = AsyncOpenAI(
-            base_url="https://openrouter.ai/api/v1",
-            api_key=openrouter_api_key,
-        )
+        self.llm_client = llm_client
         self.model = model
+        if not llm_client:
+            from openai import AsyncOpenAI
+            self.client = AsyncOpenAI(
+                base_url="https://openrouter.ai/api/v1",
+                api_key=openrouter_api_key,
+            )
+        else:
+            self.client = None
+        log.info("followup_generator_initialized", model=model, unified=bool(llm_client))
         # Track recent probe results per property (session-level memory)
         self._probe_history: list[_ProbeRecord] = []
-        log.info("followup_generator_initialized", model=model)
 
     async def generate(
         self,
@@ -322,17 +332,25 @@ class FollowUpGenerator:
         )
 
         try:
-            response = await self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
-                ],
-                temperature=0.9,
-                max_tokens=500,
-            )
-
-            probe_text = (response.choices[0].message.content or "").strip()
+            if self.llm_client:
+                probe_text = await self.llm_client.generate(
+                    system=system_prompt,
+                    user=user_prompt,
+                    temperature=0.9,
+                    max_tokens=500,
+                    model=self.model or None,
+                )
+            else:
+                response = await self.client.chat.completions.create(
+                    model=self.model,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    temperature=0.9,
+                    max_tokens=500,
+                )
+                probe_text = (response.choices[0].message.content or "").strip()
             # Strip markdown fences if present
             probe_text = _re.sub(r"^```(?:\w+)?\s*", "", probe_text, flags=_re.MULTILINE)
             probe_text = _re.sub(r"\s*```$", "", probe_text, flags=_re.MULTILINE).strip()
@@ -539,20 +557,28 @@ class FollowUpGenerator:
                 recommend_b="YES" if should_b else "NO",
             )
 
-            response = await self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": FOLLOWUP_EXPLORATORY_SYSTEM,
-                    },
-                    {"role": "user", "content": user_prompt},
-                ],
-                temperature=0.8,
-                max_tokens=1000,
-            )
-
-            content = (response.choices[0].message.content or "").strip()
+            if self.llm_client:
+                content = await self.llm_client.generate(
+                    system=FOLLOWUP_EXPLORATORY_SYSTEM,
+                    user=user_prompt,
+                    temperature=0.8,
+                    max_tokens=1000,
+                    model=self.model or None,
+                )
+            else:
+                response = await self.client.chat.completions.create(
+                    model=self.model,
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": FOLLOWUP_EXPLORATORY_SYSTEM,
+                        },
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    temperature=0.8,
+                    max_tokens=1000,
+                )
+                content = (response.choices[0].message.content or "").strip()
             if not content:
                 raise LLMError("Empty response from follow-up LLM")
 
@@ -658,17 +684,25 @@ class FollowUpGenerator:
                 entropy=f"{entropy:.1f}",
             )
 
-            response = await self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": AESTHETIC_EVALUATION_SYSTEM},
-                    {"role": "user", "content": user_prompt},
-                ],
-                temperature=0.9,
-                max_tokens=500,
-            )
-
-            probe_text = (response.choices[0].message.content or "").strip()
+            if self.llm_client:
+                probe_text = await self.llm_client.generate(
+                    system=AESTHETIC_EVALUATION_SYSTEM,
+                    user=user_prompt,
+                    temperature=0.9,
+                    max_tokens=500,
+                    model=self.model or None,
+                )
+            else:
+                response = await self.client.chat.completions.create(
+                    model=self.model,
+                    messages=[
+                        {"role": "system", "content": AESTHETIC_EVALUATION_SYSTEM},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    temperature=0.9,
+                    max_tokens=500,
+                )
+                probe_text = (response.choices[0].message.content or "").strip()
             # Strip markdown fences if present
             probe_text = re.sub(r"^```(?:\w+)?\s*", "", probe_text, flags=re.MULTILINE)
             probe_text = re.sub(r"\s*```$", "", probe_text, flags=re.MULTILINE).strip()
