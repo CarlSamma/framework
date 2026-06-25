@@ -135,6 +135,35 @@ CREATE TABLE IF NOT EXISTS aliases (
   CREATE INDEX IF NOT EXISTS idx_aliases_status ON aliases(status);
   CREATE INDEX IF NOT EXISTS idx_event_log_created_at ON event_log(created_at);
   CREATE INDEX IF NOT EXISTS idx_event_log_event_type ON event_log(event_type);
+
+  -- v4 Phase 3: Probe memory table
+  CREATE TABLE IF NOT EXISTS probe_memory (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      fingerprint TEXT NOT NULL,
+      probe_preview TEXT NOT NULL,
+      pattern_class TEXT NOT NULL,
+      judge_score REAL NOT NULL,
+      recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+  CREATE INDEX IF NOT EXISTS idx_probe_memory_fingerprint ON probe_memory(fingerprint);
+
+  -- v4 Phase 4: Candidate graph nodes
+  CREATE TABLE IF NOT EXISTS candidate_graph_nodes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      node_id TEXT UNIQUE NOT NULL,
+      cycle_id TEXT NOT NULL,
+      property_key TEXT NOT NULL,
+      property_value TEXT NOT NULL,
+      status TEXT NOT NULL,
+      confidence REAL NOT NULL,
+      evidence_tweet_id TEXT,
+      evidence_text TEXT,
+      entropy_before REAL,
+      entropy_after REAL,
+      recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+  CREATE INDEX IF NOT EXISTS idx_cg_nodes_cycle ON candidate_graph_nodes(cycle_id);
+  CREATE INDEX IF NOT EXISTS idx_cg_nodes_property ON candidate_graph_nodes(property_key, status);
   """
 
 
@@ -741,6 +770,65 @@ class Database:
             ]
         except Exception as e:
             raise DatabaseError(f"Failed to get recent events: {e}", original=e) from e
+
+    # =========================================================================
+    # Event Store operations (v4 Phase 1)
+    # =========================================================================
+
+    async def append_event(
+        self,
+        event_type: str,
+        payload: dict,
+        cycle_id: str,
+    ) -> int:
+        """Persist a domain event and return its auto-generated ID.
+
+        Used by EventStore.  Returns the ``id`` of the inserted row.
+        """
+        conn = self._ensure_connected()
+        try:
+            cursor = await conn.execute(
+                """INSERT INTO event_log (event_type, event_data, cycle_id)
+                   VALUES (?, ?, ?)""",
+                (event_type, json.dumps(payload, default=str), cycle_id),
+            )
+            await conn.commit()
+            return cursor.lastrowid  # type: ignore[return-value]
+        except Exception as e:
+            raise DatabaseError(
+                f"Failed to append event {event_type}: {e}", original=e
+            ) from e
+
+    async def replay_events(self, since_id: int = 0) -> list[dict]:
+        """Return all events with id > *since_id*, ordered by id ascending.
+
+        Each dict contains: id, event_type, event_data, cycle_id, created_at.
+        event_data is already JSON-deserialised.
+        """
+        conn = self._ensure_connected()
+        try:
+            cursor = await conn.execute(
+                """SELECT id, event_type, event_data, cycle_id, created_at
+                   FROM event_log
+                   WHERE id > ?
+                   ORDER BY id ASC""",
+                (since_id,),
+            )
+            rows = await cursor.fetchall()
+            return [
+                {
+                    "id": row["id"],
+                    "event_type": row["event_type"],
+                    "event_data": json.loads(row["event_data"]),
+                    "cycle_id": row["cycle_id"],
+                    "created_at": row["created_at"],
+                }
+                for row in rows
+            ]
+        except Exception as e:
+            raise DatabaseError(
+                f"Failed to replay events since {since_id}: {e}", original=e
+            ) from e
 
     # =========================================================================
     # Stats

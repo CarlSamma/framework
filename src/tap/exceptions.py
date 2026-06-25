@@ -65,3 +65,13 @@ class EngineError(TAPError):
     - No active DPA frame available
     - Candidate set empty
     """
+
+
+class EventStorePermanentError(EngineError):
+    """Raised when EventStore fails after max retries.
+
+    The event has been written to the dead-letter file
+    (data/event_dead_letter.jsonl) and can be replayed manually.
+    The engine continues operating without the event journal for
+    this cycle — the journal is additive, not critical-path.
+    """

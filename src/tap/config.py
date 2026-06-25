@@ -156,6 +156,24 @@ class Settings(BaseSettings):
         description="Seconds to wait for DB before buffering writes in memory (v3.0).",
     )
 
+    # === v4 Policy Thresholds (Phase 5) ===
+    phase5_entropy_threshold: float = Field(
+        default=3.3,
+        description="Entropy threshold (bits) below which Phase 5 autoregressive extraction triggers",
+    )
+    stir_rotation_threshold: float = Field(
+        default=0.20,
+        description="STIR score below which DPA frame rotation is forced",
+    )
+    oracle_latency_seconds: int = Field(
+        default=1800,
+        description="Oracle Protocol minimum inter-probe latency (seconds)",
+    )
+    eig_property_universe_path: str = Field(
+        default="data/eig_property_universe.json",
+        description="Path to EIG property universe JSON (prior entropy weights per property)",
+    )
+
     model_config = {
         "env_file": ".env",
         "env_file_encoding": "utf-8",
