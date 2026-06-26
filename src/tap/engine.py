@@ -160,8 +160,12 @@ class TAPEngine:
                     if unlocked:
                         log.info("phase0_unlocked_by_intel_extractor")
                         gate_status = await self._check_phase0_gate()
-                if not gate_status["passed"]:
-                    selected_probe = None
+                if not gate_status["passed"] and not selected_probe:
+                    log.info("phase0_gate_blocked_no_hitl_probe", missing=gate_status["missing"])
+                elif not gate_status["passed"] and selected_probe:
+                    log.info("phase0_gate_blocked_but_hitl_probe_selected",
+                             missing=gate_status["missing"],
+                             probe_preview=selected_probe[:60])
 
             entropy = await self.ssot.get_candidate_entropy()
             if entropy < _PHASE5_THRESHOLD and gate_status["passed"]:

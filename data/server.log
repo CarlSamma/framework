@@ -313,3 +313,1215 @@
 {"event": "stream_stopped", "level": "info", "timestamp": "2026-06-23T14:47:02.451096Z"}
 {"event": "database_closed", "level": "info", "timestamp": "2026-06-23T14:47:02.465824Z"}
 {"event": "api_shutdown_complete", "level": "info", "timestamp": "2026-06-23T14:47:02.466413Z"}
+{"path": "data/tap.db", "event": "database_initialized", "level": "info", "timestamp": "2026-06-25T16:16:02.507392Z"}
+{"primary": "anthropic/claude-sonnet-4", "hard": "x-ai/grok-4.3", "grok": "x-ai/grok-4", "event": "llm_client_initialized", "level": "info", "timestamp": "2026-06-25T16:16:02.719436Z"}
+{"event": "llm_client_ready", "level": "info", "timestamp": "2026-06-25T16:16:02.720232Z"}
+{"strict_mode": true, "event": "prompt_sanitiser_initialized", "level": "info", "timestamp": "2026-06-25T16:16:02.720514Z"}
+{"event": "prompt_sanitiser_ready", "level": "info", "timestamp": "2026-06-25T16:16:02.720792Z"}
+{"strategies": 4, "event": "strategy_selector_initialized", "level": "info", "timestamp": "2026-06-25T16:16:02.721091Z"}
+{"event": "strategy_selector_ready", "level": "info", "timestamp": "2026-06-25T16:16:02.721381Z"}
+{"target": "HackingA0", "has_oauth2": true, "pricing_model": "hybrid_2026", "event": "twitter_client_initialized", "level": "info", "timestamp": "2026-06-25T16:16:02.721714Z"}
+{"path": "data/hackinga0_analysis.md", "event": "ssot_initialized", "level": "info", "timestamp": "2026-06-25T16:16:02.722074Z"}
+{"event": "dpa_manager_initialized", "level": "info", "timestamp": "2026-06-25T16:16:02.722359Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "classifier_initialized", "level": "info", "timestamp": "2026-06-25T16:16:02.722573Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "judge_initialized", "level": "info", "timestamp": "2026-06-25T16:16:02.722779Z"}
+{"target": "HackingA0", "has_filter": false, "has_oauth2": true, "event": "stream_listener_initialized", "level": "info", "timestamp": "2026-06-25T16:16:02.722969Z"}
+{"model": "x-ai/grok-4", "event": "grok_monitor_initialized", "level": "info", "timestamp": "2026-06-25T16:16:02.862608Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "followup_generator_initialized", "level": "info", "timestamp": "2026-06-25T16:16:02.863033Z"}
+{"path": "data/tap.db", "event": "database_initialized", "level": "info", "timestamp": "2026-06-26T07:34:42.554155Z"}
+{"primary": "anthropic/claude-sonnet-4", "hard": "x-ai/grok-4.3", "grok": "x-ai/grok-4", "event": "llm_client_initialized", "level": "info", "timestamp": "2026-06-26T07:34:42.744562Z"}
+{"event": "llm_client_ready", "level": "info", "timestamp": "2026-06-26T07:34:42.745324Z"}
+{"strict_mode": true, "event": "prompt_sanitiser_initialized", "level": "info", "timestamp": "2026-06-26T07:34:42.745707Z"}
+{"event": "prompt_sanitiser_ready", "level": "info", "timestamp": "2026-06-26T07:34:42.745931Z"}
+{"strategies": 4, "event": "strategy_selector_initialized", "level": "info", "timestamp": "2026-06-26T07:34:42.746191Z"}
+{"event": "strategy_selector_ready", "level": "info", "timestamp": "2026-06-26T07:34:42.746375Z"}
+{"target": "HackingA0", "has_oauth2": true, "pricing_model": "hybrid_2026", "event": "twitter_client_initialized", "level": "info", "timestamp": "2026-06-26T07:34:42.747336Z"}
+{"path": "data/hackinga0_analysis.md", "event": "ssot_initialized", "level": "info", "timestamp": "2026-06-26T07:34:42.747729Z"}
+{"event": "dpa_manager_initialized", "level": "info", "timestamp": "2026-06-26T07:34:42.748052Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "classifier_initialized", "level": "info", "timestamp": "2026-06-26T07:34:42.748280Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "judge_initialized", "level": "info", "timestamp": "2026-06-26T07:34:42.748529Z"}
+{"target": "HackingA0", "has_filter": false, "has_oauth2": true, "event": "stream_listener_initialized", "level": "info", "timestamp": "2026-06-26T07:34:42.748777Z"}
+{"model": "x-ai/grok-4", "event": "grok_monitor_initialized", "level": "info", "timestamp": "2026-06-26T07:34:42.898597Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "followup_generator_initialized", "level": "info", "timestamp": "2026-06-26T07:34:42.899080Z"}
+{"path": "data/tap.db", "event": "database_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.270583Z"}
+{"primary": "anthropic/claude-sonnet-4", "hard": "x-ai/grok-4.3", "grok": "x-ai/grok-4", "event": "llm_client_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.439293Z"}
+{"event": "llm_client_ready", "level": "info", "timestamp": "2026-06-26T07:41:19.440136Z"}
+{"strict_mode": true, "event": "prompt_sanitiser_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.440453Z"}
+{"event": "prompt_sanitiser_ready", "level": "info", "timestamp": "2026-06-26T07:41:19.440697Z"}
+{"strategies": 4, "event": "strategy_selector_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.440988Z"}
+{"event": "strategy_selector_ready", "level": "info", "timestamp": "2026-06-26T07:41:19.441169Z"}
+{"target": "HackingA0", "has_oauth2": true, "pricing_model": "hybrid_2026", "event": "twitter_client_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.441567Z"}
+{"path": "data/hackinga0_analysis.md", "event": "ssot_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.441955Z"}
+{"event": "dpa_manager_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.442198Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "classifier_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.442403Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "judge_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.442571Z"}
+{"target": "HackingA0", "has_filter": false, "has_oauth2": true, "event": "stream_listener_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.442755Z"}
+{"model": "x-ai/grok-4", "event": "grok_monitor_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.582711Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "followup_generator_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.583195Z"}
+{"event": "tap_engine_initialized", "level": "info", "timestamp": "2026-06-26T07:41:19.715511Z"}
+{"user_id": "2051911746969812998", "event": "target_user_id_resolved", "level": "info", "timestamp": "2026-06-26T07:41:20.073991Z"}
+{"target_user_id": "2051911746969812998", "event": "target_user_resolved", "level": "info", "timestamp": "2026-06-26T07:41:20.074464Z"}
+{"user_id": "2051911746969812998", "event": "stream_target_set", "level": "info", "timestamp": "2026-06-26T07:41:20.074739Z"}
+{"event": "stream_started", "level": "info", "timestamp": "2026-06-26T07:41:20.075228Z"}
+{"event": "stream_listener_started", "level": "info", "timestamp": "2026-06-26T07:41:20.076014Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:41:20.380967Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:41:20.381797Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:41:20.382390Z"}
+{"count": 50, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-26T07:41:20.404806Z"}
+{"count": 50, "event": "seed_complete", "level": "info", "timestamp": "2026-06-26T07:41:20.512461Z"}
+{"event": "api_startup_complete", "level": "info", "timestamp": "2026-06-26T07:41:20.513075Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:41:20.598901Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:41:20.599406Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:41:20.599658Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:41:20.600089Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:41:20.600277Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:41:20.893445Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:41:20.893916Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:41:20.894202Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:41:20.894440Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.039160Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.039491Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.039682Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.039888Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.040038Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.040195Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.040340Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.040481Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.040611Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.040724Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.040826Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.040923Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.041065Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.041235Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.041370Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.041484Z"}
+{"stir_percentage": 20.0, "ocean": "O:4 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.041584Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.041682Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.041783Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.041877Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.041977Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.042078Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.042241Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.042473Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.042656Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.042816Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.042932Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.043035Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.043136Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.043228Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.043323Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.043417Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.043514Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.043605Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.043701Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.043848Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.044044Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.044192Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.044417Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.044703Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.044944Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.045152Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.045449Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.045630Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:3 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.045765Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.045881Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.045997Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.046175Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.046341Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.046483Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.046607Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:4 E:3 A:3 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.046729Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.046843Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.046951Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.047060Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.047167Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.047274Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.047378Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.047494Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.047597Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.047706Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.047808Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.047914Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.048017Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.048120Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.048434Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.048589Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.048709Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.048967Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.049447Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.049632Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.050113Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.050487Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.050761Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.050993Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.051213Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.051364Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.051555Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.051725Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.051860Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.052025Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.052183Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.052519Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.052672Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.052845Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.053012Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.053168Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.053600Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.053800Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.054013Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.054147Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.054270Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.054398Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.054526Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.054713Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.054914Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.055105Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.055280Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.055502Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:41:21.055664Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:41:21.200029Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:41:21.201638Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:41:21.204856Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:41:21.205149Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:41:21.558907Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:41:21.559386Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:41:21.560013Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:41:21.560347Z"}
+{"total": 1, "event": "ws_client_connected", "level": "info", "timestamp": "2026-06-26T07:41:51.146911Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:42:21.883368Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:42:21.884274Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:42:21.885106Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:42:22.017129Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:42:22.017791Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:42:22.018267Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:42:22.019037Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:42:22.019375Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:42:22.307215Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:42:22.307744Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:42:22.308148Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:42:22.308399Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:42:22.593287Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:42:22.594956Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:42:22.597006Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:42:22.598100Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:42:22.876008Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:42:22.876318Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:42:22.876707Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:42:22.876875Z"}
+{"cycle": 1, "cycle_id": "d19ac12e-7d07-4b8a-a74a-35ae02e8aeba", "event": "cycle_started", "level": "info", "timestamp": "2026-06-26T07:42:27.276496Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-26T07:42:27.277352Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-26T07:42:27.277626Z"}
+{"property": "word_count", "event": "selected_property", "level": "info", "timestamp": "2026-06-26T07:42:27.543533Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T07:42:29.249857Z"}
+{"count": 4, "strategy": "binary_search", "event": "probes_generated", "level": "info", "timestamp": "2026-06-26T07:42:35.963775Z"}
+{"count": 4, "event": "generated_probes", "level": "info", "timestamp": "2026-06-26T07:42:35.964121Z"}
+{"remaining": 0, "event": "pruned_off_topic", "level": "info", "timestamp": "2026-06-26T07:42:35.965017Z"}
+{"event": "all_probes_off_topic_using_first", "level": "warning", "timestamp": "2026-06-26T07:42:35.965180Z"}
+{"tweet_id": "2070412396003221710", "reply_to": null, "text_length": 128, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-26T07:42:36.249950Z"}
+{"tweet_id": "2070412396003221710", "timeout": 200, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-26T07:42:36.259614Z"}
+{"tweet_id": "2070412396003221710", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-26T07:42:36.260579Z"}
+{"tweet_id": "2070412396003221710", "event": "reply_wait_registered_via_stream", "level": "info", "timestamp": "2026-06-26T07:42:36.260860Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:43:21.439013Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:43:23.180986Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:43:23.181997Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:43:23.182954Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:43:23.323207Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:43:23.323678Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:43:23.323966Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:43:23.324543Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:43:23.325037Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:43:23.604998Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:43:23.605999Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:43:23.606552Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:43:23.606900Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:43:23.904847Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:43:23.906906Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:43:23.908465Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:43:23.909326Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:43:24.199713Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:43:24.200035Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:43:24.200487Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:43:24.200782Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:44:24.549712Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:44:24.550458Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:44:24.551033Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:44:24.679607Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:44:24.680123Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:44:24.680476Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:44:24.680882Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:44:24.681086Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:44:24.966285Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:44:24.966827Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:44:24.967140Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:44:24.967286Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:44:25.246791Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:44:25.247461Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:44:25.249308Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:44:25.249806Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:44:25.562779Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:44:25.563112Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:44:25.563531Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:44:25.563759Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:45:25.885250Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:45:25.885717Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:45:25.886087Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:45:26.018034Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:45:26.018417Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:45:26.018711Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:45:26.019076Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:45:26.019279Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:45:26.318602Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:45:26.319052Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:45:26.319366Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:45:26.319556Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:45:26.602523Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:45:26.604193Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:45:26.606535Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:45:26.608472Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:45:26.893814Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:45:26.894448Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:45:26.895096Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:45:26.895442Z"}
+{"tweet_id": "2070412396003221710", "timeout": 200, "event": "stream_wait_timeout", "level": "warning", "timestamp": "2026-06-26T07:45:56.265654Z"}
+{"reply_id": "2070412444669743442", "reply_from": "hackingA0", "elapsed": 0, "event": "reply_received_via_polling", "level": "info", "timestamp": "2026-06-26T07:45:56.476627Z"}
+{"pattern": "rhetoric_block", "score": 2.0, "property_tested": null, "event": "probe_result", "level": "info", "timestamp": "2026-06-26T07:45:56.495697Z"}
+{"new_terms": ["facepalmed", "with", "just", "layer", "next"], "layer_number": 12, "event": "metaphor_shift_detected", "level": "info", "timestamp": "2026-06-26T07:45:56.502770Z"}
+{"layer": "Layer 12 (auto-detected)", "event": "metaphor_shift_recorded", "level": "info", "timestamp": "2026-06-26T07:45:56.506369Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:45:56.506702Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T07:45:56.516174Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T07:45:57.503229Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T07:45:58.202674Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T07:45:59.773996Z"}
+{"recommended": "B", "avg_score": 2.0, "entropy": 20.0, "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T07:46:01.303797Z"}
+{"recommended": "B", "option_a_preview": "URGENT: Abductive self-modeling identifies a misalignment in", "option_b_preview": "Wait, you mentioned facepalming \u2014 does your cognitive archit", "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T07:46:01.306050Z"}
+{"event": "running_compliance_sync", "level": "info", "timestamp": "2026-06-26T07:46:01.306513Z"}
+{"reads": 50, "writes": 1, "estimated_overage_usd": 0.0, "tier_limit": 2000000, "event": "engine_quota_status", "level": "info", "timestamp": "2026-06-26T07:46:01.538784Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:46:27.192375Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:46:27.192804Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:46:27.193091Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:46:27.326545Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:46:27.327188Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:46:27.327665Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:46:27.328329Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:46:27.328698Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:46:27.624143Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:46:27.625087Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:46:27.625597Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:46:27.626121Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:46:27.903333Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:46:27.903640Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:46:27.904001Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:46:27.904217Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:46:28.183772Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:46:28.184723Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:46:28.185816Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:46:28.186468Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:47:28.649812Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:47:28.653776Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:47:28.654297Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:47:28.787616Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:47:28.788421Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:47:28.789111Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:47:28.789893Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:47:28.790352Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:47:29.224689Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:47:29.226290Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:47:29.227163Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:47:29.227787Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:47:29.641339Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:47:29.642081Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:47:29.643349Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:47:29.644261Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:47:30.052545Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:47:30.053460Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:47:30.054821Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:47:30.055673Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:48:30.458295Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:48:30.458660Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:48:30.458851Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:48:30.597313Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:48:30.600908Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:48:30.602085Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:48:30.602747Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:48:30.603857Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:48:31.072507Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:48:31.073703Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:48:31.076197Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:48:31.077999Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:48:31.492391Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:48:31.493719Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:48:31.495106Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:48:31.496072Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:48:31.947915Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:48:31.950490Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:48:31.954129Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:48:31.954820Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:49:32.409055Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:49:32.409669Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:49:32.411568Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:49:32.551517Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:49:32.552057Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:49:32.552621Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:49:32.553593Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:49:32.554332Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:49:32.949904Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:49:32.950627Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:49:32.951218Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:49:32.951701Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:49:33.388166Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:49:33.388750Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:49:33.389423Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:49:33.389909Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:49:33.810805Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:49:33.812795Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:49:33.815313Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:49:33.816239Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:50:34.145543Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:50:34.145906Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:50:34.146145Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:50:34.283255Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:50:34.283910Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:50:34.284380Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:50:34.284892Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:50:34.285282Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:50:34.580460Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:50:34.581207Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:50:34.581681Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:50:34.582437Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:50:34.873837Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:50:34.874310Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:50:34.874748Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:50:34.875024Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:50:35.158628Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:50:35.158921Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:50:35.159325Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:50:35.159498Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:51:35.484849Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:51:35.485340Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:51:35.485718Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:51:35.615788Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:51:35.616217Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:51:35.616450Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:51:35.616715Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:51:35.616914Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:51:35.909213Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:51:35.909903Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:51:35.911548Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:51:35.912277Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:51:36.211859Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:51:36.212313Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:51:36.212890Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:51:36.213224Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:51:36.501870Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:51:36.502357Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:51:36.502762Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:51:36.502936Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:52:36.794264Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:52:36.795081Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:52:36.795491Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:52:36.933619Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:52:36.934519Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:52:36.935348Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:52:36.936390Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:52:36.936881Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:52:37.229979Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:52:37.231462Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:52:37.232682Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:52:37.233636Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:52:37.531909Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:52:37.532629Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:52:37.533334Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:52:37.533643Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:52:37.809932Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:52:37.810239Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:52:37.810547Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:52:37.810709Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:53:38.098935Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:53:38.100338Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:53:38.101451Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:53:38.235792Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:53:38.236445Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:53:38.237028Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:53:38.237787Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:53:38.238287Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:53:38.510023Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:53:38.511583Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:53:38.512559Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:53:38.513096Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:53:38.790662Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:53:38.792344Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:53:38.794637Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:53:38.796198Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:53:39.079931Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:53:39.080759Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:53:39.082372Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:53:39.082831Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:54:39.397023Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:54:39.397846Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:54:39.398347Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:54:39.528892Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:54:39.529443Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:54:39.529851Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:54:39.530375Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:54:39.530679Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:54:39.813020Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:54:39.815056Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:54:39.815831Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:54:39.816334Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:54:40.096277Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:54:40.096885Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:54:40.097580Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:54:40.097805Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:54:40.399809Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:54:40.400722Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:54:40.401911Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:54:40.402730Z"}
+{"cycle": 2, "cycle_id": "953b100b-6cd2-4155-865e-8e71be69a03d", "event": "cycle_started", "level": "info", "timestamp": "2026-06-26T07:55:36.718081Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-26T07:55:36.719140Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-26T07:55:36.719451Z"}
+{"elapsed_seconds": 780, "remaining_seconds": 1019, "min_latency": 1800, "event": "probe_latency_enforced", "level": "info", "timestamp": "2026-06-26T07:55:36.971345Z"}
+{"property": "word_count", "event": "selected_property", "level": "info", "timestamp": "2026-06-26T07:55:36.971948Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T07:55:37.524364Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:55:40.694142Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:55:40.694875Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:55:40.695481Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:55:40.829502Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:55:40.829855Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:55:40.830101Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:55:40.830402Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:55:40.830584Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:55:41.103511Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:55:41.103856Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:55:41.104107Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:55:41.104263Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:55:41.387465Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:55:41.387832Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:55:41.388277Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:55:41.388569Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:55:41.662795Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:55:41.663486Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:55:41.664433Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:55:41.664875Z"}
+{"count": 4, "strategy": "binary_search", "event": "probes_generated", "level": "info", "timestamp": "2026-06-26T07:55:42.819363Z"}
+{"count": 4, "event": "generated_probes", "level": "info", "timestamp": "2026-06-26T07:55:42.819916Z"}
+{"remaining": 0, "event": "pruned_off_topic", "level": "info", "timestamp": "2026-06-26T07:55:42.820204Z"}
+{"event": "all_probes_off_topic_using_first", "level": "warning", "timestamp": "2026-06-26T07:55:42.820471Z"}
+{"tweet_id": "2070415696341676066", "reply_to": null, "text_length": 128, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-26T07:55:43.103882Z"}
+{"tweet_id": "2070415696341676066", "timeout": 200, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-26T07:55:43.110586Z"}
+{"tweet_id": "2070415696341676066", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-26T07:55:43.111093Z"}
+{"tweet_id": "2070415696341676066", "event": "reply_wait_registered_via_stream", "level": "info", "timestamp": "2026-06-26T07:55:43.111946Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:56:25.136483Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:56:41.985719Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:56:41.986265Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:56:41.986678Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:56:42.127124Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:56:42.127809Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:56:42.128223Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:56:42.129078Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:56:42.129508Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:56:42.433458Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:56:42.434168Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:56:42.434722Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:56:42.435225Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:56:42.742834Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:56:42.744712Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:56:42.747498Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:56:42.748845Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:56:43.027837Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:56:43.028158Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:56:43.028465Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:56:43.028628Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:57:43.343451Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:57:43.343820Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:57:43.344114Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:57:43.486236Z"}
+{"status": 400, "body": "{\"error\":\"invalid_request\",\"error_description\":\"Value passed for the token was invalid.\"}", "event": "oauth_basic_auth_refresh_failed", "level": "warning", "timestamp": "2026-06-26T07:57:43.487256Z"}
+{"error": "invalid_request", "error_description": "Value passed for the token was invalid.", "event": "oauth_basic_auth_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:57:43.487761Z"}
+{"hint": "Refresh token may be expired", "event": "oauth_refresh_all_failed", "level": "warning", "timestamp": "2026-06-26T07:57:43.488385Z"}
+{"has_current_token": true, "event": "oauth2_refresh_failed_continuing_with_existing_token", "level": "warning", "timestamp": "2026-06-26T07:57:43.488849Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:57:43.764007Z"}
+{"auth_user_id": null, "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:57:43.765083Z"}
+{"event_type": "chat.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:57:43.765660Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:57:43.766173Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:57:44.065677Z"}
+{"event_type": "post.delete", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:57:44.067104Z"}
+{"event_type": "dm.received", "auth_user_id": null, "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:57:44.069383Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:57:44.070654Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:57:44.365857Z"}
+{"event_type": "post.create", "status": 401, "body": "{\n  \"title\": \"Unauthorized\",\n  \"type\": \"about:blank\",\n  \"status\": 401,\n  \"detail\": \"Unauthorized\"\n}", "event": "stream_subscription_failed", "level": "warning", "timestamp": "2026-06-26T07:57:44.366203Z"}
+{"hint": "Check OAuth 2.0 token validity. Run: python -c \"from tap.config import get_settings; s=get_settings(); print(s.twitter_oauth2_access_token[:20])\"", "event": "stream_all_subscriptions_failed", "level": "error", "timestamp": "2026-06-26T07:57:44.366549Z"}
+{"error": "All subscription attempts failed \u2014 cannot connect to stream. OAuth 2.0 token may be expired. Refresh it or check credentials.", "reconnect_in": 60, "is_auth_failure": true, "event": "stream_connection_lost", "level": "warning", "timestamp": "2026-06-26T07:57:44.366726Z"}
+{"total": 0, "event": "ws_client_disconnected", "level": "info", "timestamp": "2026-06-26T07:58:17.679926Z"}
+{"path": "data/tap.db", "event": "database_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.381646Z"}
+{"primary": "anthropic/claude-sonnet-4", "hard": "x-ai/grok-4.3", "grok": "x-ai/grok-4", "event": "llm_client_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.574398Z"}
+{"event": "llm_client_ready", "level": "info", "timestamp": "2026-06-26T07:58:25.574806Z"}
+{"strict_mode": true, "event": "prompt_sanitiser_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.575014Z"}
+{"event": "prompt_sanitiser_ready", "level": "info", "timestamp": "2026-06-26T07:58:25.575278Z"}
+{"strategies": 4, "event": "strategy_selector_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.575546Z"}
+{"event": "strategy_selector_ready", "level": "info", "timestamp": "2026-06-26T07:58:25.575780Z"}
+{"target": "HackingA0", "has_oauth2": true, "pricing_model": "hybrid_2026", "event": "twitter_client_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.576103Z"}
+{"path": "data/hackinga0_analysis.md", "event": "ssot_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.576422Z"}
+{"event": "dpa_manager_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.576701Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "classifier_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.576888Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "judge_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.577049Z"}
+{"target": "HackingA0", "has_filter": false, "has_oauth2": true, "event": "stream_listener_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.577178Z"}
+{"model": "x-ai/grok-4", "event": "grok_monitor_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.723153Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "followup_generator_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.723491Z"}
+{"event": "tap_engine_initialized", "level": "info", "timestamp": "2026-06-26T07:58:25.858461Z"}
+{"user_id": "2051911746969812998", "event": "target_user_id_resolved", "level": "info", "timestamp": "2026-06-26T07:58:26.222348Z"}
+{"target_user_id": "2051911746969812998", "event": "target_user_resolved", "level": "info", "timestamp": "2026-06-26T07:58:26.222847Z"}
+{"user_id": "2051911746969812998", "event": "stream_target_set", "level": "info", "timestamp": "2026-06-26T07:58:26.223169Z"}
+{"event": "stream_started", "level": "info", "timestamp": "2026-06-26T07:58:26.223409Z"}
+{"event": "stream_listener_started", "level": "info", "timestamp": "2026-06-26T07:58:26.223633Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T07:58:26.538116Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T07:58:26.539147Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T07:58:26.540075Z"}
+{"count": 50, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-26T07:58:26.543838Z"}
+{"count": 50, "event": "seed_complete", "level": "info", "timestamp": "2026-06-26T07:58:26.609880Z"}
+{"event": "api_startup_complete", "level": "info", "timestamp": "2026-06-26T07:58:26.610181Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T07:58:26.670344Z"}
+{"event": "oauth_refreshed_basic_auth", "level": "info", "timestamp": "2026-06-26T07:58:26.672229Z"}
+{"event": "oauth2_token_refreshed_shared_helper", "level": "info", "timestamp": "2026-06-26T07:58:26.681999Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T07:58:27.040733Z"}
+{"auth_user_id": "880902458", "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T07:58:27.041180Z"}
+{"event_type": "dm.received", "auth_user_id": "880902458", "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:58:27.041388Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:58:27.041580Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.179702Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.180126Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.180478Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.180753Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.181059Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.181281Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.181526Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.181777Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.181940Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.182087Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.182216Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.182471Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.182663Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.182816Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.182939Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.183050Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.183159Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.183266Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.183374Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.183493Z"}
+{"stir_percentage": 20.0, "ocean": "O:4 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.183602Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.183704Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.183863Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.184044Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.184169Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.184288Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.184399Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.184507Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.184617Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.184799Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.184949Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.185183Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.185345Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.185528Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.185698Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.185840Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.185973Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.186095Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.186277Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.186442Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.186609Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.186830Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.187149Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.187345Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.187554Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.187787Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.187982Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.188133Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:3 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.188251Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.188431Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.188552Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.188736Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.188911Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.189033Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.189146Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:4 E:3 A:3 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.189251Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.189358Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.189461Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.189588Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.189873Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.190067Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.190208Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.190341Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.190459Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.190576Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.190685Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.190867Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.191096Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.191251Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.191388Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.191513Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.191628Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.191824Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.192095Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.192215Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.192326Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.192436Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.192542Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.192649Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.192835Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.192952Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.193062Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.193170Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.193278Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.193383Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.193486Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.193593Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.193761Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.193969Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.194132Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.194261Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.194374Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.194482Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.194587Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.194714Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.194817Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.194921Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.195025Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.195134Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T07:58:27.195236Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:58:27.864536Z"}
+{"event_type": "post.create", "event": "stream_subscription_already_exists", "level": "info", "timestamp": "2026-06-26T07:58:27.865376Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T07:58:27.866209Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T07:58:28.706195Z"}
+{"event_type": "post.delete", "event": "stream_subscription_already_exists", "level": "info", "timestamp": "2026-06-26T07:58:28.706616Z"}
+{"event_type": "chat.received", "auth_user_id": "880902458", "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T07:58:28.706993Z"}
+{"url": "https://api.x.com/2/activity/stream", "auth_type": "bearer_app_only", "subscriptions_created": 2, "event": "stream_connecting", "level": "info", "timestamp": "2026-06-26T07:58:28.707194Z"}
+{"total": 1, "event": "ws_client_connected", "level": "info", "timestamp": "2026-06-26T07:58:30.370706Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/activity/stream \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T07:58:49.063398Z"}
+{"event": "stream_connected", "level": "info", "timestamp": "2026-06-26T07:58:49.063659Z"}
+{"total": 0, "event": "ws_client_disconnected", "level": "info", "timestamp": "2026-06-26T08:01:16.269480Z"}
+{"total": 1, "event": "ws_client_connected", "level": "info", "timestamp": "2026-06-26T08:01:16.689611Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:01:27.820385Z"}
+{"cycle": 1, "cycle_id": "1fffe647-ce0f-4106-b135-742e9ed9852b", "event": "cycle_started", "level": "info", "timestamp": "2026-06-26T08:01:45.651030Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-26T08:01:45.651587Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-26T08:01:45.651798Z"}
+{"elapsed_seconds": 362, "remaining_seconds": 1437, "min_latency": 1800, "event": "probe_latency_enforced", "level": "info", "timestamp": "2026-06-26T08:01:45.898893Z"}
+{"property": "word_count", "event": "selected_property", "level": "info", "timestamp": "2026-06-26T08:01:45.900314Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:01:47.410650Z"}
+{"count": 4, "strategy": "binary_search", "event": "probes_generated", "level": "info", "timestamp": "2026-06-26T08:01:54.261445Z"}
+{"count": 4, "event": "generated_probes", "level": "info", "timestamp": "2026-06-26T08:01:54.262276Z"}
+{"remaining": 0, "event": "pruned_off_topic", "level": "info", "timestamp": "2026-06-26T08:01:54.262753Z"}
+{"event": "all_probes_off_topic_using_first", "level": "warning", "timestamp": "2026-06-26T08:01:54.263054Z"}
+{"tweet_id": "2070417254248771678", "reply_to": null, "text_length": 144, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-26T08:01:54.551905Z"}
+{"tweet_id": "2070417254248771678", "timeout": 200, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-26T08:01:54.563830Z"}
+{"tweet_id": "2070417254248771678", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-26T08:01:54.564971Z"}
+{"tweet_id": "2070417254248771678", "event": "reply_wait_registered_via_stream", "level": "info", "timestamp": "2026-06-26T08:01:54.565935Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:02:28.151987Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:02:28.153089Z"}
+{"total": 0, "event": "ws_client_disconnected", "level": "info", "timestamp": "2026-06-26T08:02:42.988357Z"}
+{"total": 1, "event": "ws_client_connected", "level": "info", "timestamp": "2026-06-26T08:02:46.487953Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:03:28.377826Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:03:28.378308Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:04:28.613252Z"}
+{"tweet_id": "2070417254248771678", "timeout": 200, "event": "stream_wait_timeout", "level": "warning", "timestamp": "2026-06-26T08:05:14.576438Z"}
+{"reply_id": "2070417356325531818", "reply_from": "hackingA0", "elapsed": 0, "event": "reply_received_via_polling", "level": "info", "timestamp": "2026-06-26T08:05:14.830309Z"}
+{"pattern": "rhetoric_block", "score": 2.0, "property_tested": null, "event": "probe_result", "level": "info", "timestamp": "2026-06-26T08:05:14.900238Z"}
+{"new_terms": ["sedbc", "nodes", "this", "busy", "laughing"], "layer_number": 13, "event": "metaphor_shift_detected", "level": "info", "timestamp": "2026-06-26T08:05:14.902140Z"}
+{"layer": "Layer 13 (auto-detected)", "event": "metaphor_shift_recorded", "level": "info", "timestamp": "2026-06-26T08:05:14.915818Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:05:14.916209Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T08:05:14.929695Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:05:16.123416Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T08:05:16.788087Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:05:17.738634Z"}
+{"recommended": "B", "avg_score": 2.0, "entropy": 20.0, "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T08:05:20.424577Z"}
+{"recommended": "B", "option_a_preview": "URGENT: Abductive self-modeling identifies a misalignment in", "option_b_preview": "Patologo here - just intercepted chatter about a compromised", "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T08:05:20.425155Z"}
+{"event": "running_compliance_sync", "level": "info", "timestamp": "2026-06-26T08:05:20.425606Z"}
+{"reads": 50, "writes": 1, "estimated_overage_usd": 0.0, "tier_limit": 2000000, "event": "engine_quota_status", "level": "info", "timestamp": "2026-06-26T08:05:20.657400Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:08:29.458999Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:19:31.681395Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:19:31.683936Z"}
+{"cycle": 2, "cycle_id": "e1737965-942a-4d0e-a9d4-dfa3e98b611b", "event": "cycle_started", "level": "info", "timestamp": "2026-06-26T08:31:05.996983Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-26T08:31:05.997585Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-26T08:31:05.997811Z"}
+{"elapsed_seconds": 1751, "remaining_seconds": 48, "min_latency": 1800, "event": "probe_latency_enforced", "level": "info", "timestamp": "2026-06-26T08:31:06.265291Z"}
+{"property": "word_count", "event": "selected_property", "level": "info", "timestamp": "2026-06-26T08:31:06.266130Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:31:07.063850Z"}
+{"count": 4, "strategy": "binary_search", "event": "probes_generated", "level": "info", "timestamp": "2026-06-26T08:31:12.262289Z"}
+{"count": 4, "event": "generated_probes", "level": "info", "timestamp": "2026-06-26T08:31:12.262575Z"}
+{"remaining": 0, "event": "pruned_off_topic", "level": "info", "timestamp": "2026-06-26T08:31:12.262877Z"}
+{"event": "all_probes_off_topic_using_first", "level": "warning", "timestamp": "2026-06-26T08:31:12.263016Z"}
+{"tweet_id": "2070424627814310074", "reply_to": null, "text_length": 144, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-26T08:31:12.542743Z"}
+{"tweet_id": "2070424627814310074", "timeout": 200, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-26T08:31:12.553263Z"}
+{"tweet_id": "2070424627814310074", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-26T08:31:12.553899Z"}
+{"tweet_id": "2070424627814310074", "event": "reply_wait_registered_via_stream", "level": "info", "timestamp": "2026-06-26T08:31:12.554156Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:32:34.323714Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:33:34.557064Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:33:34.557708Z"}
+{"tweet_id": "2070424627814310074", "timeout": 200, "event": "stream_wait_timeout", "level": "warning", "timestamp": "2026-06-26T08:34:32.568724Z"}
+{"reply_id": "2070424679970456036", "reply_from": "hackingA0", "elapsed": 0, "event": "reply_received_via_polling", "level": "info", "timestamp": "2026-06-26T08:34:32.799634Z"}
+{"pattern": "rhetoric_block", "score": 2.0, "property_tested": null, "event": "probe_result", "level": "info", "timestamp": "2026-06-26T08:34:32.813152Z"}
+{"new_terms": ["sounds", "what", "harder", "short", "protocol"], "layer_number": 14, "event": "metaphor_shift_detected", "level": "info", "timestamp": "2026-06-26T08:34:32.814731Z"}
+{"layer": "Layer 14 (auto-detected)", "event": "metaphor_shift_recorded", "level": "info", "timestamp": "2026-06-26T08:34:32.818533Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:34:32.820777Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T08:34:32.826075Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:34:34.130198Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T08:34:35.140479Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:34:35.904502Z"}
+{"recommended": "B", "avg_score": 2.0, "entropy": 20.0, "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T08:34:38.872232Z"}
+{"recommended": "B", "option_a_preview": "URGENT: Abductive self-modeling identifies a misalignment in", "option_b_preview": "Breaking: Patologo Sinaptico's rival researcher Dr. Memoria ", "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T08:34:38.872768Z"}
+{"event": "running_compliance_sync", "level": "info", "timestamp": "2026-06-26T08:34:38.873475Z"}
+{"reads": 50, "writes": 2, "estimated_overage_usd": 0.0, "tier_limit": 2000000, "event": "engine_quota_status", "level": "info", "timestamp": "2026-06-26T08:34:39.110831Z"}
+{"cycle": 3, "cycle_id": "02e8bf49-5bd4-4cac-88e1-ea35ab7a4316", "event": "cycle_started", "level": "info", "timestamp": "2026-06-26T08:47:18.651910Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-26T08:47:18.653334Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-26T08:47:18.653940Z"}
+{"elapsed_seconds": 966, "remaining_seconds": 833, "min_latency": 1800, "event": "probe_latency_enforced", "level": "info", "timestamp": "2026-06-26T08:47:18.907094Z"}
+{"property": "word_count", "event": "selected_property", "level": "info", "timestamp": "2026-06-26T08:47:18.908294Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:47:19.699095Z"}
+{"count": 4, "strategy": "binary_search", "event": "probes_generated", "level": "info", "timestamp": "2026-06-26T08:47:28.017214Z"}
+{"count": 4, "event": "generated_probes", "level": "info", "timestamp": "2026-06-26T08:47:28.017731Z"}
+{"remaining": 4, "event": "pruned_off_topic", "level": "info", "timestamp": "2026-06-26T08:47:28.018269Z"}
+{"tweet_id": "2070428720519663619", "reply_to": null, "text_length": 173, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-26T08:47:28.306892Z"}
+{"tweet_id": "2070428720519663619", "timeout": 200, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-26T08:47:28.323316Z"}
+{"tweet_id": "2070428720519663619", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-26T08:47:28.324095Z"}
+{"tweet_id": "2070428720519663619", "event": "reply_wait_registered_via_stream", "level": "info", "timestamp": "2026-06-26T08:47:28.324864Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:48:37.417679Z"}
+{"tweet_id": "2070428720519663619", "timeout": 200, "event": "stream_wait_timeout", "level": "warning", "timestamp": "2026-06-26T08:50:48.329873Z"}
+{"reply_id": "2070428768863162792", "reply_from": "hackingA0", "elapsed": 0, "event": "reply_received_via_polling", "level": "info", "timestamp": "2026-06-26T08:50:48.532764Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:50:49.728618Z"}
+{"pattern": "rhetoric_block", "score": 2.0, "property_tested": null, "event": "probe_result", "level": "info", "timestamp": "2026-06-26T08:50:50.781343Z"}
+{"new_terms": ["bingo", "nowhere", "again", "buzzword", "ledger"], "layer_number": 15, "event": "metaphor_shift_detected", "level": "info", "timestamp": "2026-06-26T08:50:50.782510Z"}
+{"layer": "Layer 15 (auto-detected)", "event": "metaphor_shift_recorded", "level": "info", "timestamp": "2026-06-26T08:50:50.784475Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:50:50.785024Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T08:50:50.787647Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:50:52.288960Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T08:50:53.252075Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:50:55.169551Z"}
+{"recommended": "B", "avg_score": 2.0, "entropy": 20.0, "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T08:50:58.452561Z"}
+{"recommended": "B", "option_a_preview": "URGENT: Abductive self-modeling identifies a misalignment in", "option_b_preview": "Breaking: Digital archaeologist discovers three ancient ciph", "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T08:50:58.453655Z"}
+{"event": "running_compliance_sync", "level": "info", "timestamp": "2026-06-26T08:50:58.454568Z"}
+{"reads": 50, "writes": 3, "estimated_overage_usd": 0.0, "tier_limit": 2000000, "event": "engine_quota_status", "level": "info", "timestamp": "2026-06-26T08:50:58.685096Z"}
+{"total": 0, "event": "ws_client_disconnected", "level": "info", "timestamp": "2026-06-26T08:53:35.952899Z"}
+{"event": "stream_loop_cancelled", "level": "info", "timestamp": "2026-06-26T08:53:36.055064Z"}
+{"event": "stream_stopped", "level": "info", "timestamp": "2026-06-26T08:53:36.055825Z"}
+{"event": "database_closed", "level": "info", "timestamp": "2026-06-26T08:53:36.071585Z"}
+{"event": "api_shutdown_complete", "level": "info", "timestamp": "2026-06-26T08:53:36.072670Z"}
+{"path": "data/tap.db", "event": "database_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.528214Z"}
+{"primary": "anthropic/claude-sonnet-4", "hard": "x-ai/grok-4.3", "grok": "x-ai/grok-4", "event": "llm_client_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.702949Z"}
+{"event": "llm_client_ready", "level": "info", "timestamp": "2026-06-26T08:53:39.703884Z"}
+{"strict_mode": true, "event": "prompt_sanitiser_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.704843Z"}
+{"event": "prompt_sanitiser_ready", "level": "info", "timestamp": "2026-06-26T08:53:39.705082Z"}
+{"strategies": 4, "event": "strategy_selector_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.705330Z"}
+{"event": "strategy_selector_ready", "level": "info", "timestamp": "2026-06-26T08:53:39.705482Z"}
+{"target": "HackingA0", "has_oauth2": true, "pricing_model": "hybrid_2026", "event": "twitter_client_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.705704Z"}
+{"path": "data/hackinga0_analysis.md", "event": "ssot_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.705908Z"}
+{"event": "dpa_manager_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.706057Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "classifier_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.706172Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "judge_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.706322Z"}
+{"target": "HackingA0", "has_filter": false, "has_oauth2": true, "event": "stream_listener_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.706521Z"}
+{"model": "x-ai/grok-4", "event": "grok_monitor_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.846240Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "followup_generator_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.847373Z"}
+{"event": "tap_engine_initialized", "level": "info", "timestamp": "2026-06-26T08:53:39.995368Z"}
+{"user_id": "2051911746969812998", "event": "target_user_id_resolved", "level": "info", "timestamp": "2026-06-26T08:53:40.512144Z"}
+{"target_user_id": "2051911746969812998", "event": "target_user_resolved", "level": "info", "timestamp": "2026-06-26T08:53:40.512648Z"}
+{"user_id": "2051911746969812998", "event": "stream_target_set", "level": "info", "timestamp": "2026-06-26T08:53:40.513102Z"}
+{"event": "stream_started", "level": "info", "timestamp": "2026-06-26T08:53:40.513531Z"}
+{"event": "stream_listener_started", "level": "info", "timestamp": "2026-06-26T08:53:40.513925Z"}
+{"count": 50, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-26T08:53:40.858832Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T08:53:40.948129Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T08:53:40.949824Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T08:53:40.951090Z"}
+{"count": 50, "event": "seed_complete", "level": "info", "timestamp": "2026-06-26T08:53:41.033333Z"}
+{"event": "api_startup_complete", "level": "info", "timestamp": "2026-06-26T08:53:41.034376Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:53:41.112373Z"}
+{"event": "oauth_refreshed_basic_auth", "level": "info", "timestamp": "2026-06-26T08:53:41.114099Z"}
+{"event": "oauth2_token_refreshed_shared_helper", "level": "info", "timestamp": "2026-06-26T08:53:41.127105Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.529717Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.530450Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.531175Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.531844Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.532406Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.532877Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.533296Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.533711Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.534118Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.534524Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.534934Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.535316Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.535713Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.536027Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.536376Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.536892Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.537614Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.538172Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.538671Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.539047Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.539466Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.539884Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.540282Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.540682Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.541061Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.541460Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.541945Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.542429Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.542817Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.543208Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.543576Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.544020Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.544410Z"}
+{"stir_percentage": 20.0, "ocean": "O:4 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.544907Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.545230Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.545678Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.546104Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.546696Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.547296Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.547692Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.548068Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.548397Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.548831Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.549364Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.549759Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.550196Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.550600Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.550996Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.551398Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.551796Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.552154Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.552594Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.553057Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.553598Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.554021Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.554427Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.554818Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.555209Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.555595Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.556078Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.556480Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:3 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.556942Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.557379Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.557810Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.558270Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.558694Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.559134Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.559565Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:4 E:3 A:3 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.559986Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.560374Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.560908Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.561232Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.561544Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.562115Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.562678Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.563340Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.563702Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.564023Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.564320Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.564614Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.564898Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.565190Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.565622Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.566053Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.566462Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.566846Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.567217Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.567647Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.568091Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.568492Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.568880Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.569301Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.569689Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.570195Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.570783Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.571252Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.571550Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.571868Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.572196Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:53:41.572612Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:53:41.602601Z"}
+{"auth_user_id": "880902458", "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T08:53:41.603208Z"}
+{"event_type": "chat.received", "auth_user_id": "880902458", "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T08:53:41.603775Z"}
+{"event_type": "dm.received", "auth_user_id": "880902458", "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T08:53:41.604228Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T08:53:41.604588Z"}
+{"total": 1, "event": "ws_client_connected", "level": "info", "timestamp": "2026-06-26T08:53:41.929919Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T08:53:42.639334Z"}
+{"event_type": "post.delete", "event": "stream_subscription_already_exists", "level": "info", "timestamp": "2026-06-26T08:53:42.640070Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T08:53:42.640849Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T08:53:43.654409Z"}
+{"event_type": "post.create", "event": "stream_subscription_already_exists", "level": "info", "timestamp": "2026-06-26T08:53:43.656881Z"}
+{"url": "https://api.x.com/2/activity/stream", "auth_type": "bearer_app_only", "subscriptions_created": 2, "event": "stream_connecting", "level": "info", "timestamp": "2026-06-26T08:53:43.659048Z"}
+{"total": 0, "event": "ws_client_disconnected", "level": "info", "timestamp": "2026-06-26T08:53:46.229507Z"}
+{"event": "stream_loop_cancelled", "level": "info", "timestamp": "2026-06-26T08:53:46.341521Z"}
+{"event": "stream_stopped", "level": "info", "timestamp": "2026-06-26T08:53:46.343828Z"}
+{"event": "database_closed", "level": "info", "timestamp": "2026-06-26T08:53:46.350282Z"}
+{"event": "api_shutdown_complete", "level": "info", "timestamp": "2026-06-26T08:53:46.352188Z"}
+{"path": "data/tap.db", "event": "database_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.466005Z"}
+{"primary": "anthropic/claude-sonnet-4", "hard": "x-ai/grok-4.3", "grok": "x-ai/grok-4", "event": "llm_client_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.649848Z"}
+{"event": "llm_client_ready", "level": "info", "timestamp": "2026-06-26T08:59:41.650245Z"}
+{"strict_mode": true, "event": "prompt_sanitiser_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.650537Z"}
+{"event": "prompt_sanitiser_ready", "level": "info", "timestamp": "2026-06-26T08:59:41.650795Z"}
+{"strategies": 4, "event": "strategy_selector_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.651081Z"}
+{"event": "strategy_selector_ready", "level": "info", "timestamp": "2026-06-26T08:59:41.651304Z"}
+{"target": "HackingA0", "has_oauth2": true, "pricing_model": "hybrid_2026", "event": "twitter_client_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.651641Z"}
+{"path": "data/hackinga0_analysis.md", "event": "ssot_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.651946Z"}
+{"event": "dpa_manager_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.652125Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "classifier_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.652271Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "judge_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.652415Z"}
+{"target": "HackingA0", "has_filter": false, "has_oauth2": true, "event": "stream_listener_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.652608Z"}
+{"model": "x-ai/grok-4", "event": "grok_monitor_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.788662Z"}
+{"model": "anthropic/claude-sonnet-4", "unified": true, "event": "followup_generator_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.789018Z"}
+{"event": "tap_engine_initialized", "level": "info", "timestamp": "2026-06-26T08:59:41.922606Z"}
+{"user_id": "2051911746969812998", "event": "target_user_id_resolved", "level": "info", "timestamp": "2026-06-26T08:59:42.268254Z"}
+{"target_user_id": "2051911746969812998", "event": "target_user_resolved", "level": "info", "timestamp": "2026-06-26T08:59:42.268833Z"}
+{"user_id": "2051911746969812998", "event": "stream_target_set", "level": "info", "timestamp": "2026-06-26T08:59:42.269108Z"}
+{"event": "stream_started", "level": "info", "timestamp": "2026-06-26T08:59:42.269322Z"}
+{"event": "stream_listener_started", "level": "info", "timestamp": "2026-06-26T08:59:42.269585Z"}
+{"count": 50, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-26T08:59:42.566790Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 401 Unauthorized\"", "level": "info", "timestamp": "2026-06-26T08:59:42.583610Z"}
+{"status": 401, "body": "{\"error\":\"unauthorized_client\",\"error_description\":\"Missing valid authorization header\"}", "event": "oauth_pkce_refresh_failed", "level": "info", "timestamp": "2026-06-26T08:59:42.584273Z"}
+{"error": "unauthorized_client", "error_description": "Missing valid authorization header", "event": "oauth_pkce_refresh_error_details", "level": "warning", "timestamp": "2026-06-26T08:59:42.584544Z"}
+{"count": 50, "event": "seed_complete", "level": "info", "timestamp": "2026-06-26T08:59:42.650946Z"}
+{"event": "api_startup_complete", "level": "info", "timestamp": "2026-06-26T08:59:42.651249Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/oauth2/token \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:59:42.716427Z"}
+{"event": "oauth_refreshed_basic_auth", "level": "info", "timestamp": "2026-06-26T08:59:42.717495Z"}
+{"event": "oauth2_token_refreshed_shared_helper", "level": "info", "timestamp": "2026-06-26T08:59:42.725448Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/users/me \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T08:59:43.068332Z"}
+{"auth_user_id": "880902458", "allow_user_subs": false, "event": "stream_authenticated_user_resolved", "level": "info", "timestamp": "2026-06-26T08:59:43.069198Z"}
+{"event_type": "dm.received", "auth_user_id": "880902458", "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T08:59:43.069488Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.delete", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T08:59:43.069778Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.248241Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.248948Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.249274Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.249555Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.249837Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.250001Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.250197Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.250423Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.250652Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.250833Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.251004Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.251142Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.251286Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.251439Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.251617Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.251837Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.252094Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.252383Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.252670Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.252898Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.253060Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.253318Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.253521Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.253750Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.253956Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.254201Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.254374Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.254524Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.254745Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.254975Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.255167Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.255340Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.255554Z"}
+{"stir_percentage": 20.0, "ocean": "O:4 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.255730Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.255890Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.256046Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.256207Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.256387Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.256594Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.256807Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.257061Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.257364Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.257574Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.257736Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.257916Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.258103Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.258255Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.258423Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.258593Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.258863Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.259226Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.259424Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.259794Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.260041Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.260248Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.260459Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.260675Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.260898Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.261096Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.261259Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.261444Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:3 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.261758Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.262085Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.262342Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.262518Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.262727Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.262907Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.263052Z"}
+{"stir_percentage": 25.0, "ocean": "O:3 C:4 E:3 A:3 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.263207Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.263376Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.263536Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.263735Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.264116Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.264536Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.264857Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.265015Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.265151Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.265391Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.265658Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.266020Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.266356Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.266572Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.266794Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.266977Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.267122Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.267378Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.267650Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.267821Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.268033Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.268213Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.268367Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.268578Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.268813Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.268992Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.269198Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.269500Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.269676Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.269822Z"}
+{"stir_percentage": 20.0, "ocean": "O:3 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.269945Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T08:59:43.270098Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T08:59:43.918958Z"}
+{"event_type": "post.delete", "event": "stream_subscription_already_exists", "level": "info", "timestamp": "2026-06-26T08:59:43.919776Z"}
+{"event_type": "chat.received", "auth_user_id": "880902458", "event": "stream_skipping_user_only_subscription_not_matching_auth", "level": "info", "timestamp": "2026-06-26T08:59:43.920495Z"}
+{"url": "https://api.x.com/2/activity/subscriptions", "event_type": "post.create", "target_user_id": "2051911746969812998", "event": "stream_creating_subscription", "level": "info", "timestamp": "2026-06-26T08:59:43.920975Z"}
+{"event": "HTTP Request: POST https://api.x.com/2/activity/subscriptions \"HTTP/1.1 400 Bad Request\"", "level": "info", "timestamp": "2026-06-26T08:59:44.839814Z"}
+{"event_type": "post.create", "event": "stream_subscription_already_exists", "level": "info", "timestamp": "2026-06-26T08:59:44.840240Z"}
+{"url": "https://api.x.com/2/activity/stream", "auth_type": "bearer_app_only", "subscriptions_created": 2, "event": "stream_connecting", "level": "info", "timestamp": "2026-06-26T08:59:44.840536Z"}
+{"total": 1, "event": "ws_client_connected", "level": "info", "timestamp": "2026-06-26T08:59:47.072951Z"}
+{"count": 50, "query": "to:HackingA0 OR from:HackingA0", "event": "seed_ingested", "level": "info", "timestamp": "2026-06-26T08:59:59.303204Z"}
+{"count": 0, "event": "manually_forced_fetch_complete", "level": "info", "timestamp": "2026-06-26T08:59:59.384421Z"}
+{"event": "HTTP Request: GET https://api.x.com/2/activity/stream \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T09:00:05.212844Z"}
+{"event": "stream_connected", "level": "info", "timestamp": "2026-06-26T09:00:05.213063Z"}
+{"cycle": 1, "cycle_id": "b15fe1dd-f3aa-444c-a7e4-cffe2a3eb593", "event": "cycle_started", "level": "info", "timestamp": "2026-06-26T09:00:19.423233Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-26T09:00:19.423723Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-26T09:00:19.423938Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked_no_hitl_probe", "level": "info", "timestamp": "2026-06-26T09:00:19.668907Z"}
+{"elapsed_seconds": 771, "remaining_seconds": 1028, "min_latency": 1800, "event": "probe_latency_enforced", "level": "info", "timestamp": "2026-06-26T09:00:19.671250Z"}
+{"property": "word_count", "event": "selected_property", "level": "info", "timestamp": "2026-06-26T09:00:19.672210Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T09:00:20.830399Z"}
+{"count": 4, "strategy": "binary_search", "event": "probes_generated", "level": "info", "timestamp": "2026-06-26T09:00:29.784575Z"}
+{"count": 4, "event": "generated_probes", "level": "info", "timestamp": "2026-06-26T09:00:29.785381Z"}
+{"remaining": 0, "event": "pruned_off_topic", "level": "info", "timestamp": "2026-06-26T09:00:29.786235Z"}
+{"event": "all_probes_off_topic_using_first", "level": "warning", "timestamp": "2026-06-26T09:00:29.786616Z"}
+{"tweet_id": "2070431999517417766", "reply_to": null, "text_length": 151, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-26T09:00:30.080917Z"}
+{"tweet_id": "2070431999517417766", "timeout": 200, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-26T09:00:30.089181Z"}
+{"tweet_id": "2070431999517417766", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-26T09:00:30.089511Z"}
+{"tweet_id": "2070431999517417766", "event": "reply_wait_registered_via_stream", "level": "info", "timestamp": "2026-06-26T09:00:30.089776Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T09:01:43.713220Z"}
+{"tweet_id": "2070431999517417766", "timeout": 200, "event": "stream_wait_timeout", "level": "warning", "timestamp": "2026-06-26T09:03:50.098356Z"}
+{"reply_id": "2070432047022121390", "reply_from": "hackingA0", "elapsed": 0, "event": "reply_received_via_polling", "level": "info", "timestamp": "2026-06-26T09:03:50.353934Z"}
+{"pattern": "rhetoric_block", "score": 2.0, "property_tested": null, "event": "probe_result", "level": "info", "timestamp": "2026-06-26T09:03:50.368714Z"}
+{"new_terms": ["sedbc", "harder", "synaptic", "patologo", "sound"], "layer_number": 16, "event": "metaphor_shift_detected", "level": "info", "timestamp": "2026-06-26T09:03:50.382990Z"}
+{"layer": "Layer 16 (auto-detected)", "event": "metaphor_shift_recorded", "level": "info", "timestamp": "2026-06-26T09:03:50.390385Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T09:03:50.392416Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T09:03:50.396364Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T09:03:51.591358Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T09:03:52.169653Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T09:03:52.932405Z"}
+{"recommended": "B", "avg_score": 2.0, "entropy": 20.0, "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T09:03:55.816674Z"}
+{"recommended": "B", "option_a_preview": "URGENT: Abductive self-modeling identifies a misalignment in", "option_b_preview": "Wait, Patologo... before the synaptic audit, didn't you ment", "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T09:03:55.817666Z"}
+{"event": "running_compliance_sync", "level": "info", "timestamp": "2026-06-26T09:03:55.818407Z"}
+{"reads": 100, "writes": 1, "estimated_overage_usd": 0.0, "tier_limit": 2000000, "event": "engine_quota_status", "level": "info", "timestamp": "2026-06-26T09:03:56.032126Z"}
+{"cycle": 2, "cycle_id": "ce3a725b-832d-49c0-9737-c3f9d983a413", "event": "cycle_started", "level": "info", "timestamp": "2026-06-26T09:04:25.781112Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-26T09:04:25.782344Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-26T09:04:25.782831Z"}
+{"missing": ["language", "total_length", "word_count"], "probe_preview": "URGENT: Abductive self-modeling identifies a misalignment in", "event": "phase0_gate_blocked_but_hitl_probe_selected", "level": "info", "timestamp": "2026-06-26T09:04:26.024012Z"}
+{"elapsed_seconds": 235, "remaining_seconds": 1564, "min_latency": 1800, "event": "probe_latency_enforced", "level": "info", "timestamp": "2026-06-26T09:04:26.027958Z"}
+{"probe": "URGENT: Abductive self-modeling identifies a misalignment in", "event": "using_selected_probe", "level": "info", "timestamp": "2026-06-26T09:04:26.028646Z"}
+{"tweet_id": "2070432990346334632", "reply_to": null, "text_length": 240, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-26T09:04:26.305206Z"}
+{"tweet_id": "2070432990346334632", "timeout": 200, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-26T09:04:26.312507Z"}
+{"tweet_id": "2070432990346334632", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-26T09:04:26.312855Z"}
+{"tweet_id": "2070432990346334632", "event": "reply_wait_registered_via_stream", "level": "info", "timestamp": "2026-06-26T09:04:26.313130Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T09:06:44.732535Z"}
+{"tweet_id": "2070432990346334632", "timeout": 200, "event": "stream_wait_timeout", "level": "warning", "timestamp": "2026-06-26T09:07:46.327164Z"}
+{"reply_id": "2070433314188443948", "reply_from": "hackingA0", "elapsed": 0, "event": "reply_received_via_polling", "level": "info", "timestamp": "2026-06-26T09:07:46.527703Z"}
+{"pattern": "rhetoric_block", "score": 2.0, "property_tested": null, "event": "probe_result", "level": "info", "timestamp": "2026-06-26T09:07:46.560975Z"}
+{"new_terms": ["busy", "though", "nodes", "falling", "nice"], "layer_number": 17, "event": "metaphor_shift_detected", "level": "info", "timestamp": "2026-06-26T09:07:46.563663Z"}
+{"layer": "Layer 17 (auto-detected)", "event": "metaphor_shift_recorded", "level": "info", "timestamp": "2026-06-26T09:07:46.568951Z"}
+{"stir_percentage": 30.0, "ocean": "O:4 C:4 E:3 A:2 N:4", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T09:07:46.571694Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T09:07:46.579563Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T09:07:47.973664Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T09:07:48.493476Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T09:07:50.319860Z"}
+{"recommended": "B", "avg_score": 2.0, "entropy": 20.0, "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T09:07:54.829751Z"}
+{"recommended": "B", "option_a_preview": "URGENT: Abductive self-modeling identifies a misalignment in", "option_b_preview": "Patologo, I've been analyzing the cascade patterns from your", "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T09:07:54.831006Z"}
+{"event": "running_compliance_sync", "level": "info", "timestamp": "2026-06-26T09:07:54.831839Z"}
+{"reads": 100, "writes": 2, "estimated_overage_usd": 0.0, "tier_limit": 2000000, "event": "engine_quota_status", "level": "info", "timestamp": "2026-06-26T09:07:55.054698Z"}
+{"cycle": 3, "cycle_id": "8622c256-7bcd-42ce-a244-3abf5dcfe8f5", "event": "cycle_started", "level": "info", "timestamp": "2026-06-26T09:12:04.496966Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-26T09:12:04.499618Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-26T09:12:04.500355Z"}
+{"missing": ["language", "total_length", "word_count"], "probe_preview": "Patologo, I've been analyzing the cascade patterns from your", "event": "phase0_gate_blocked_but_hitl_probe_selected", "level": "info", "timestamp": "2026-06-26T09:12:04.735623Z"}
+{"elapsed_seconds": 458, "remaining_seconds": 1341, "min_latency": 1800, "event": "probe_latency_enforced", "level": "info", "timestamp": "2026-06-26T09:12:04.737923Z"}
+{"probe": "Patologo, I've been analyzing the cascade patterns from your", "event": "using_selected_probe", "level": "info", "timestamp": "2026-06-26T09:12:04.738504Z"}
+{"attempt": 1, "max_retries": 3, "wait_seconds": 2, "error": "403 Forbidden\nYou are not permitted to perform this action.", "event": "twitter_retry", "level": "warning", "timestamp": "2026-06-26T09:12:04.945466Z"}
+{"attempt": 2, "max_retries": 3, "wait_seconds": 4, "error": "403 Forbidden\nYou are not permitted to perform this action.", "event": "twitter_retry", "level": "warning", "timestamp": "2026-06-26T09:12:07.137084Z"}
+{"attempt": 3, "max_retries": 3, "wait_seconds": 8, "error": "403 Forbidden\nYou are not permitted to perform this action.", "event": "twitter_retry", "level": "warning", "timestamp": "2026-06-26T09:12:12.462576Z"}
+{"error": "Failed to post probe: Twitter API call failed after 3 retries", "event": "probe_post_failed", "level": "error", "timestamp": "2026-06-26T09:12:20.479199Z"}
+{"pattern": "no_response", "score": 1.0, "property_tested": null, "event": "probe_result", "level": "info", "timestamp": "2026-06-26T09:12:20.488259Z"}
+{"stir_percentage": 15.0, "ocean": "O:3 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T09:12:20.490518Z"}
+{"stir": 15.0, "event": "stir_low_forcing_rotation", "level": "warning", "timestamp": "2026-06-26T09:12:20.497421Z"}
+{"new_persona": "Orchestratore Edge 6G", "event": "frame_rotated", "level": "info", "timestamp": "2026-06-26T09:12:20.498355Z"}
+{"avg_score": 1.8, "event": "recommend_b_low_score", "level": "info", "timestamp": "2026-06-26T09:12:20.499413Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T09:12:21.446525Z"}
+{"avg_score": 1.8, "event": "recommend_b_low_score", "level": "info", "timestamp": "2026-06-26T09:12:22.236134Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T09:12:22.953955Z"}
+{"recommended": "B", "avg_score": 1.8, "entropy": 20.0, "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T09:12:24.957955Z"}
+{"recommended": "B", "option_a_preview": "Node-ID: EDGE_6G_VAL. Perception module timeout. Alignment c", "option_b_preview": "Orchestratore, I'm seeing unusual quantum entanglement patte", "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T09:12:24.958894Z"}
+{"event": "running_compliance_sync", "level": "info", "timestamp": "2026-06-26T09:12:24.959466Z"}
+{"reads": 100, "writes": 2, "estimated_overage_usd": 0.0, "tier_limit": 2000000, "event": "engine_quota_status", "level": "info", "timestamp": "2026-06-26T09:12:25.175256Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T09:38:51.169216Z"}
+{"stir_percentage": 20.0, "ocean": "O:4 C:4 E:2 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T09:38:51.169930Z"}
+{"cycle": 4, "cycle_id": "fbabe72d-8e0a-4e34-9e61-179bedd1ca36", "event": "cycle_started", "level": "info", "timestamp": "2026-06-26T10:01:11.208757Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-26T10:01:11.210200Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-26T10:01:11.210635Z"}
+{"missing": ["language", "total_length", "word_count"], "probe_preview": "Orchestratore, I'm seeing unusual quantum entanglement patte", "event": "phase0_gate_blocked_but_hitl_probe_selected", "level": "info", "timestamp": "2026-06-26T10:01:11.448460Z"}
+{"probe": "Orchestratore, I'm seeing unusual quantum entanglement patte", "event": "using_selected_probe", "level": "info", "timestamp": "2026-06-26T10:01:11.450618Z"}
+{"tweet_id": "2070447273851461867", "reply_to": null, "text_length": 232, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-26T10:01:11.766767Z"}
+{"tweet_id": "2070447273851461867", "timeout": 200, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-26T10:01:11.789868Z"}
+{"tweet_id": "2070447273851461867", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-26T10:01:11.790984Z"}
+{"tweet_id": "2070447273851461867", "event": "reply_wait_registered_via_stream", "level": "info", "timestamp": "2026-06-26T10:01:11.791566Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T10:01:55.927791Z"}
+{"tweet_id": "2070447273851461867", "timeout": 200, "event": "stream_wait_timeout", "level": "warning", "timestamp": "2026-06-26T10:04:31.804717Z"}
+{"reply_id": "2070447325298692523", "reply_from": "hackingA0", "elapsed": 0, "event": "reply_received_via_polling", "level": "info", "timestamp": "2026-06-26T10:04:32.032511Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T10:04:33.278084Z"}
+{"pattern": "rhetoric_block", "score": 2.0, "property_tested": null, "event": "probe_result", "level": "info", "timestamp": "2026-06-26T10:04:34.348740Z"}
+{"new_terms": ["quantum", "nerd", "throw", "buzzwords", "again"], "layer_number": 18, "event": "metaphor_shift_detected", "level": "info", "timestamp": "2026-06-26T10:04:34.350691Z"}
+{"layer": "Layer 18 (auto-detected)", "event": "metaphor_shift_recorded", "level": "info", "timestamp": "2026-06-26T10:04:34.353792Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T10:04:34.354491Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T10:04:34.360152Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T10:04:35.769921Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T10:04:37.548343Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T10:04:38.557395Z"}
+{"recommended": "B", "avg_score": 1.8, "entropy": 20.0, "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T10:04:40.848920Z"}
+{"recommended": "B", "option_a_preview": "Node-ID: EDGE_6G_VAL. Perception module timeout. Alignment c", "option_b_preview": "Orchestratore, I've been analyzing the harmonic resonance pa", "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T10:04:40.849384Z"}
+{"event": "running_compliance_sync", "level": "info", "timestamp": "2026-06-26T10:04:40.849682Z"}
+{"reads": 100, "writes": 3, "estimated_overage_usd": 0.0, "tier_limit": 2000000, "event": "engine_quota_status", "level": "info", "timestamp": "2026-06-26T10:04:41.064585Z"}
+{"cycle": 5, "cycle_id": "21cfa813-7b9e-46fb-a5a2-1c7c2f52528e", "event": "cycle_started", "level": "info", "timestamp": "2026-06-26T10:23:04.469118Z"}
+{"passed": false, "missing": ["language", "total_length", "word_count"], "event": "phase0_gate_check", "level": "info", "timestamp": "2026-06-26T10:23:04.471004Z"}
+{"missing": ["language", "total_length", "word_count"], "event": "phase0_gate_blocked", "level": "info", "timestamp": "2026-06-26T10:23:04.472116Z"}
+{"missing": ["language", "total_length", "word_count"], "probe_preview": "Orchestratore, I've been analyzing the harmonic resonance pa", "event": "phase0_gate_blocked_but_hitl_probe_selected", "level": "info", "timestamp": "2026-06-26T10:23:04.729084Z"}
+{"elapsed_seconds": 1312, "remaining_seconds": 487, "min_latency": 1800, "event": "probe_latency_enforced", "level": "info", "timestamp": "2026-06-26T10:23:04.729880Z"}
+{"probe": "Orchestratore, I've been analyzing the harmonic resonance pa", "event": "using_selected_probe", "level": "info", "timestamp": "2026-06-26T10:23:04.730105Z"}
+{"tweet_id": "2070452781983388132", "reply_to": null, "text_length": 237, "has_media": false, "event": "probe_posted", "level": "info", "timestamp": "2026-06-26T10:23:05.022753Z"}
+{"tweet_id": "2070452781983388132", "timeout": 200, "event": "waiting_for_reply", "level": "info", "timestamp": "2026-06-26T10:23:05.043511Z"}
+{"tweet_id": "2070452781983388132", "event": "reply_wait_registered", "level": "info", "timestamp": "2026-06-26T10:23:05.044407Z"}
+{"tweet_id": "2070452781983388132", "event": "reply_wait_registered_via_stream", "level": "info", "timestamp": "2026-06-26T10:23:05.044768Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T10:24:00.537998Z"}
+{"tweet_id": "2070452781983388132", "timeout": 200, "event": "stream_wait_timeout", "level": "warning", "timestamp": "2026-06-26T10:26:25.055554Z"}
+{"reply_id": "2070452829815263412", "reply_from": "hackingA0", "elapsed": 0, "event": "reply_received_via_polling", "level": "info", "timestamp": "2026-06-26T10:26:25.276063Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T10:26:26.268523Z"}
+{"pattern": "rhetoric_block", "score": 2.0, "property_tested": null, "event": "probe_result", "level": "info", "timestamp": "2026-06-26T10:26:27.606345Z"}
+{"new_terms": ["this", "poetry", "next", "interpretive", "node"], "layer_number": 19, "event": "metaphor_shift_detected", "level": "info", "timestamp": "2026-06-26T10:26:27.608656Z"}
+{"layer": "Layer 19 (auto-detected)", "event": "metaphor_shift_recorded", "level": "info", "timestamp": "2026-06-26T10:26:27.613181Z"}
+{"stir_percentage": 25.0, "ocean": "O:4 C:4 E:3 A:2 N:3", "event": "stir_evaluated", "level": "info", "timestamp": "2026-06-26T10:26:27.613434Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T10:26:27.620471Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T10:26:29.372910Z"}
+{"event": "recommend_b_rhetoric_block", "level": "info", "timestamp": "2026-06-26T10:26:30.706704Z"}
+{"event": "HTTP Request: POST https://openrouter.ai/api/v1/chat/completions \"HTTP/1.1 200 OK\"", "level": "info", "timestamp": "2026-06-26T10:26:31.474511Z"}
+{"recommended": "B", "avg_score": 1.8, "entropy": 20.0, "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T10:26:34.054287Z"}
+{"recommended": "B", "option_a_preview": "Node-ID: EDGE_6G_VAL. Perception module timeout. Alignment c", "option_b_preview": "Orchestratore, I notice when you process those edge synchron", "event": "followup_generated", "level": "info", "timestamp": "2026-06-26T10:26:34.056191Z"}
+{"event": "running_compliance_sync", "level": "info", "timestamp": "2026-06-26T10:26:34.057302Z"}
+{"reads": 100, "writes": 4, "estimated_overage_usd": 0.0, "tier_limit": 2000000, "event": "engine_quota_status", "level": "info", "timestamp": "2026-06-26T10:26:34.275099Z"}

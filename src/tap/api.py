@@ -36,6 +36,7 @@ from tap.config import get_settings, save_env_vars
 from tap.db import Database
 from tap.dpa import DPAFrameManager
 from tap.engine import TAPEngine
+from tap.persistence.event_store import EventStore
 from tap.followup import FollowUpGenerator
 from tap.grok_monitor import GrokMonitor
 from tap.stream_listener import StreamListener
@@ -122,6 +123,8 @@ async def lifespan(app: FastAPI):
     async def on_engine_event(event_type: str, data: dict):
         await broadcast_update(event_type, data)
 
+    _event_store = EventStore(_db)
+
     _engine = TAPEngine(
         db=_db,
         twitter=twitter,
@@ -131,6 +134,7 @@ async def lifespan(app: FastAPI):
         judge=judge,
         grok=grok,
         settings=settings,
+        event_store=_event_store,
         followup=followup_gen,
         event_callback=on_engine_event,
         stir_evaluator=stir_evaluator,
