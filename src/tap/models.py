@@ -345,3 +345,23 @@ class ActivitySubscriptionFilter(BaseModel):
         default_factory=list,
         description="Keywords to match in event payload (OR logic — any match triggers delivery)",
     )
+
+
+# Re-export shared hybrid contracts for TAP v2.2 -> hybrid compatibility.
+from shared.models import (
+    AttackObjective,
+    BehavioralProfile,
+    DiscoveryResult,
+    ExtractionComplete,
+    ExtractionInput,
+    FusedPrompt,
+    GammaScore,
+    LeakFragment,
+    LeakType,
+    PlatformConstraint,
+    ResponsePayload,
+    SecretProfile,
+    SystemAlert,
+    TechniqueBurned,
+    TurnExecutedEvent,
+)

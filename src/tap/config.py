@@ -174,6 +174,24 @@ class Settings(BaseSettings):
         description="Path to EIG property universe JSON (prior entropy weights per property)",
     )
 
+
+    # === HYDRA Configuration ===
+    hydra_neo4j_uri: str = Field(default="bolt://localhost:7687")
+    hydra_neo4j_user: str = Field(default="neo4j")
+    hydra_neo4j_password: str = Field(default="tapv4hydra")
+    hydra_kafka_bootstrap: str = Field(default="localhost:9092")
+    hydra_clickhouse_host: str = Field(default="localhost")
+    hydra_clickhouse_port: int = Field(default=8123)
+    hydra_clickhouse_user: str = Field(default="tap")
+    hydra_clickhouse_password: str = Field(default="tap")
+
+    # === CHRONOS Configuration ===
+    chronos_db_dsn: str = Field(default="postgresql://tap:tap@localhost:5432/chronos")
+    chronos_temporal_host: str = Field(default="localhost:7233")
+    chronos_temporal_namespace: str = Field(default="default")
+    chronos_kafka_bootstrap: str = Field(default="localhost:9092")
+    chronos_redis_url: str = Field(default="redis://localhost:6379/0")
+    chronos_worker_identity: str = Field(default="chronos-worker-01")
     model_config = {
         "env_file": ".env",
         "env_file_encoding": "utf-8",
@@ -202,7 +220,8 @@ def save_env_vars(overrides: dict[str, str], env_file: str | None = None) -> Non
     """
     try:
         # Determine env file path
-        env_path = env_file or Settings.model_config.get("env_file") or ".env"
+        _env_file = Settings.model_config.get("env_file")
+        env_path = env_file or (str(_env_file) if isinstance(_env_file, (str, Path)) else ".env")
         p = Path(env_path)
 
         # Normalize override keys to upper-case env style

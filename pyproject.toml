@@ -36,14 +36,40 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
-    "pytest-asyncio>=0.24.0",
+    "pytest-asyncio>=0.25.0",
     "pytest-cov>=5.0",
+    "pytest-postgresql>=6.1",
     "ruff>=0.6.0",
     "mypy>=1.11.0",
+    "mypy-protobuf>=3.6",
+]
+hybrid = [
+    "neo4j>=5.26",
+    "torch>=2.4.0",
+    "grpcio>=1.68.0",
+    "grpcio-tools>=1.68.0",
+    "protobuf>=5.29",
+    "temporalio>=1.9.0",
+    "asyncpg>=0.30.0",
+    "alembic>=1.14.0",
+    "kafka-python>=2.0.5",
+    "redis>=5.2.0",
+    "clickhouse-driver>=0.2.9",
+    "testcontainers>=4.8.0",
 ]
 
 [project.scripts]
 tap-server = "tap.api:main"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+warn_unused_ignores = true
+show_error_codes = true
+disable_error_code = ["import-untyped"]
+mypy_path = ["src"]
+packages = ["tap", "hydra", "chronos", "shared", "adapters"]
 
 [tool.ruff]
 line-length = 100
@@ -51,4 +77,21 @@ target-version = "py311"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-testpaths = ["tests"]
+testpaths = ["tests/hydra", "tests/chronos", "tests/shared", "tests/integration", "tests"]
+
+[[tool.mypy.overrides]]
+module = [
+    "neo4j.*",
+    "torch.*",
+    "torchvision.*",
+    "temporalio.*",
+    "asyncpg",
+    "asyncpg.*",
+    "kafka.*",
+    "redis.*",
+    "clickhouse_driver.*",
+    "testcontainers.*",
+    "grpc.*",
+    "google.protobuf.*",
+]
+ignore_missing_imports = true
