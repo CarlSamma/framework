@@ -74,7 +74,9 @@ class CHRONOSOrchestrator:
             if payload.get("behavioral_profile")
             else BehavioralProfile()
         )
+        from uuid import UUID
         extraction_input = ExtractionInput(
+            attack_id=UUID(str(attack_id)) if attack_id else uuid4(),
             target_handle=target_handle or "",
             secret_profile=payload.get("secret_profile", {}),
             fused_payloads=[],
