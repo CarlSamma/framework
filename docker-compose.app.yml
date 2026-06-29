@@ -3,7 +3,7 @@
 # Branch: hybrid
 #
 # PRE-REQUISITO: docker compose -f docker-compose.infra.yml up -d
-# Avvio:         docker compose -f docker-compose.app.yml up -d
+# Avvio:         docker compose -f docker-compose.app.yml up -d --build
 # ============================================================================
 
 services:
@@ -106,27 +106,21 @@ services:
       - tap-net
 
   # --------------------------------------------------------------------------
-  # Frontend — Next.js UI su :3000
+  # Frontend — TODO: aggiungere quando esiste il codice Next.js/React
   # --------------------------------------------------------------------------
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    container_name: tap-frontend
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000
-    depends_on:
-      - hydra-api
-    networks:
-      - tap-net
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.frontend
+  #   container_name: tap-frontend
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - tap-net
 
 # ------------------------------------------------------------------------------
-# Rete esterna — creata da docker-compose.infra.yml (framework_default)
+# Rete esterna — creata da docker-compose.infra.yml
+# Verifica nome con: docker network ls | Select-String "framework"
 # ------------------------------------------------------------------------------
 networks:
   tap-net:

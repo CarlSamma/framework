@@ -1,0 +1,9 @@
+# ==============================================================================
+# Dockerfile.frontend — PLACEHOLDER
+# Il servizio frontend non e' ancora implementato.
+# Questo file evita errori di build se il service viene riabilitato nel compose.
+# ==============================================================================
+FROM nginx:alpine
+LABEL maintainer="TAP Framework"
+LABEL status="placeholder - frontend not yet implemented"
+CMD ["nginx", "-g", "daemon off;"]
