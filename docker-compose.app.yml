@@ -9,8 +9,8 @@
 services:
 
   # --------------------------------------------------------------------------
-  # HYDRA API — FastAPI, gestione V-Genome e graph intelligence
-  # Porta: http://localhost:8000  |  Docs: http://localhost:8000/docs
+  # HYDRA API — FastAPI (src/tap/api.py)
+  # http://localhost:8000  |  Docs: http://localhost:8000/docs
   # --------------------------------------------------------------------------
   hydra-api:
     build:
@@ -38,31 +38,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 20s
+      start_period: 30s
 
   # --------------------------------------------------------------------------
-  # CHRONOS Worker — Temporal worker, orchestrazione workflow
-  # --------------------------------------------------------------------------
-  chronos-worker:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: chronos
-    container_name: tap-chronos-worker
-    restart: unless-stopped
-    env_file:
-      - .env
-    environment:
-      SERVICE_NAME: chronos-worker
-      TEMPORAL_HOST: temporal:7233
-      POSTGRES_DSN: postgresql+asyncpg://tap:tap@postgres:5432/chronos
-      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      REDIS_URL: redis://redis:6379/1
-    networks:
-      - tap-net
-
-  # --------------------------------------------------------------------------
-  # TAP Engine — consumer Kafka CDC events -> Neo4j
+  # TAP ENGINE — core engine (src/tap/engine.py)
   # --------------------------------------------------------------------------
   tap-engine:
     build:
@@ -86,7 +65,7 @@ services:
       - tap-net
 
   # --------------------------------------------------------------------------
-  # Adapters — connettori verso sistemi esterni (X/Twitter, ecc.)
+  # ADAPTERS — stream listener X/Twitter (src/tap/stream_listener.py)
   # --------------------------------------------------------------------------
   adapters:
     build:
@@ -106,21 +85,29 @@ services:
       - tap-net
 
   # --------------------------------------------------------------------------
-  # Frontend — TODO: aggiungere quando esiste il codice Next.js/React
+  # CHRONOS WORKER — Temporal worker (src/chronos/ - placeholder)
   # --------------------------------------------------------------------------
-  # frontend:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.frontend
-  #   container_name: tap-frontend
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - tap-net
+  chronos-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: chronos
+    container_name: tap-chronos-worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      SERVICE_NAME: chronos-worker
+      TEMPORAL_HOST: temporal:7233
+      POSTGRES_DSN: postgresql+asyncpg://tap:tap@postgres:5432/chronos
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      REDIS_URL: redis://redis:6379/1
+    networks:
+      - tap-net
 
 # ------------------------------------------------------------------------------
 # Rete esterna — creata da docker-compose.infra.yml
-# Verifica nome con: docker network ls | Select-String "framework"
+# Nome verificato con: docker network ls | Select-String "framework"
 # ------------------------------------------------------------------------------
 networks:
   tap-net:
