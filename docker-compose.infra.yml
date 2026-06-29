@@ -80,12 +80,13 @@ services:
       retries: 10
 
   # --------------------------------------------------------------------------
-  # Debezium Connect 3.0 — CDC PostgreSQL -> Kafka -> Neo4j
+  # Debezium Connect 2.7.3.Final — CDC PostgreSQL -> Kafka -> Neo4j
+  # NOTA: il repo e' stato spostato da Docker Hub a quay.io
   # REST API su http://localhost:8083
   # Registra il connettore con: .\scripts\debezium.ps1
   # --------------------------------------------------------------------------
   debezium:
-    image: debezium/connect:3.0
+    image: quay.io/debezium/connect:2.7.3.Final
     container_name: tap-debezium
     depends_on:
       postgres:
