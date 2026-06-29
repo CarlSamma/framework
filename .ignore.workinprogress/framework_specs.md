@@ -2,7 +2,9 @@
 
 > **Document Audience**: Expert developers and AI agents. This file contains the complete technical specification of the TAP Framework's internal functioning, data flows, algorithms, and integration contracts.
 
-**Version**: 2.2.0 | **Python**: ≥3.11 | **Entry Point**: `tap.api:main` → `uvicorn` on `0.0.0.0:8000`
+**Version**: 3.1.0-beta | **Python**: ≥3.11 | **Entry Point**: `tap.api:main` → `uvicorn` on `0.0.0.0:8000`
+
+> See [Changelog v3.1](#changelog-v31) at the bottom of this document for changes applied in this branch.
 
 ---
 
@@ -1147,3 +1149,30 @@ mypy>=1.11.0
 ```
 
 **Entry point**: `tap-server = "tap.api:main"` (defined in `pyproject.toml [project.scripts]`)
+
+---
+
+## Changelog v3.1
+
+### Fase 1 — Bug critici a runtime
+
+| ID | Fix | File(s) |
+|----|-----|---------|
+| 1.1 | Rimossi riferimenti a tipi inesistenti in `agents.py` e `api.py` | `agents.py`, `api.py` |
+| 1.2 | Fix `reply_to` indefinito in `engine.py` — `execute_probe` posta come nuovo tweet con mention | `engine.py` |
+| 1.3 | Aggiunto `Copia.env.txt` al `.gitignore` per prevenire leak di credenziali | `.gitignore` |
+
+### Fase 2 — Allineamento contrattuale e debito tecnico
+
+| ID | Fix | File(s) |
+|----|-----|---------|
+| 2.1 | Unificazione chiamate LLM: `ResponseClassifier`, `Judge`, `FollowUpGenerator`, e `TAPEngine._run_phase5_extraction` ora accettano `LLMClient` opzionale con circuit breaker, retry e model fallback. `api.py` cabla `_llm_client` in tutti i componenti. | `classifier.py`, `judge.py`, `followup.py`, `engine.py`, `api.py` |
+| 2.2 | Fix timestamp `AgentSTIREvaluator`: sostituito `logging.Formatter().formatTime()` con `datetime.now(timezone.utc).isoformat()` | `agents.py` |
+| 2.3 | Estratto `TACTICAL_PERSONAS` da `agents.py` in nuovo modulo `src/tap/personas.py` | `personas.py`, `agents.py` |
+
+### Fase 3 — Test e documentazione
+
+| ID | Fix | File(s) |
+|----|-----|---------|
+| 3.1 | Creato `tests/test_agents.py` con 17 test per `AgentDPAFManager`, `AgentSTIREvaluator`, `AgentIntelExtractor` | `tests/test_agents.py` |
+| 3.2 | Aggiornato `framework_specs.md` alla versione 3.1.0-beta con questo changelog | `framework_specs.md` |
