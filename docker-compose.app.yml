@@ -53,6 +53,7 @@ services:
     env_file:
       - .env
     environment:
+      OAUTHLIB_INSECURE_TRANSPORT: 1
       SERVICE_NAME: tap-engine
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       KAFKA_GROUP_ID: tap-engine-group
