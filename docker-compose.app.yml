@@ -4,15 +4,13 @@
 #
 # PRE-REQUISITO: docker compose -f docker-compose.infra.yml up -d
 # Avvio:         docker compose -f docker-compose.app.yml up -d
-# Avvio completo: docker compose -f docker-compose.infra.yml -f docker-compose.app.yml up -d
 # ============================================================================
 
 services:
 
   # --------------------------------------------------------------------------
   # HYDRA API — FastAPI, gestione V-Genome e graph intelligence
-  # Porta: http://localhost:8000
-  # Docs:  http://localhost:8000/docs
+  # Porta: http://localhost:8000  |  Docs: http://localhost:8000/docs
   # --------------------------------------------------------------------------
   hydra-api:
     build:
@@ -33,11 +31,6 @@ services:
       POSTGRES_DSN: postgresql+asyncpg://tap:tap@postgres:5432/hydra
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       REDIS_URL: redis://redis:6379/0
-    depends_on:
-      - neo4j
-      - postgres
-      - kafka
-      - redis
     networks:
       - tap-net
     healthcheck:
@@ -49,7 +42,6 @@ services:
 
   # --------------------------------------------------------------------------
   # CHRONOS Worker — Temporal worker, orchestrazione workflow
-  # Connesso a Temporal Server (tap-temporal)
   # --------------------------------------------------------------------------
   chronos-worker:
     build:
@@ -66,16 +58,11 @@ services:
       POSTGRES_DSN: postgresql+asyncpg://tap:tap@postgres:5432/chronos
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       REDIS_URL: redis://redis:6379/1
-    depends_on:
-      - temporal
-      - postgres
-      - kafka
     networks:
       - tap-net
 
   # --------------------------------------------------------------------------
-  # TAP Engine — core processing engine, consumer Kafka CDC events
-  # Legge da Kafka (Debezium CDC) e aggiorna Neo4j
+  # TAP Engine — consumer Kafka CDC events -> Neo4j
   # --------------------------------------------------------------------------
   tap-engine:
     build:
@@ -95,15 +82,11 @@ services:
       NEO4J_PASSWORD: tapv4hydra
       POSTGRES_DSN: postgresql+asyncpg://tap:tap@postgres:5432/chronos
       REDIS_URL: redis://redis:6379/2
-    depends_on:
-      - kafka
-      - neo4j
-      - debezium
     networks:
       - tap-net
 
   # --------------------------------------------------------------------------
-  # Adapters Service — connettori verso sistemi esterni (X/Twitter, ecc.)
+  # Adapters — connettori verso sistemi esterni (X/Twitter, ecc.)
   # --------------------------------------------------------------------------
   adapters:
     build:
@@ -119,14 +102,11 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       REDIS_URL: redis://redis:6379/3
       POSTGRES_DSN: postgresql+asyncpg://tap:tap@postgres:5432/chronos
-    depends_on:
-      - kafka
-      - redis
     networks:
       - tap-net
 
   # --------------------------------------------------------------------------
-  # Frontend — interfaccia utente (serve su :3000 in dev)
+  # Frontend — Next.js UI su :3000
   # --------------------------------------------------------------------------
   frontend:
     build:
@@ -146,12 +126,9 @@ services:
       - tap-net
 
 # ------------------------------------------------------------------------------
-# Rete condivisa con docker-compose.infra.yml
-# NOTA: la rete deve esistere - viene creata da docker-compose.infra.yml
-# Se avvii solo questo file, crea la rete manualmente:
-#   docker network create tap-infra_default
+# Rete esterna — creata da docker-compose.infra.yml (framework_default)
 # ------------------------------------------------------------------------------
 networks:
   tap-net:
     external: true
-    name: framework160626_default
+    name: framework_default
