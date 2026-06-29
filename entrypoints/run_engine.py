@@ -31,7 +31,7 @@ async def main() -> None:
     from tap.engine import TAPEngine
     from tap.llm_client import LLMClient
 
-    db = Database(settings)
+    db = Database(settings.db_path)
     await db.initialize()
     log.info("db_initialized")
 

@@ -20,7 +20,7 @@ async def main() -> None:
     from tap.db import Database
     from tap.stream_listener import StreamListener
 
-    db = Database(settings)
+    db = Database(settings.db_path)
     await db.initialize()
     log.info("db_initialized")
 
