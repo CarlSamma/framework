@@ -5,8 +5,7 @@
 
 # HYDRA
 neo4j>=5.26
-pytorch
-
+# NOTA: il pacchetto PyTorch si chiama 'torch', NON 'pytorch'
 torch>=2.4.0
 grpcio>=1.68.0
 grpcio-tools>=1.68.0
