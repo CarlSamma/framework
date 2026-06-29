@@ -51,6 +51,9 @@ services:
 
   # --------------------------------------------------------------------------
   # Apache Kafka + Zookeeper — event bus
+  # NOTA: due listener separati:
+  #   - PLAINTEXT_INTERNAL://kafka:29092  → usato dai container (Debezium, app)
+  #   - PLAINTEXT://localhost:9092        → usato dall'host Windows (kafkacat, ecc.)
   # --------------------------------------------------------------------------
   zookeeper:
     image: confluentinc/cp-zookeeper:7.7.0
@@ -69,7 +72,10 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT_INTERNAL://0.0.0.0:29092,PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_INTERNAL://kafka:29092,PLAINTEXT://localhost:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     healthcheck:
@@ -81,7 +87,7 @@ services:
 
   # --------------------------------------------------------------------------
   # Debezium Connect 2.7.3.Final — CDC PostgreSQL -> Kafka -> Neo4j
-  # NOTA: il repo e' stato spostato da Docker Hub a quay.io
+  # NOTA: usa kafka:29092 (listener interno Docker)
   # REST API su http://localhost:8083
   # Registra il connettore con: .\scripts\debezium.ps1
   # --------------------------------------------------------------------------
@@ -96,7 +102,7 @@ services:
     ports:
       - "8083:8083"
     environment:
-      BOOTSTRAP_SERVERS: kafka:9092
+      BOOTSTRAP_SERVERS: kafka:29092
       GROUP_ID: tap-debezium-group
       CONFIG_STORAGE_TOPIC: tap.debezium.configs
       OFFSET_STORAGE_TOPIC: tap.debezium.offsets
