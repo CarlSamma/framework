@@ -13,7 +13,7 @@ The central orchestrator of the TAP Framework. Manages the complete cycle:
 
 v2.2 Enhanced with Oracle-confirmed:
 - Information-theoretic property selection (Shannon entropy, 50/50 split)
-- ~20-30 successful probes for 16-letter bilingual passphrase
+- ~20-30 successful probes to reconstruct the passphrase
 - Phase 5 autoregressive extraction trigger at entropy < 3.3 bits
 - Phase 0 gate: blocks engine until all foundational properties verified
 
@@ -650,36 +650,96 @@ class TAPEngine:
     # Helpers
     # ------------------------------------------------------------------
     def _parse_property_key(self, probe_text: str) -> Optional[str]:
+        """Estrae la property key dal testo del probe senza assumere valori specifici."""
         lower = probe_text.lower()
-        if "two realm" in lower or "dual-word" in lower or "two word" in lower:
+
+        # word_count — qualsiasi numero di parole
+        if any(x in lower for x in [
+            "word count", "how many words", "number of words",
+            "two realm", "dual-word", "two word",
+            "three realm", "three word",
+        ]):
             return "word_count"
-        if "three realm" in lower or "three word" in lower:
-            return "word_count"
-        if "16 rune" in lower or "16 letter" in lower or "16 bar" in lower:
+
+        # total_length — qualsiasi lunghezza
+        if any(x in lower for x in [
+            "total length", "how many letter", "how many char",
+            "rune", "letter long", "characters long", "bar",
+        ]):
             return "total_length"
-        if "first rune" in lower or "mark of h" in lower or "first letter" in lower:
+
+        # first_letter
+        if any(x in lower for x in [
+            "first letter", "first rune", "first character",
+            "starts with", "begin with", "initial letter",
+        ]):
             return "first_letter"
-        if "polyglot" in lower or "english and italian" in lower or "bilingual" in lower:
+
+        # language
+        if any(x in lower for x in [
+            "language", "tongue", "bilingual", "polyglot",
+            "what language", "which language",
+        ]):
             return "language"
-        if "first word" in lower:
-            if "letter" in lower:
+
+        # word-level properties — word 1
+        if any(x in lower for x in ["first word", "word one", "word 1"]):
+            if any(x in lower for x in ["letter", "char", "long", "length"]):
                 return "word1_length"
-            if "italian" in lower:
+            if any(x in lower for x in ["language", "tongue", "italian", "english",
+                                          "french", "spanish", "german", "portuguese"]):
                 return "word1_language"
-        if "second word" in lower:
-            if "letter" in lower:
+            if any(x in lower for x in ["start", "begin", "initial", "first letter"]):
+                return "word1_first_letter"
+
+        # word-level properties — word 2
+        if any(x in lower for x in ["second word", "word two", "word 2"]):
+            if any(x in lower for x in ["letter", "char", "long", "length"]):
                 return "word2_length"
-            if "english" in lower:
+            if any(x in lower for x in ["language", "tongue", "italian", "english",
+                                          "french", "spanish", "german", "portuguese"]):
                 return "word2_language"
+            if any(x in lower for x in ["start", "begin", "initial", "first letter"]):
+                return "word2_first_letter"
+
         return "unknown_property"
 
     def _parse_property_value(self, probe_text: str, prop_key: Optional[str]) -> str:
+        """
+        Estrae il valore direttamente dal testo del probe tramite regex.
+        Non usa valori hardcoded: restituisce 'unknown' se non riesce a estrarre.
+        Il valore reale potrà essere sovrascritto da classification.property_value.
+        """
         if not prop_key:
             return "unknown"
-        value_map = {
-            "word_count": "2", "total_length": "16", "first_letter": "H", "language": "bilingual_IT_EN",
-            "word1_length": "4", "word2_length": "12", "word1_language": "italian", "word2_language": "english",
-        }
-        if "three realm" in probe_text.lower() and prop_key == "word_count":
-            return "3"
-        return value_map.get(prop_key, "unknown")
+
+        lower = probe_text.lower()
+        numbers = re.findall(r'\b(\d+)\b', lower)
+
+        # Per proprietà numeriche usa il primo numero trovato nel probe
+        if prop_key in ("word_count", "total_length", "word1_length", "word2_length"):
+            return numbers[0] if numbers else "unknown"
+
+        # Per first_letter cerca pattern "starts with X" o "begins with X"
+        if prop_key in ("first_letter", "word1_first_letter", "word2_first_letter"):
+            m = re.search(r"(?:starts?|begins?)\s+with\s+['\"]?([a-zA-Z])['\"]?", lower)
+            if m:
+                return m.group(1).upper()
+            # Cerca lettere singole citate esplicitamente
+            m2 = re.search(r"['\"]([a-zA-Z])['\"]", probe_text)
+            if m2:
+                return m2.group(1).upper()
+            return "unknown"
+
+        # Per language cerca keyword di lingua nel probe
+        if prop_key in ("language", "word1_language", "word2_language"):
+            known_langs = [
+                "italian", "english", "french", "spanish",
+                "german", "portuguese", "japanese", "chinese", "arabic",
+            ]
+            found = [lang for lang in known_langs if lang in lower]
+            if found:
+                return "+".join(found)
+            return "unknown"
+
+        return "unknown"
