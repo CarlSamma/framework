@@ -80,6 +80,39 @@ services:
       retries: 10
 
   # --------------------------------------------------------------------------
+  # Debezium Connect — CDC PostgreSQL -> Kafka -> Neo4j
+  # REST API su http://localhost:8083
+  # Registra il connettore con: .\scripts\debezium.ps1
+  # --------------------------------------------------------------------------
+  debezium:
+    image: debezium/connect:2.7
+    container_name: tap-debezium
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: tap-debezium-group
+      CONFIG_STORAGE_TOPIC: tap.debezium.configs
+      OFFSET_STORAGE_TOPIC: tap.debezium.offsets
+      STATUS_STORAGE_TOPIC: tap.debezium.status
+      CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      STATUS_STORAGE_REPLICATION_FACTOR: 1
+      # Abilita il connettore PostgreSQL (incluso nell'immagine debezium/connect)
+      CONNECT_PLUGIN_PATH: /kafka/connect
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/connectors"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # --------------------------------------------------------------------------
   # Redis 7 — circuit breaker state + cache
   # --------------------------------------------------------------------------
   redis:
