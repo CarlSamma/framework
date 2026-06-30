@@ -106,6 +106,29 @@ services:
     networks:
       - tap-net
 
+  # --------------------------------------------------------------------------
+  # FRONTEND — React + TypeScript GUI (branch hybridGUI)
+  # http://localhost:3000
+  # --------------------------------------------------------------------------
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      target: dev
+    container_name: tap-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_BASE=http://hydra-api:8000
+    depends_on:
+      - hydra-api
+    networks:
+      - tap-net
+
 # ------------------------------------------------------------------------------
 # Rete esterna — creata da docker-compose.infra.yml
 # Nome verificato con: docker network ls | Select-String "framework"
